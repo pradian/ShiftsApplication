@@ -9,15 +9,32 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { RegisterComponent } from './pages/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './pages/login/login.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 @NgModule({
-  declarations: [AppComponent, RegisterComponent, LoginComponent, HomepageComponent, UserProfileComponent],
+  declarations: [
+    AppComponent,
+    RegisterComponent,
+    LoginComponent,
+    NavigationComponent,
+  ],
+  declarations: [
+    AppComponent,
+    RegisterComponent,
+    LoginComponent,
+    HomepageComponent,
+    UserProfileComponent,
+  ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    MatProgressSpinnerModule,
+    BrowserAnimationsModule,
     provideFirebaseApp(() =>
       initializeApp({
         projectId: 'shiftapp-16b21',
