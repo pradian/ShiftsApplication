@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  isLoading = false;
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore,
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     if (this.loginForm.valid) {
+      this.isLoading = true;
       const { email, password } = this.loginForm.value;
       this.authService
         .login(email, password)
@@ -37,8 +39,12 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('userId', userId);
             this.router.navigate(['/']);
           }
+          this.isLoading = false;
         })
-        .catch(console.error);
+        .catch(() => {
+          alert('Email or password is incorect. Please try again.');
+          this.isLoading = false;
+        });
     } else {
       this.loginForm.markAllAsTouched();
     }

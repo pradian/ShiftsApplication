@@ -3,7 +3,7 @@
   <form
     [formGroup]="registerForm"
     (ngSubmit)="register()"
-    class="m-4 shadow-md p-5 w1/3"
+    class="m-4 shadow-md p-5 w-1/3"
   >
     <div class="my-4 h-14">
       <label for="email" class="text-cyan-800 my-4">Email:</label>
@@ -86,7 +86,7 @@
         *ngIf="!isLoading"
         type="submit"
         [disabled]="registerForm.invalid"
-        class="bg-green-500 hover:bg-green-700 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+        class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
       >
         Register
       </button>
