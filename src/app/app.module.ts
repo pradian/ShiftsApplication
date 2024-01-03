@@ -21,11 +21,6 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
     RegisterComponent,
     LoginComponent,
     NavigationComponent,
-  ],
-  declarations: [
-    AppComponent,
-    RegisterComponent,
-    LoginComponent,
     HomepageComponent,
     UserProfileComponent,
   ],
