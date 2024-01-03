@@ -1,0 +1,72 @@
+<div class="flex flex-col justify-center items-center font-normal h-full">
+  <h1 class="m-5 text-xl">Update profile</h1>
+  <form
+    [formGroup]="userProfileForm"
+    (ngSubmit)="saveProfile()"
+    class="m-4 shadow-md p-5 w-1/3"
+  >
+    <div class="my-4 h-14">
+      <label for="firstName" class="text-cyan-800 my-4">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        formControlName="firstName"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          userProfileForm.get('firstName')?.invalid &&
+          userProfileForm.get('firstName')?.touched
+        "
+      >
+        <small class="text-danger">First Name is required</small>
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="lastName" class="text-cyan-800 my-4">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        formControlName="lastName"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          userProfileForm.get('lastName')?.invalid &&
+          userProfileForm.get('lastName')?.touched
+        "
+      >
+        <small class="text-danger">Last Name is required</small>
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="role" class="text-cyan-800 my-4">Role</label>
+      <input
+        type="text"
+        id="role"
+        formControlName="role"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          userProfileForm.get('role')?.invalid &&
+          userProfileForm.get('role')?.touched
+        "
+      >
+        <small class="text-danger">Role is required</small>
+      </div>
+    </div>
+
+    <!-- Add other profile fields as needed -->
+
+    <button
+      type="submit"
+      [disabled]="userProfileForm.invalid"
+      class="btn btn-primary"
+    >
+      Save Profile
+    </button>
+  </form>
+</div>

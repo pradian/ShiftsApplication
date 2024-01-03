@@ -50,13 +50,4 @@ export class RegisterComponent implements OnInit {
       this.registerForm?.markAllAsTouched();
     }
   }
-  // passwordMatchValidator(g: FormGroup) {
-  //   const password = g.get('password')?.value;
-  //   const confirmPassword = g.get('confirmPassword')?.value;
-  //   if (password !== confirmPassword) {
-  //     g.get('confirmPassword')?.setErrors({ mismatch: true });
-  //   } else {
-  //     g.get('confirmPassword')?.setErrors(null);
-  //   }
-  // }
 }

@@ -1,0 +1,10 @@
+<div class="flex flex-col justify-center items-center font-normal h-full">
+  <h2>Welcome to Shifts Managment Application</h2>
+  <div *ngIf="!isLoggedIn()">
+    <p>
+      If you need to access this application, you need to register or login:
+    </p>
+    <button routerLink="/register">Register</button>
+    <button routerLink="/login">Login</button>
+  </div>
+</div>
