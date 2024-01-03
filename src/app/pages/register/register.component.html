@@ -5,25 +5,38 @@
     (ngSubmit)="register()"
     class="m-4 shadow-md p-5 w1/3"
   >
-    <div class="my-4">
+    <div class="my-4 h-14">
       <label for="email" class="text-cyan-800 my-4">Email:</label>
       <input
         type="email"
         id="email"
         formControlName="email"
-        class="border-b-2 border-b-sky-500 w-full"
+        class="border-b-2 border-b-sky-500 w-full outline-0"
+        autocomplete="off"
       />
+      <p *ngIf="registerForm.get('email')?.errors" class="text-red-700 text-sm">
+        Email format "name@domain.com"
+      </p>
     </div>
-    <div class="my-4">
-      <label for="password" class="text-cyan-800 my-4">Password:</label>
+    <div class="my-4 h-14">
+      <label for="password" class="text-cyan-800 my-4 outline-0"
+        >Password:</label
+      >
       <input
         type="password"
         id="password"
         formControlName="password"
-        class="border-b-2 border-b-sky-500 w-full"
+        class="border-b-2 border-b-sky-500 w-full outline-0"
+        autocomplete="off"
       />
+      <p
+        *ngIf="registerForm.get('password')?.errors"
+        class="text-red-700 text-sm"
+      >
+        Password minim length 6 characters
+      </p>
     </div>
-    <div class="my-4">
+    <div class="my-4 h-14">
       <label for="confirmPassword" class="text-cyan-800 my-4">
         Confirm Password:
       </label>
@@ -31,17 +44,25 @@
         type="password"
         id="confirmPassword"
         formControlName="confirmPassword"
-        class="border-b-2 border-b-sky-500 w-full"
+        class="border-b-2 border-b-sky-500 w-full outline-0"
+        autocomplete="off"
       />
+      <p
+        *ngIf="
+          registerForm.get('confirmPassword')?.invalid &&
+          registerForm.get('confirmPassword')?.touched
+        "
+        class="text-red-700 text-sm"
+      >
+        <span *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+          Confirm password is required
+        </span>
+        <span *ngIf="registerForm.get('confirmPassword')?.hasError('mismatch')">
+          Confirm password must match password
+        </span>
+      </p>
     </div>
-    <div
-      *ngIf="
-        registerForm.hasError('passwordMismatch') &&
-        registerForm.get('confirmPassword')?.dirty
-      "
-    >
-      Passwords do not match
-    </div>
+
     <div>
       <button
         type="submit"
@@ -50,11 +71,14 @@
       >
         Register
       </button>
-      <div class="text-sm">
-        <p ngIf="">Email format "name@domain.com"</p>
-        <p>Password minim length 6 characters</p>
-        <p>Confirm password must match password</p>
-      </div>
+      <div class="text-sm"></div>
     </div>
   </form>
+
+  <div>
+    <p>
+      Already have account?
+      <span class="cursor-pointer" routerLink="/login">Login here</span>
+    </p>
+  </div>
 </div>
