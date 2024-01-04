@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { RegisterComponent } from './pages/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './pages/login/login.component';
@@ -30,6 +32,8 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
     AppRoutingModule,
     MatProgressSpinnerModule,
     BrowserAnimationsModule,
+    AngularFireModule,
+    AngularFirestoreModule,
     provideFirebaseApp(() =>
       initializeApp({
         projectId: 'shiftapp-16b21',

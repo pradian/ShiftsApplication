@@ -11,6 +11,8 @@ import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.ser
 export class UserProfileComponent implements OnInit {
   userProfileForm: FormGroup;
   authState = 'Loading....';
+  userData: any;
+  userId = localStorage.getItem('userId');
 
   constructor(
     private fb: FormBuilder,
@@ -25,16 +27,27 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.authState = `Logged in | Current user: ${user.email}`;
-      } else {
-        this.authState = 'Logged out';
-      }
-    });
+  async ngOnInit(): Promise<void> {
+    await this.readData();
   }
-
+  async readData() {
+    try {
+      const users = await this.authService.getData('users'),
+        user = users.find((user: { uid: string }) => {
+          user.uid === this.userId;
+        });
+      if (user) {
+        this.userData = user;
+        this.userProfileForm.patchValue({
+          firstName: this.userData.firstName || '',
+          lastName: this.userData.lastName || '',
+          role: this.userData.role || '',
+        });
+      }
+    } catch (error) {
+      console.error('Error Fetching user data:', error);
+    }
+  }
   saveProfile(): void {
     if (this.userProfileForm.valid) {
       const { firstName, lastName, role } = this.userProfileForm.value;

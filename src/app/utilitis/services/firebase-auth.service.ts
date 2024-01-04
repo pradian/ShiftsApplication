@@ -6,6 +6,16 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from '@angular/fire/auth';
+import {
+  DocumentData,
+  Query,
+  QuerySnapshot,
+  collection,
+  getDocs,
+  query,
+  where,
+} from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -50,14 +60,15 @@ export class FirebaseAuthService {
     return credentials.user;
   }
   async updateProfile(firstName: string, lastName: string, role: string) {
-    if (!this.currentUser) return;
+    const userId = localStorage.getItem('userId');
+    if (!this.currentUser || !!userId) return;
 
     try {
       await updateProfile(this.currentUser, {
         displayName: `${firstName} ${lastName}`,
       });
 
-      const userRef = this.firestore.doc(`users/${this.currentUser.uid}`);
+      const userRef = this.firestore.doc(`users/${userId}`);
       await userRef.set({ firstName, lastName, role }, { merge: true });
 
       // Optionally, update the local currentUser object with the updated display name
@@ -68,7 +79,32 @@ export class FirebaseAuthService {
       throw new Error('Error updating profile');
     }
   }
+  // async getUserProfileData(): Promise<any>{
+  //   try{
+  //     const userId = localStorage.getItem('userId');
+  //     if(!userId){
+  //       throw new Error("User ID not found")
+  //     }
+  //     const userDoc = await this.firestore
+  //   }
+  // }
+  async getData(collectionName: string): Promise<any[]> {
+    try {
+      const collectionRef = this.firestore.collection(collectionName);
+      const querySnapshot: QuerySnapshot<DocumentData> =
+        await collectionRef.get();
+      const documentsData: DocumentData[] = querySnapshot.docs.map((doc) =>
+        doc.data()
+      );
+      return documentsData;
+    } catch (error) {
+      throw new Error('Error fetching data');
+    }
+  }
   logout() {
-    this.authService.logout().then(console.log).catch(console.error);
+    this.authService
+      .logout()
+      .then(localStorage.removeItem('userId'))
+      .catch(console.error);
   }
 }
