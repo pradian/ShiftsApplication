@@ -8,6 +8,7 @@ import {
 } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
+import { Member } from 'src/app/utilitis/types';
 
 @Component({
   selector: 'app-user-profile',
@@ -18,8 +19,8 @@ export class UserProfileComponent implements OnInit {
   userProfileForm: FormGroup;
   authState = 'Loading....';
   userData?: Member;
-  userId = localStorage.getItem('userId');
   usersData: Member[] = [];
+  userId = localStorage.getItem('userId');
 
   constructor(
     private fb: FormBuilder,
@@ -54,7 +55,7 @@ export class UserProfileComponent implements OnInit {
   async autofillForm() {
     try {
       const fetchedUsers = await this.readData();
-
+      console.log(fetchedUsers);
       if (fetchedUsers.length > 0) {
         const currentUser = fetchedUsers.find(
           (user) => user.uid === this.userId
@@ -102,11 +103,11 @@ export class UserProfileComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 }
-type Member = {
-  birthDate: Timestamp;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  uid: string;
-};
+// type Member = {
+//   birthDate: Timestamp;
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   role: string;
+//   uid: string;
+// };

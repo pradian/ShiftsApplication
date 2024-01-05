@@ -1,10 +1,22 @@
-<div class="flex flex-col justify-center items-center font-normal h-full">
+<div class="flex flex-col justify-center items-center font-normal h-full mt-6">
   <h2>Welcome to Shifts Managment Application</h2>
-  <div *ngIf="!isLoggedIn()">
+  <div *ngIf="!isLoggedIn()" class="mt-8">
     <p>
       If you need to access this application, you need to register or login:
     </p>
-    <button routerLink="/register">Register</button>
-    <button routerLink="/login">Login</button>
+    <div class="mt-4 flex justify-center gap-5">
+      <button
+        routerLink="/register"
+        class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 text-xl rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+      >
+        Register
+      </button>
+      <button
+        routerLink="/login"
+        class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 text-xl rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+      >
+        Login
+      </button>
+    </div>
   </div>
 </div>

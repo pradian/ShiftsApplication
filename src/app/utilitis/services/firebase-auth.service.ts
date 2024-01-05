@@ -4,6 +4,7 @@ import {
   User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   updateProfile,
 } from '@angular/fire/auth';
 import {
@@ -16,6 +17,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { Member } from '../types';
 @Injectable({
   providedIn: 'root',
 })
@@ -71,40 +73,39 @@ export class FirebaseAuthService {
       const userRef = this.firestore.doc(`users/${userId}`);
       await userRef.set({ firstName, lastName, role }, { merge: true });
 
-      // Optionally, update the local currentUser object with the updated display name
-      // this.currentUser.displayName = `${firstName} ${lastName}`;
-
       return true;
     } catch (error) {
       throw new Error('Error updating profile');
     }
   }
-  // async getUserProfileData(): Promise<any>{
-  //   try{
-  //     const userId = localStorage.getItem('userId');
-  //     if(!userId){
-  //       throw new Error("User ID not found")
-  //     }
-  //     const userDoc = await this.firestore
+  async readData(): Promise<Member[]> {
+    const usersDBCol = await collection(this.firestore, 'users');
+    const fetchedUsers: Member[] = [];
+    const querySnapshot = await getDocs(usersDBCol);
+    querySnapshot.forEach((doc) => {
+      fetchedUsers.push(doc.data() as Member);
+    });
+
+    return fetchedUsers;
+  }
+
+  // async getData(collectionName: string): Promise<any[]> {
+  //   try {
+  //     const collectionRef = this.firestore.collection(collectionName);
+  //     const querySnapshot: QuerySnapshot<DocumentData> =
+  //       await collectionRef.get();
+  //     const documentsData: DocumentData[] = querySnapshot.docs.map((doc) =>
+  //       doc.data()
+  //     );
+  //     return documentsData;
+  //   } catch (error) {
+  //     throw new Error('Error fetching data');
   //   }
   // }
-  async getData(collectionName: string): Promise<any[]> {
-    try {
-      const collectionRef = this.firestore.collection(collectionName);
-      const querySnapshot: QuerySnapshot<DocumentData> =
-        await collectionRef.get();
-      const documentsData: DocumentData[] = querySnapshot.docs.map((doc) =>
-        doc.data()
-      );
-      return documentsData;
-    } catch (error) {
-      throw new Error('Error fetching data');
-    }
-  }
-  logout() {
-    this.authService
-      .logout()
-      .then(localStorage.removeItem('userId'))
-      .catch(console.error);
+
+  async logout() {
+    await signOut(this.auth);
+    this.currentUser = undefined;
+    return;
   }
 }

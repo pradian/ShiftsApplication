@@ -8,5 +8,13 @@
       <li class="cursor-pointer">Add shift</li>
     </ul>
   </div>
-  <div>Welcome user</div>
+  <div>
+    Welcome {{ userData?.firstName }} {{ userData?.lastName }} |
+    <button
+      class="font-semibold text-lg text-red-700 cursor-pointer underline"
+      (click)="handleLogout()"
+    >
+      Logout
+    </button>
+  </div>
 </div>
