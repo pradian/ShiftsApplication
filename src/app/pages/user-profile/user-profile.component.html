@@ -1,0 +1,97 @@
+<div class="flex flex-col justify-center items-center font-normal h-full">
+  <h1 class="m-5 text-xl">Update profile</h1>
+  <form
+    [formGroup]="userProfileForm"
+    (ngSubmit)="saveProfile()"
+    class="m-4 shadow-md p-5 w-6/12"
+  >
+    <div class="my-4 h-14">
+      <label for="firstName" class="text-cyan-800 my-4">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        formControlName="firstName"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div *ngIf="userProfileForm.get('firstName')?.errors">
+        <small class="text-danger"
+          >Minimum 3 characters required for First Name</small
+        >
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="lastName" class="text-cyan-800 my-4">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        formControlName="lastName"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div *ngIf="userProfileForm.get('lastName')?.errors">
+        <small class="text-danger"
+          >Minimum 3 characters required for Last Name</small
+        >
+      </div>
+    </div>
+
+    <div class="my-4 h-14 hidden">
+      <label for="role" class="text-cyan-800 my-4">Role</label>
+      <input
+        type="text"
+        id="role"
+        formControlName="role"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="birthDate" class="text-cyan-800 my-4">Birth Date</label>
+      <input
+        type="date"
+        id="birthDate"
+        formControlName="birthDate"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          userProfileForm.get('birthDate')?.invalid &&
+          userProfileForm.get('birthDate')?.touched
+        "
+      >
+        <small class="text-danger">Birth Date is required</small>
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="email" class="text-cyan-800 my-4">Email</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          userProfileForm.get('email')?.invalid &&
+          userProfileForm.get('email')?.touched
+        "
+      >
+        <small class="text-danger">Please enter a valid email</small>
+      </div>
+    </div>
+    <div>
+      Role: {{ userData?.role }} <br />
+      User ID: {{ userData?.uid }}
+    </div>
+    <!-- Add other profile fields as needed -->
+
+    <button
+      type="submit"
+      [disabled]="userProfileForm.invalid"
+      class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+    >
+      Save Profile
+    </button>
+  </form>
+</div>

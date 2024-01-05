@@ -14,6 +14,7 @@ import { ValidatorsService } from 'src/app/utilitis/services/validators.service'
 export class RegisterComponent implements OnInit {
   [x: string]: any;
   registerForm: FormGroup;
+  isLoading = false;
   constructor(
     private auth: Auth,
     private firestore: Firestore,
@@ -42,21 +43,19 @@ export class RegisterComponent implements OnInit {
   register() {
     if (this.registerForm?.valid) {
       const { email, password } = this.registerForm.value;
+      this.isLoading = true;
       this.authService
         .register(email, password)
-        .then(console.log)
-        .catch(console.error);
+        .then((result) => {
+          console.log(result);
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          alert(error.message);
+          this.isLoading = false;
+        });
     } else {
       this.registerForm?.markAllAsTouched();
     }
   }
-  // passwordMatchValidator(g: FormGroup) {
-  //   const password = g.get('password')?.value;
-  //   const confirmPassword = g.get('confirmPassword')?.value;
-  //   if (password !== confirmPassword) {
-  //     g.get('confirmPassword')?.setErrors({ mismatch: true });
-  //   } else {
-  //     g.get('confirmPassword')?.setErrors(null);
-  //   }
-  // }
 }
