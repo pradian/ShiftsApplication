@@ -9,7 +9,9 @@ import {
 } from '@angular/fire/auth';
 import {
   DocumentData,
+  Firestore,
   Query,
+  QueryDocumentSnapshot,
   QuerySnapshot,
   collection,
   getDocs,
@@ -18,6 +20,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Member } from '../types';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,7 +32,6 @@ export class FirebaseAuthService {
   currentUser?: User;
   authService: any;
   firestore: any;
-
   constructor(private auth: Auth) {}
 
   isLoggedIn(): boolean {
@@ -78,8 +80,8 @@ export class FirebaseAuthService {
       throw new Error('Error updating profile');
     }
   }
-  async readData(): Promise<Member[]> {
-    const usersDBCol = await collection(this.firestore, 'users');
+  async readMembersData(fdb: any, coll: string): Promise<Member[]> {
+    const usersDBCol = await collection(fdb, coll);
     const fetchedUsers: Member[] = [];
     const querySnapshot = await getDocs(usersDBCol);
     querySnapshot.forEach((doc) => {
@@ -88,20 +90,6 @@ export class FirebaseAuthService {
 
     return fetchedUsers;
   }
-
-  // async getData(collectionName: string): Promise<any[]> {
-  //   try {
-  //     const collectionRef = this.firestore.collection(collectionName);
-  //     const querySnapshot: QuerySnapshot<DocumentData> =
-  //       await collectionRef.get();
-  //     const documentsData: DocumentData[] = querySnapshot.docs.map((doc) =>
-  //       doc.data()
-  //     );
-  //     return documentsData;
-  //   } catch (error) {
-  //     throw new Error('Error fetching data');
-  //   }
-  // }
 
   async logout() {
     await signOut(this.auth);

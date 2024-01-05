@@ -9,12 +9,14 @@
     </ul>
   </div>
   <div>
-    Welcome {{ userData?.firstName }} {{ userData?.lastName }} |
-    <button
-      class="font-semibold text-lg text-red-700 cursor-pointer underline"
-      (click)="handleLogout()"
+    <ng-container *ngIf="userData">
+      Welcome {{ userData.firstName }} {{ userData.lastName }} |
+      <button
+        class="font-semibold text-lg text-red-700 cursor-pointer underline"
+        (click)="handleLogout()"
+      >
+        Logout
+      </button></ng-container
     >
-      Logout
-    </button>
   </div>
 </div>

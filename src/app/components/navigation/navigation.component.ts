@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
@@ -9,7 +9,7 @@ import { Member } from 'src/app/utilitis/types';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css'],
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
   userId = localStorage.getItem('userId');
   userData?: Member;
   constructor(
@@ -22,15 +22,18 @@ export class NavigationComponent implements OnInit {
 
     this.getUser();
   }
+
   async getUser() {
-    const user = await this.authService.readData().then((members) =>
-      members.forEach((member) => {
-        if (member.uid === this.userId) {
-          this.userData = member;
-          console.log(this.userData);
-        }
-      })
-    );
+    const user = await this.authService
+      .readMembersData(this.firestore, 'users')
+      .then((members) =>
+        members.forEach((member) => {
+          if (member.uid === this.userId) {
+            this.userData = member;
+            console.log(this.userData);
+          }
+        })
+      );
   }
 
   handleLogout() {
@@ -43,5 +46,8 @@ export class NavigationComponent implements OnInit {
       .catch((error) => {
         console.log('Error');
       });
+  }
+  ngOnDestroy(): void {
+    this.userData;
   }
 }

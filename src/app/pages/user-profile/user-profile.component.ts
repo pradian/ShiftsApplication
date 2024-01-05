@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import {
-  Firestore,
-  Timestamp,
-  collection,
-  getDocs,
-} from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
@@ -41,20 +36,13 @@ export class UserProfileComponent implements OnInit {
     // await this.readData();
     this.autofillForm();
   }
-  async readData() {
-    const usersDBCol = collection(this.firestore, 'users');
-    const fetchedUsers: Member[] = [];
-    const querySnapshot = await getDocs(usersDBCol);
-    querySnapshot.forEach((doc) => {
-      fetchedUsers.push(doc.data() as Member);
-    });
-
-    return fetchedUsers;
-  }
 
   async autofillForm() {
     try {
-      const fetchedUsers = await this.readData();
+      const fetchedUsers = await this.authService.readMembersData(
+        this.firestore,
+        'users'
+      );
       console.log(fetchedUsers);
       if (fetchedUsers.length > 0) {
         const currentUser = fetchedUsers.find(
@@ -103,11 +91,3 @@ export class UserProfileComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 }
-// type Member = {
-//   birthDate: Timestamp;
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   role: string;
-//   uid: string;
-// };
