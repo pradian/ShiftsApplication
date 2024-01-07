@@ -20,6 +20,8 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Member } from '../types';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastComponent } from 'src/app/components/toast/toast.component';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +34,7 @@ export class FirebaseAuthService {
   currentUser?: User;
   authService: any;
   firestore: any;
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth, private snackBar: MatSnackBar) {}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('userId');
@@ -47,8 +49,16 @@ export class FirebaseAuthService {
       );
 
       this.currentUser = credentials.user;
+      this.snackBar.openFromComponent(ToastComponent, {
+        duration: 3000,
+        data: 'Login successful!',
+      });
       return credentials.user;
     } catch {
+      this.snackBar.openFromComponent(ToastComponent, {
+        duration: 3000,
+        data: 'Login unsuccessful! Try again',
+      });
       throw new Error('Invalid credentials. Please try again');
     }
   }

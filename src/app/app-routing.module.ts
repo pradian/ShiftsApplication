@@ -4,6 +4,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { authGuard } from './utilitis/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -13,14 +14,17 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'userprofile',
     component: UserProfileComponent,
+    canActivate: [authGuard],
   },
 ];
 
