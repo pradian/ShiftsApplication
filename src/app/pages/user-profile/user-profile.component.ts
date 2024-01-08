@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, doc, docSnapshots, getDoc } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
@@ -66,22 +66,24 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  saveProfile(): void {
+  async handleUpdateProfile() {
     if (this.userProfileForm.valid) {
-      const { firstName, lastName, role } = this.userProfileForm.value;
-      this.authService
-        .updateProfile(firstName, lastName, role)
-        .then((result) => {
-          if (result) {
+      const { firstName, lastName, role, email, birthDate } =
+        this.userProfileForm.value;
+
+      await this.authService
+        .updateProfile(firstName, lastName, role, email, birthDate)
+        .then(
+          () => {
             console.log('Profile updated successfully!');
-          } else {
-            console.error('Failed to update profile.');
+            // Perform any additional actions upon successful update if needed
+          },
+          (error) => {
+            console.error('Error updating profile:', error);
           }
-        })
-        .catch((error) => {
-          console.error('Error updating profile:', error);
-        });
+        );
     } else {
+      console.error('Profile update failed. Please check form fields.');
     }
   }
   formatISODate(date: Date): string {

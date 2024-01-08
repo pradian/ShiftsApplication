@@ -18,7 +18,7 @@ import {
   query,
   where,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Member } from '../types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToastComponent } from 'src/app/components/toast/toast.component';
@@ -34,6 +34,10 @@ export class FirebaseAuthService {
   currentUser?: User;
   authService: any;
   firestore: any;
+  isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
   constructor(private auth: Auth, private snackBar: MatSnackBar) {}
 
   isLoggedIn(): boolean {
@@ -53,6 +57,7 @@ export class FirebaseAuthService {
         duration: 3000,
         data: 'Login successful!',
       });
+      this.isLoggedInSubject.next(true);
       return credentials.user;
     } catch {
       this.snackBar.openFromComponent(ToastComponent, {
@@ -73,7 +78,14 @@ export class FirebaseAuthService {
     alert(`Welcome ${this.createdUser.email}!`);
     return credentials.user;
   }
-  async updateProfile(firstName: string, lastName: string, role: string) {
+
+  async updateProfile(
+    firstName: string,
+    lastName: string,
+    role: string,
+    email: string,
+    birthDate: Date
+  ) {
     const userId = localStorage.getItem('userId');
     if (!this.currentUser || !!userId) return;
 
@@ -83,7 +95,10 @@ export class FirebaseAuthService {
       });
 
       const userRef = this.firestore.doc(`users/${userId}`);
-      await userRef.set({ firstName, lastName, role }, { merge: true });
+      await userRef.set(
+        { firstName, lastName, role, email, birthDate },
+        { merge: true }
+      );
 
       return true;
     } catch (error) {
@@ -104,6 +119,7 @@ export class FirebaseAuthService {
   async logout() {
     await signOut(this.auth);
     this.currentUser = undefined;
+    this.isLoggedInSubject.next(false);
     return;
   }
 }

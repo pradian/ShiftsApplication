@@ -17,7 +17,14 @@
   </div>
   <div>
     <ng-container *ngIf="isLoggedIn">
-      Welcome {{ userData?.firstName }} {{ userData?.lastName }} |
+      Welcome
+      <span
+        routerLink="/userprofile"
+        class="hover:underline cursor-pointer text-sky-700 font-medium"
+      >
+        {{ userData?.firstName }} {{ userData?.lastName }}</span
+      >
+      |
       <button
         class="font-semibold text-lg text-red-700 cursor-pointer underline"
         (click)="handleLogout()"
