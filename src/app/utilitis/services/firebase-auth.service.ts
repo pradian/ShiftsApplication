@@ -14,6 +14,7 @@ import {
   QueryDocumentSnapshot,
   QuerySnapshot,
   collection,
+  getDoc,
   getDocs,
   query,
   where,

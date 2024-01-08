@@ -1,7 +1,15 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { timestamp } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
 
@@ -48,6 +56,7 @@ export class RegisterComponent implements OnInit {
         .register(email, password)
         .then((result) => {
           console.log(result);
+          this.addEmployee('', '', this.authService.createdUser?.email, '');
           this.isLoading = false;
         })
         .catch((error) => {
@@ -57,5 +66,23 @@ export class RegisterComponent implements OnInit {
     } else {
       this.registerForm?.markAllAsTouched();
     }
+  }
+  addEmployee(
+    firstName: string,
+    lastName: string,
+    email: string | undefined | null,
+    birthDate: Date | string
+  ) {
+    const data: any = {};
+    if (firstName) data.firstName = firstName;
+    if (lastName) data.lastName = lastName;
+    if (email) data.email = email;
+    if (birthDate) data.bithDate = birthDate;
+    data.role = 'user';
+    data.uid = this.authService.createdUser?.uid;
+
+    setDoc(doc(this.authService.firestore, 'users', data.uid), data, {
+      merge: true,
+    }).then(console.log, console.error);
   }
 }
