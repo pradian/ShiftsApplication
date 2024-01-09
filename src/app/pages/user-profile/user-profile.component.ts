@@ -15,7 +15,8 @@ export class UserProfileComponent implements OnInit {
   authState = 'Loading....';
   userData?: Member;
   usersData: Member[] = [];
-  userId = localStorage.getItem('userId');
+  userId? = localStorage.getItem('userId');
+  id = this.userId + '';
 
   constructor(
     private fb: FormBuilder,
@@ -72,7 +73,7 @@ export class UserProfileComponent implements OnInit {
         this.userProfileForm.value;
 
       await this.authService
-        .updateProfile(firstName, lastName, role, email, birthDate)
+        .updateUserProfile(this.id, firstName, lastName, role, email, birthDate)
         .then(
           () => {
             console.log('Profile updated successfully!');

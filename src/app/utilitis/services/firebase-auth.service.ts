@@ -14,9 +14,11 @@ import {
   QueryDocumentSnapshot,
   QuerySnapshot,
   collection,
+  doc,
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -34,12 +36,17 @@ export class FirebaseAuthService {
   createdUser?: User;
   currentUser?: User;
   authService: any;
-  firestore: any;
+  // firestore: any;
   isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
   isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
-  constructor(private auth: Auth, private snackBar: MatSnackBar) {}
+
+  constructor(
+    private auth: Auth,
+    private snackBar: MatSnackBar,
+    protected firestore: Firestore
+  ) {}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('userId');
@@ -79,33 +86,39 @@ export class FirebaseAuthService {
     alert(`Welcome ${this.createdUser.email}!`);
     return credentials.user;
   }
+  // async updateProfile(){
 
-  async updateProfile(
+  // }
+
+  async updateUserProfile(
+    id: string,
     firstName: string,
     lastName: string,
     role: string,
     email: string,
     birthDate: Date
-  ) {
-    const userId = localStorage.getItem('userId');
-    if (!this.currentUser || !!userId) return;
+  ): Promise<void> {
+    const userRef = doc(this.firestore, 'users', id);
+    const userDoc = await getDoc(userRef);
 
-    try {
-      await updateProfile(this.currentUser, {
-        displayName: `${firstName} ${lastName}`,
-      });
+    const userData = {
+      uid: id,
+      firstName,
+      lastName,
+      role,
+      email,
+      birthDate,
+    };
 
-      const userRef = this.firestore.doc(`users/${userId}`);
-      await userRef.set(
-        { firstName, lastName, role, email, birthDate },
-        { merge: true }
-      );
-
-      return true;
-    } catch (error) {
-      throw new Error('Error updating profile');
+    if (userDoc.exists()) {
+      // Update existing user profile in the database
+      await setDoc(userRef, userData, { merge: true });
+    } else {
+      // Create a new user profile in the database
+      await setDoc(userRef, userData);
     }
   }
+
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {
     const usersDBCol = await collection(fdb, coll);
     const fetchedUsers: Member[] = [];

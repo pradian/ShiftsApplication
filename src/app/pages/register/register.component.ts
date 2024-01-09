@@ -9,6 +9,7 @@ import {
   setDoc,
 } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { timestamp } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
@@ -28,7 +29,8 @@ export class RegisterComponent implements OnInit {
     private firestore: Firestore,
     private authService: FirebaseAuthService,
     private fb: FormBuilder,
-    private validators: ValidatorsService
+    private validators: ValidatorsService,
+    private router: Router
   ) {
     this.registerForm = this.fb.group(
       {
@@ -56,8 +58,8 @@ export class RegisterComponent implements OnInit {
         .register(email, password)
         .then((result) => {
           console.log(result);
-          this.addEmployee('', '', this.authService.createdUser?.email, '');
           this.isLoading = false;
+          this.router.navigate(['/login']);
         })
         .catch((error) => {
           alert(error.message);
@@ -81,7 +83,7 @@ export class RegisterComponent implements OnInit {
     data.role = 'user';
     data.uid = this.authService.createdUser?.uid;
 
-    setDoc(doc(this.authService.firestore, 'users', data.uid), data, {
+    setDoc(doc(this.firestore, 'users', data.uid), data, {
       merge: true,
     }).then(console.log, console.error);
   }
