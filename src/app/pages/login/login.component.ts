@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
           if (userCredential && userCredential.uid) {
             const userId = userCredential.uid;
             localStorage.setItem('userId', userId);
-            this.toast.open('Login successful.', 2000);
+            this.toast.open('Login successful.');
             this.router.navigate(['/']);
           }
           this.isLoading = false;
