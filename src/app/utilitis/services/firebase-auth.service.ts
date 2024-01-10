@@ -4,18 +4,28 @@ import {
   User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   updateProfile,
 } from '@angular/fire/auth';
 import {
   DocumentData,
+  Firestore,
   Query,
+  QueryDocumentSnapshot,
   QuerySnapshot,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Member } from '../types';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastComponent } from 'src/app/components/toast/toast.component';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -26,9 +36,17 @@ export class FirebaseAuthService {
   createdUser?: User;
   currentUser?: User;
   authService: any;
-  firestore: any;
+  // firestore: any;
+  isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
 
-  constructor(private auth: Auth) {}
+  constructor(
+    private auth: Auth,
+    private snackBar: MatSnackBar,
+    protected firestore: Firestore
+  ) {}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('userId');
@@ -43,8 +61,17 @@ export class FirebaseAuthService {
       );
 
       this.currentUser = credentials.user;
+      this.snackBar.openFromComponent(ToastComponent, {
+        duration: 3000,
+        data: 'Login successful!',
+      });
+      this.isLoggedInSubject.next(true);
       return credentials.user;
     } catch {
+      this.snackBar.openFromComponent(ToastComponent, {
+        duration: 3000,
+        data: 'Login unsuccessful! Try again',
+      });
       throw new Error('Invalid credentials. Please try again');
     }
   }
@@ -59,52 +86,54 @@ export class FirebaseAuthService {
     alert(`Welcome ${this.createdUser.email}!`);
     return credentials.user;
   }
-  async updateProfile(firstName: string, lastName: string, role: string) {
-    const userId = localStorage.getItem('userId');
-    if (!this.currentUser || !!userId) return;
+  // async updateProfile(){
 
-    try {
-      await updateProfile(this.currentUser, {
-        displayName: `${firstName} ${lastName}`,
-      });
-
-      const userRef = this.firestore.doc(`users/${userId}`);
-      await userRef.set({ firstName, lastName, role }, { merge: true });
-
-      // Optionally, update the local currentUser object with the updated display name
-      // this.currentUser.displayName = `${firstName} ${lastName}`;
-
-      return true;
-    } catch (error) {
-      throw new Error('Error updating profile');
-    }
-  }
-  // async getUserProfileData(): Promise<any>{
-  //   try{
-  //     const userId = localStorage.getItem('userId');
-  //     if(!userId){
-  //       throw new Error("User ID not found")
-  //     }
-  //     const userDoc = await this.firestore
-  //   }
   // }
-  async getData(collectionName: string): Promise<any[]> {
-    try {
-      const collectionRef = this.firestore.collection(collectionName);
-      const querySnapshot: QuerySnapshot<DocumentData> =
-        await collectionRef.get();
-      const documentsData: DocumentData[] = querySnapshot.docs.map((doc) =>
-        doc.data()
-      );
-      return documentsData;
-    } catch (error) {
-      throw new Error('Error fetching data');
+
+  async updateUserProfile(
+    id: string,
+    firstName: string,
+    lastName: string,
+    role: string,
+    email: string,
+    birthDate: Date
+  ): Promise<void> {
+    const userRef = doc(this.firestore, 'users', id);
+    const userDoc = await getDoc(userRef);
+
+    const userData = {
+      uid: id,
+      firstName,
+      lastName,
+      role,
+      email,
+      birthDate,
+    };
+
+    if (userDoc.exists()) {
+      // Update existing user profile in the database
+      await setDoc(userRef, userData, { merge: true });
+    } else {
+      // Create a new user profile in the database
+      await setDoc(userRef, userData);
     }
   }
-  logout() {
-    this.authService
-      .logout()
-      .then(localStorage.removeItem('userId'))
-      .catch(console.error);
+
+  async readMembersData(fdb: any, coll: string): Promise<Member[]> {
+    const usersDBCol = await collection(fdb, coll);
+    const fetchedUsers: Member[] = [];
+    const querySnapshot = await getDocs(usersDBCol);
+    querySnapshot.forEach((doc) => {
+      fetchedUsers.push(doc.data() as Member);
+    });
+
+    return fetchedUsers;
+  }
+
+  async logout() {
+    await signOut(this.auth);
+    this.currentUser = undefined;
+    this.isLoggedInSubject.next(false);
+    return;
   }
 }

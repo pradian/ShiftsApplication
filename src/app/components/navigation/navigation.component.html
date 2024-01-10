@@ -3,10 +3,34 @@
     <h1>Shifts logo</h1>
   </div>
   <div>
-    <ul class="flex gap-2 list-none">
-      <li class="cursor-pointer">Shifts</li>
-      <li class="cursor-pointer">Add shift</li>
+    <ul class="flex gap-6 list-none font-black text-sky-700" *ngIf="isLoggedIn">
+      <li class="cursor-pointer text-xl">Shifts</li>
+      <li class="cursor-pointer text-xl">Add shift</li>
+    </ul>
+    <ul
+      class="flex gap-6 list-none font-black text-sky-700"
+      *ngIf="!isLoggedIn"
+    >
+      <li class="cursor-pointer text-xl">Login</li>
+      <li class="cursor-pointer text-xl">Register</li>
     </ul>
   </div>
-  <div>Welcome user</div>
+  <div>
+    <ng-container *ngIf="isLoggedIn">
+      Welcome
+      <span
+        routerLink="/userprofile"
+        class="hover:underline cursor-pointer text-sky-700 font-medium"
+      >
+        {{ userData?.firstName }} {{ userData?.lastName }}</span
+      >
+      |
+      <button
+        class="font-semibold text-lg text-red-700 cursor-pointer underline"
+        (click)="handleLogout()"
+      >
+        Logout
+      </button></ng-container
+    >
+  </div>
 </div>

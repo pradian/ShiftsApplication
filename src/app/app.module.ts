@@ -16,7 +16,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
-
+import { ToastComponent } from './components/toast/toast.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +27,7 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
     NavigationComponent,
     HomepageComponent,
     UserProfileComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,6 +35,8 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
     AppRoutingModule,
     MatProgressSpinnerModule,
     BrowserAnimationsModule,
+    MatSnackBarModule,
+    MatButtonModule,
     AngularFireModule,
     AngularFirestoreModule,
     provideFirebaseApp(() =>
@@ -48,7 +53,7 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
   ],
-  providers: [],
+  providers: [ToastComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

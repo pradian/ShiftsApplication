@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
-import { User } from '@angular/fire/auth';
+// import { User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-
+import { ToastComponent } from 'src/app/components/toast/toast.component';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toast: ToastComponent // private _snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -37,12 +39,13 @@ export class LoginComponent implements OnInit {
           if (userCredential && userCredential.uid) {
             const userId = userCredential.uid;
             localStorage.setItem('userId', userId);
+            this.toast.open('Login successful.');
             this.router.navigate(['/']);
           }
           this.isLoading = false;
         })
         .catch(() => {
-          alert('Email or password is incorect. Please try again.');
+          this.toast.open('Email or password is incorect. Please try again.');
           this.isLoading = false;
         });
     } else {

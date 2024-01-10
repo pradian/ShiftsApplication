@@ -1,7 +1,16 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { timestamp } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
 
@@ -20,7 +29,8 @@ export class RegisterComponent implements OnInit {
     private firestore: Firestore,
     private authService: FirebaseAuthService,
     private fb: FormBuilder,
-    private validators: ValidatorsService
+    private validators: ValidatorsService,
+    private router: Router
   ) {
     this.registerForm = this.fb.group(
       {
@@ -49,6 +59,7 @@ export class RegisterComponent implements OnInit {
         .then((result) => {
           console.log(result);
           this.isLoading = false;
+          this.router.navigate(['/login']);
         })
         .catch((error) => {
           alert(error.message);
@@ -57,5 +68,23 @@ export class RegisterComponent implements OnInit {
     } else {
       this.registerForm?.markAllAsTouched();
     }
+  }
+  addEmployee(
+    firstName: string,
+    lastName: string,
+    email: string | undefined | null,
+    birthDate: Date | string
+  ) {
+    const data: any = {};
+    if (firstName) data.firstName = firstName;
+    if (lastName) data.lastName = lastName;
+    if (email) data.email = email;
+    if (birthDate) data.bithDate = birthDate;
+    data.role = 'user';
+    data.uid = this.authService.createdUser?.uid;
+
+    setDoc(doc(this.firestore, 'users', data.uid), data, {
+      merge: true,
+    }).then(console.log, console.error);
   }
 }
