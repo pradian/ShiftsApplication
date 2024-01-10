@@ -1,3 +1,4 @@
+import { MatIconModule } from '@angular/material/icon';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -19,6 +20,7 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
 import { ToastComponent } from './components/toast/toast.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+// import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +39,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BrowserAnimationsModule,
     MatSnackBarModule,
     MatButtonModule,
+    MatIconModule,
     AngularFireModule,
     AngularFirestoreModule,
     provideFirebaseApp(() =>
