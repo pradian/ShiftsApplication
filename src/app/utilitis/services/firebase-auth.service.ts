@@ -61,17 +61,18 @@ export class FirebaseAuthService {
       );
 
       this.currentUser = credentials.user;
-      this.snackBar.openFromComponent(ToastComponent, {
-        duration: 3000,
-        data: 'Login successful!',
-      });
+      localStorage.setItem('userId', this.currentUser.uid);
+      // this.snackBar.openFromComponent(ToastComponent, {
+      //   duration: 3000,
+      //   data: 'Login successful!',
+      // });
       this.isLoggedInSubject.next(true);
       return credentials.user;
     } catch {
-      this.snackBar.openFromComponent(ToastComponent, {
-        duration: 3000,
-        data: 'Login unsuccessful! Try again',
-      });
+      // this.snackBar.open(message, {
+      //   duration: 3000,
+      //   data: 'Login unsuccessful! Try again',
+      // });
       throw new Error('Invalid credentials. Please try again');
     }
   }
@@ -86,9 +87,6 @@ export class FirebaseAuthService {
     alert(`Welcome ${this.createdUser.email}!`);
     return credentials.user;
   }
-  // async updateProfile(){
-
-  // }
 
   async updateUserProfile(
     id: string,
@@ -120,7 +118,7 @@ export class FirebaseAuthService {
   }
 
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {
-    const usersDBCol = await collection(fdb, coll);
+    const usersDBCol = collection(fdb, coll);
     const fetchedUsers: Member[] = [];
     const querySnapshot = await getDocs(usersDBCol);
     querySnapshot.forEach((doc) => {

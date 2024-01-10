@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-// import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-toast',
   templateUrl: './toast.component.html',
@@ -14,12 +14,10 @@ export class ToastComponent {
 
   open(message: string, duration = 3000) {
     this.message = message;
-    this.snackBar.openFromComponent(ToastComponent, {
-      duration: duration,
-    });
+    this.snackBar.open(message, undefined, { duration: 3000 });
   }
 
-  dismiss() {
-    this.snackBar.dismiss();
-  }
+  // dismiss() {
+  //   this.snackBar.dismiss();
+  // }
 }

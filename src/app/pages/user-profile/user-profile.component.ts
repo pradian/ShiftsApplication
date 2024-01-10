@@ -56,8 +56,7 @@ export class UserProfileComponent implements OnInit {
             firstName: this.userData.firstName || '',
             lastName: this.userData.lastName || '',
             role: this.userData.role || '',
-            birthDate:
-              this.formatISODate(this.userData.birthDate.toDate()) || '',
+            birthDate: this.userData.birthDate || '',
             email: this.userData.email || '',
           });
         }
