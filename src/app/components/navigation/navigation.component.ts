@@ -22,7 +22,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private router: Router,
-    private auth: Auth
+    private auth: Auth,
+    private _snackBar: MatSnackBar
   ) {}
   ngOnInit(): void {
     this.checkUserStatus();
