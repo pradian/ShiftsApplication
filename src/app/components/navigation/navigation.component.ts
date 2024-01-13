@@ -75,7 +75,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.updateLoginStatus();
 
         this.router.navigate(['/login']);
-        this._snackBar.open('Successfuly logged out');
+        this._snackBar.open('Successfuly logged out.', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+          panelClass: ['custom-snackBar', 'snackbar-success'],
+        });
       })
       .catch((error) => {
         console.log('Error');
