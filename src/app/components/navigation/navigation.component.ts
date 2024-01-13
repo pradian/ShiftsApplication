@@ -28,7 +28,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.auth.onAuthStateChanged(() => this.checkUserStatus());
 
-    this.checkUserStatus();
+    // this.checkUserStatus();
 
     this.router.events
       .pipe(
@@ -73,7 +73,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
       .then(() => {
         localStorage.removeItem('userId');
         this.updateLoginStatus();
-
         this.router.navigate(['/login']);
         this._snackBar.open('Successfuly logged out.', 'Close', {
           duration: 3000,
