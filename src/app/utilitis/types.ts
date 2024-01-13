@@ -9,3 +9,13 @@ export type Member = {
   role: string;
   uid: string;
 };
+
+export type Shift = {
+  startDate: Date;
+  endDate: Date;
+  wage: number;
+  workPlace: string;
+  shiftName: string;
+  userId: string;
+  comments: string;
+};
