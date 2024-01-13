@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject, Subscription, filter, takeUntil } from 'rxjs';
@@ -19,9 +20,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore,
-    private router: Router
+    private router: Router,
+    private auth: Auth
   ) {}
   ngOnInit(): void {
+    this.auth.onAuthStateChanged(() => this.checkUserStatus());
+
     this.checkUserStatus();
 
     this.router.events
