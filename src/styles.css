@@ -12,12 +12,17 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-
-html,
-body {
-  height: 100%;
+.custom-snackbar.mat-mdc-snack-bar-container.mdc-snackbar__surface {
+  border-radius: 8px !important;
 }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+.custom-snackbar.mat-mdc-button.mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+.snackbar-success.mdc-snackbar__surface {
+  background-color: lightgreen !important;
+}
+.snackbar-success.mdc-snackbar__label {
+  color: white !important;
 }

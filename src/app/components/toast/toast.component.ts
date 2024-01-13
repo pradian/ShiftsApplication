@@ -14,7 +14,10 @@ export class ToastComponent {
 
   open(message: string, duration = 3000) {
     this.message = message;
-    this.snackBar.open(message, undefined, { duration: 3000 });
+    this.snackBar.open(message, undefined, {
+      duration: 3000,
+      panelClass: ['custom-snackbar', 'snackbar-success'],
+    });
   }
 
   // dismiss() {

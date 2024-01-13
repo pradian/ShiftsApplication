@@ -5,6 +5,7 @@ import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.ser
 // import { User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastComponent } from 'src/app/components/toast/toast.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 // import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
     private firestore: Firestore,
     private fb: FormBuilder,
     private router: Router,
-    private toast: ToastComponent // private _snackBar: MatSnackBar
+    private toast: ToastComponent,
+    private _snackBar: MatSnackBar // private _snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -39,13 +41,23 @@ export class LoginComponent implements OnInit {
           if (userCredential && userCredential.uid) {
             const userId = userCredential.uid;
             localStorage.setItem('userId', userId);
-            this.toast.open('Login successful.');
+            this._snackBar.open('Login successful.', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+              panelClass: ['custom-snackBar', 'snackbar-success'],
+            });
             this.router.navigate(['/']);
           }
           this.isLoading = false;
         })
         .catch(() => {
-          this.toast.open('Email or password is incorect. Please try again.');
+          this._snackBar.open('Invalid email or password', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top',
+            panelClass: ['custom-snackBar', 'snackbar-error'],
+          });
           this.isLoading = false;
         });
     } else {

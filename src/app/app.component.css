@@ -1,0 +1,14 @@
+.custom-snackbar.mat-mdc-snack-bar-container.mdc-snackbar__surface {
+  border-radius: 8px !important;
+}
+
+.custom-snackbar.mat-mdc-button.mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+.snackbar-success.mdc-snackbar__surface {
+  background-color: greenyellow !important;
+}
+.snackbar-success.mdc-snackbar__label {
+  color: white !important;
+}
