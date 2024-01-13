@@ -3,7 +3,7 @@ import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subject, Subscription, filter, takeUntil } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
 
@@ -22,13 +22,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private router: Router,
-    private _snackBar: MatSnackBar,
     private auth: Auth
   ) {}
   ngOnInit(): void {
-    this.auth.onAuthStateChanged(() => this.checkUserStatus());
-
-    // this.checkUserStatus();
+    this.checkUserStatus();
 
     this.router.events
       .pipe(
@@ -53,6 +50,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   async getUser() {
+    this.userId = localStorage.getItem('userId');
     const users = await this.authService
       .readMembersData(this.firestore, 'users')
 

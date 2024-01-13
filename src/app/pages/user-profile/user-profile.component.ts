@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, doc, docSnapshots, getDoc } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
 
@@ -22,7 +24,9 @@ export class UserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
     private auth: Auth,
-    protected firestore: Firestore
+    protected firestore: Firestore,
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.userProfileForm = this.fb.group({
       firstName: ['', Validators.min(3)],
@@ -56,8 +60,7 @@ export class UserProfileComponent implements OnInit {
             firstName: this.userData.firstName || '',
             lastName: this.userData.lastName || '',
             role: this.userData.role || '',
-            birthDate:
-              this.formatISODate(this.userData.birthDate.toDate()) || '',
+            birthDate: this.userData.birthDate || '',
             email: this.userData.email || '',
           });
         }
@@ -76,7 +79,10 @@ export class UserProfileComponent implements OnInit {
         .updateUserProfile(this.id, firstName, lastName, role, email, birthDate)
         .then(
           () => {
+            this.router.navigate(['/']);
             console.log('Profile updated successfully!');
+            this._snackBar.open('Profile updated successfuly.');
+
             // Perform any additional actions upon successful update if needed
           },
           (error) => {
