@@ -1,1 +1,16 @@
 <p>shifts works!</p>
+<div class="mt-5">
+  <div *ngFor="let shift of userShift">
+    <ul class="w-80 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] p-2">
+      <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
+      <li>
+        Start Date:
+        {{ shift.dateStart.toDate() | date : "medium" }}
+      </li>
+      <li>End Date: {{ shift.dateEnd.toDate() | date : "medium" }}</li>
+      <li>Wage: {{ shift.wage }} $</li>
+      <li>workPlace {{ shift.position }}</li>
+      <li>Comments: {{ shift.comments }}</li>
+    </ul>
+  </div>
+</div>

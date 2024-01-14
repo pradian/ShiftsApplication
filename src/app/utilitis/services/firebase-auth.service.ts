@@ -15,7 +15,7 @@ import {
   setDoc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Member } from '../types';
+import { Member, Shift } from '../types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -101,6 +101,28 @@ export class FirebaseAuthService {
     }
   }
 
+  async addUserShift(
+    dateStart: Date,
+    dateEnd: Date,
+    wage: number,
+    position: string,
+    name: string,
+    userId: string,
+    comments: string
+  ): Promise<void> {
+    const shiftRef = doc(this.firestore, 'shifts');
+    const shiftData = {
+      dateStart,
+      dateEnd,
+      wage,
+      position,
+      name,
+      userId,
+      comments,
+    };
+    await setDoc(shiftRef, shiftData);
+  }
+
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {
     const usersDBCol = collection(fdb, coll);
     const fetchedUsers: Member[] = [];
@@ -110,6 +132,17 @@ export class FirebaseAuthService {
     });
 
     return fetchedUsers;
+  }
+
+  async readUserShifts(fdb: any, coll: string, userId: any): Promise<Shift[]> {
+    const usersShifts: Shift[] = [];
+    const shiftsDBCol = collection(fdb, coll);
+    const querySnapshot = await getDocs(shiftsDBCol);
+    querySnapshot.forEach((doc) => {
+      usersShifts.push(doc.data() as Shift);
+    });
+
+    return usersShifts;
   }
 
   async logout() {

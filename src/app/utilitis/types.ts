@@ -11,11 +11,11 @@ export type Member = {
 };
 
 export type Shift = {
-  startDate: Date;
-  endDate: Date;
+  dateStart: Timestamp;
+  dateEnd: Timestamp;
   wage: number;
-  workPlace: string;
-  shiftName: string;
+  position: string;
+  name: string;
   userId: string;
   comments: string;
 };

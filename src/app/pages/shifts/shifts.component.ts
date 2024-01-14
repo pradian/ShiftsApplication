@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Firestore } from '@angular/fire/firestore';
@@ -8,12 +8,36 @@ import { Firestore } from '@angular/fire/firestore';
   templateUrl: './shifts.component.html',
   styleUrls: ['./shifts.component.css'],
 })
-export class ShiftsComponent implements OnChanges {
-  userShifts: Shift[] = [];
+export class ShiftsComponent implements OnChanges, OnInit {
+  userShift: Shift[] = [];
+  userId?: string | null = localStorage.getItem('userId');
 
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnInit(): void {
+    console.log(this.userShift);
+
+    this.fetchUserShifts();
+    console.log(this.userShift);
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.userShift;
+  }
+
+  async fetchUserShifts() {
+    const data = await this.authService.readUserShifts(
+      this.firestore,
+      'shifts',
+      this.userId
+    );
+    if (data) {
+      data.forEach((shift) => {
+        if (shift.userId === this.userId) {
+          this.userShift.push(shift);
+        }
+      });
+    }
+  }
 }
