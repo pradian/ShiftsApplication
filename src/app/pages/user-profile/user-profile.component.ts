@@ -81,7 +81,7 @@ export class UserProfileComponent implements OnInit {
           () => {
             this.router.navigate(['/']);
             console.log('Profile updated successfully!');
-            this._snackBar.open('Profile updated successfuly.');
+            this.authService.showSnackBar('Profile updated successfuly.');
 
             // Perform any additional actions upon successful update if needed
           },

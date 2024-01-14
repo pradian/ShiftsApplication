@@ -73,14 +73,16 @@ export class NavigationComponent implements OnInit, OnDestroy {
         localStorage.removeItem('userId');
         this.updateLoginStatus();
         this.router.navigate(['/login']);
-        this._snackBar.open('Successfuly logged out.', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'top',
-          panelClass: ['custom-snackBar', 'snackbar-success'],
-        });
+        // this._snackBar.open('Successfuly logged out.', 'Close', {
+        //   duration: 3000,
+        //   horizontalPosition: 'end',
+        //   verticalPosition: 'top',
+        //   panelClass: ['custom-snackBar', 'snackbar-success'],
+        // });
+        this.authService.showSnackBar('Successfuly logged out.');
       })
       .catch((error) => {
+        this.authService.showSnackBar('There was an error when logged out.');
         console.log('Error');
       });
   }

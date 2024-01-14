@@ -28,6 +28,7 @@ export class FirebaseAuthService {
   createdUser?: User;
   currentUser?: User;
   authService: any;
+  // firestore: any;
   isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
@@ -35,7 +36,7 @@ export class FirebaseAuthService {
 
   constructor(
     private auth: Auth,
-    private snackBar: MatSnackBar,
+    private _snackBar: MatSnackBar,
     protected firestore: Firestore
   ) {}
 
@@ -53,17 +54,9 @@ export class FirebaseAuthService {
 
       this.currentUser = credentials.user;
       localStorage.setItem('userId', this.currentUser.uid);
-      // this.snackBar.openFromComponent(ToastComponent, {
-      //   duration: 3000,
-      //   data: 'Login successful!',
-      // });
       this.isLoggedInSubject.next(true);
       return credentials.user;
     } catch {
-      // this.snackBar.open(message, {
-      //   duration: 3000,
-      //   data: 'Login unsuccessful! Try again',
-      // });
       throw new Error('Invalid credentials. Please try again');
     }
   }
@@ -124,5 +117,16 @@ export class FirebaseAuthService {
     this.currentUser = undefined;
     this.isLoggedInSubject.next(false);
     return;
+  }
+  showSnackBar(
+    message: string,
+    snackBarClass: string = 'snack-bar-success'
+  ): void {
+    this._snackBar.open(message, 'Close!', {
+      duration: 3000,
+      panelClass: [snackBarClass],
+      verticalPosition: 'bottom',
+      horizontalPosition: 'right',
+    });
   }
 }

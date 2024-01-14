@@ -1,4 +1,4 @@
-import { MatIconModule } from '@angular/material/icon';
+// import { MatIconModule } from '@angular/material/icon';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -13,14 +13,15 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './pages/login/login.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+// import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { ToastComponent } from './components/toast/toast.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+// import { MatButtonModule } from '@angular/material/button';
+// import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ShiftsComponent } from './pages/shifts/shifts.component';
+import { MaterialModule } from './utilitis/material/material-module';
 // import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
@@ -37,11 +38,12 @@ import { ShiftsComponent } from './pages/shifts/shifts.component';
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    MatProgressSpinnerModule,
+    MaterialModule,
+    // MatProgressSpinnerModule,
     BrowserAnimationsModule,
-    MatSnackBarModule,
-    MatButtonModule,
-    MatIconModule,
+    // MatSnackBarModule,
+    // MatButtonModule,
+    // MatIconModule,
     AngularFireModule,
     AngularFirestoreModule,
     provideFirebaseApp(() =>

@@ -5,6 +5,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { authGuard } from './utilitis/guards/auth.guard';
+import { ShiftsComponent } from './pages/shifts/shifts.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,12 @@ const routes: Routes = [
   {
     path: 'userprofile',
     component: UserProfileComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'shifts',
+    component: ShiftsComponent,
+    canActivate: [authGuard],
   },
 ];
 

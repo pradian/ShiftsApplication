@@ -1,16 +1,7 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import {
-  Firestore,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-} from '@angular/fire/firestore';
+import { Component, OnInit } from '@angular/core';
+import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { timestamp } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
 
@@ -25,7 +16,6 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   isLoading = false;
   constructor(
-    private auth: Auth,
     private firestore: Firestore,
     private authService: FirebaseAuthService,
     private fb: FormBuilder,
@@ -60,10 +50,15 @@ export class RegisterComponent implements OnInit {
           console.log(result);
           this.isLoading = false;
           this.router.navigate(['/login']);
+          this.authService.showSnackBar('Successfuly registered');
         })
         .catch((error) => {
           alert(error.message);
           this.isLoading = false;
+          this.authService.showSnackBar(
+            'Error, please check the form',
+            'snack-bar-warning'
+          );
         });
     } else {
       this.registerForm?.markAllAsTouched();

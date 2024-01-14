@@ -1,14 +1,22 @@
-<div class="w-full h-full flex justify-between items-center p-4">
-  <div>
-    <h1>Shifts logo</h1>
-  </div>
-  <div>
-    <ul class="flex gap-6 list-none font-black text-sky-700" *ngIf="isLoggedIn">
-      <li class="cursor-pointer text-xl">Shifts</li>
+<div class="w-full h-full flex flex-col justify-between p-4">
+  <div class="flex items-start justify-between flex-col gap-5 w-full">
+    <img
+      src="../../../assets/images/logo.png"
+      alt="Shift logo"
+      class="text-left h-9"
+    />
+    <!-- </div> -->
+    <!-- <div> -->
+    <div class="w-full border-b-sky-700 border-b-2 h-1"></div>
+    <ul
+      class="flex flex-col gap-6 list-none font-black text-sky-700"
+      *ngIf="isLoggedIn"
+    >
+      <li class="cursor-pointer text-xl hover:color">Shifts</li>
       <li class="cursor-pointer text-xl">Add shift</li>
     </ul>
     <ul
-      class="flex gap-6 list-none font-black text-sky-700"
+      class="flex flex-col gap-6 list-none font-black text-sky-700"
       *ngIf="!isLoggedIn"
     >
       <li class="cursor-pointer text-xl">Login</li>
@@ -16,13 +24,14 @@
     </ul>
   </div>
   <div>
-    <ng-container *ngIf="isLoggedIn">
-      Welcome
+    <ng-container *ngIf="isLoggedIn" class="flex flex-col">
+      <p>Welcome</p>
       <span
         routerLink="/userprofile"
         class="hover:underline cursor-pointer text-sky-700 font-medium"
       >
-        {{ userData?.firstName }} {{ userData?.lastName }}</span
+        <!-- {{ userData?.firstName }} -->
+        {{ userData?.lastName }}</span
       >
       |
       <button
@@ -30,7 +39,7 @@
         (click)="handleLogout()"
       >
         Logout
-      </button></ng-container
-    >
+      </button>
+    </ng-container>
   </div>
 </div>
