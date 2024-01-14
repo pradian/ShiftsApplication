@@ -8,6 +8,7 @@ import {
 } from '@angular/fire/auth';
 import {
   Firestore,
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -111,16 +112,18 @@ export class FirebaseAuthService {
     comments: string
   ): Promise<void> {
     const shiftRef = doc(this.firestore, 'shifts');
+    const shiftDoc = await getDoc(shiftRef);
     const shiftData = {
       dateStart,
       dateEnd,
       wage,
       position,
       name,
-      userId,
+      userId: userId,
       comments,
     };
-    await setDoc(shiftRef, shiftData);
+
+    await addDoc(collection(this.firestore, 'shifts'), shiftData);
   }
 
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {

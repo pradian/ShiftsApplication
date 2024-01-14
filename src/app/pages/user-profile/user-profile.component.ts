@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { Firestore, doc, docSnapshots, getDoc } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
@@ -23,9 +21,7 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
-    private auth: Auth,
     protected firestore: Firestore,
-    private _snackBar: MatSnackBar,
     private router: Router
   ) {
     this.userProfileForm = this.fb.group({

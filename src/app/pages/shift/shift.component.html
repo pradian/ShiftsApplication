@@ -1,0 +1,105 @@
+<p>shift works!</p>
+<div class="flex flex-col justify-center items-center font-normal h-full">
+  <h1 class="m-5 text-xl">Update profile</h1>
+  <form
+    [formGroup]="shiftForm"
+    (ngSubmit)="handleAddShift()"
+    class="m-4 shadow-md p-5 w-80"
+  >
+    <div class="my-4 h-14">
+      <label for="name" class="text-cyan-800 my-4">Shift Name</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div *ngIf="shiftForm.get('name')?.errors">
+        <small class="text-danger"
+          >Minimum 3 characters required for Shift Name</small
+        >
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="dateStart" class="text-cyan-800 my-4">Start Date</label>
+      <input
+        type="datetime-local"
+        id="dateStart"
+        formControlName="dateStart"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          shiftForm.get('dateStart')?.invalid &&
+          shiftForm.get('dateStart')?.touched
+        "
+      >
+        <small class="text-danger">Full date is required</small>
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="dateEnd" class="text-cyan-800 my-4">End Date</label>
+      <input
+        type="datetime-local"
+        id="dateEnd"
+        formControlName="dateEnd"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          shiftForm.get('dateEnd')?.invalid && shiftForm.get('dateEnd')?.touched
+        "
+      >
+        <small class="text-danger">Full date is required</small>
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="wage" class="text-cyan-800 my-4">Wage / h</label>
+      <input
+        type="number"
+        id="wage"
+        formControlName="wage"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div *ngIf="shiftForm.get('dateEnd')?.errors">
+        <small class="text-danger">Wage is required</small>
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="position" class="text-cyan-800 my-4">Your position</label>
+      <input
+        type="text"
+        id="position"
+        formControlName="position"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div *ngIf="shiftForm.get('position')?.errors">
+        <small class="text-danger">Position is required</small>
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="comments" class="text-cyan-800 my-4">Shift comments</label>
+      <input
+        type="text"
+        id="comments"
+        formControlName="comments"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+    </div>
+    <div></div>
+    <!-- Add other profile fields as needed -->
+
+    <button
+      type="submit"
+      [disabled]="shiftForm.invalid"
+      class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+    >
+      Add shift
+    </button>
+  </form>
+</div>

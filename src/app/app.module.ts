@@ -22,6 +22,7 @@ import { ToastComponent } from './components/toast/toast.component';
 // import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ShiftsComponent } from './pages/shifts/shifts.component';
 import { MaterialModule } from './utilitis/material/material-module';
+import { ShiftComponent } from './pages/shift/shift.component';
 // import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { MaterialModule } from './utilitis/material/material-module';
     UserProfileComponent,
     ToastComponent,
     ShiftsComponent,
+    ShiftComponent,
   ],
   imports: [
     BrowserModule,
