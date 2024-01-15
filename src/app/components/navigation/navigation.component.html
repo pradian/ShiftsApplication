@@ -7,7 +7,7 @@
     />
     <!-- </div> -->
     <!-- <div> -->
-    <div class="w-full border-b-sky-700 border-b-2 h-1"></div>
+    <div class="w-full border-b-sky-500 border-b-[0.5px] h-1"></div>
     <ul
       class="flex flex-col list-none font-medium text-sky-700 w-full"
       *ngIf="isLoggedIn"
@@ -29,6 +29,7 @@
       class="flex flex-col gap-1 list-none font-black text-sky-700"
       *ngIf="!isLoggedIn"
     >
+      <div class="w-full border-b-sky-500 border-b-1 h-1"></div>
       <li class="cursor-pointer text-xl">Login</li>
       <li class="cursor-pointer text-xl">Register</li>
     </ul>
