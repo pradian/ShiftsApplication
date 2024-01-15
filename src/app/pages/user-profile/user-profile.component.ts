@@ -17,6 +17,7 @@ export class UserProfileComponent implements OnInit {
   usersData: Member[] = [];
   userId? = localStorage.getItem('userId');
   id = this.userId + '';
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -67,6 +68,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   async handleUpdateProfile() {
+    this.isLoading = true;
     if (this.userProfileForm.valid) {
       const { firstName, lastName, role, email, birthDate } =
         this.userProfileForm.value;

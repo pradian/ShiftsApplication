@@ -1,7 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-shifts',
@@ -11,22 +11,21 @@ import { Firestore } from '@angular/fire/firestore';
 export class ShiftsComponent implements OnChanges, OnInit {
   userShift: Shift[] = [];
   userId?: string | null = localStorage.getItem('userId');
+  isLoading = false;
 
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore
   ) {}
   ngOnInit(): void {
-    console.log(this.userShift);
-
     this.fetchUserShifts();
-    console.log(this.userShift);
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.userShift;
   }
 
   async fetchUserShifts() {
+    this.isLoading = true;
     const data = await this.authService.readUserShifts(
       this.firestore,
       'shifts',
@@ -35,9 +34,16 @@ export class ShiftsComponent implements OnChanges, OnInit {
     if (data) {
       data.forEach((shift) => {
         if (shift.userId === this.userId) {
+          const shiftWithTotal = shift;
           this.userShift.push(shift);
         }
       });
     }
+    this.isLoading = false;
+  }
+  shiftTotal(startDate: Timestamp, endDate: Timestamp, wage: number) {
+    return Math.round(
+      ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
+    );
   }
 }

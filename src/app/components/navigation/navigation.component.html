@@ -9,14 +9,24 @@
     <!-- <div> -->
     <div class="w-full border-b-sky-700 border-b-2 h-1"></div>
     <ul
-      class="flex flex-col gap-6 list-none font-black text-sky-700"
+      class="flex flex-col list-none font-medium text-sky-700 w-full"
       *ngIf="isLoggedIn"
     >
-      <li class="cursor-pointer text-lg" routerLink="/shifts">Shifts</li>
-      <li class="cursor-pointer text-lg" routerLink="/shift">Add shift</li>
+      <li
+        class="cursor-pointer hover:bg-orange-200 w-full p-1 rounded-md"
+        routerLink="/shifts"
+      >
+        Shifts
+      </li>
+      <li
+        class="cursor-pointer hover:bg-orange-200 w-full p-1 rounded-md"
+        routerLink="/shift"
+      >
+        Add shift
+      </li>
     </ul>
     <ul
-      class="flex flex-col gap-6 list-none font-black text-sky-700"
+      class="flex flex-col gap-1 list-none font-black text-sky-700"
       *ngIf="!isLoggedIn"
     >
       <li class="cursor-pointer text-xl">Login</li>

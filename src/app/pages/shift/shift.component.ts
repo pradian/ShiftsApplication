@@ -13,7 +13,7 @@ export class ShiftComponent {
   shiftForm: FormGroup;
   userId? = localStorage.getItem('userId');
   id = this.userId + '';
-
+  isLoading = false;
   constructor(
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
@@ -25,28 +25,17 @@ export class ShiftComponent {
       dateEnd: ['', Validators.required],
       wage: ['', Validators.required],
       position: ['', Validators.required],
-      name: ['', Validators.min(3)],
+      name: ['', [Validators.min(3), Validators.required]],
       comments: [''],
     });
   }
 
   async handleAddShift() {
-    console.log('Add shift button pressed');
+    this.isLoading = true;
 
     if (this.shiftForm.valid) {
-      console.log("Entering in 'if' ");
-
       const { dateStart, dateEnd, wage, position, name, comments } =
         this.shiftForm.value;
-      console.log(
-        'Form values: ',
-        dateStart,
-        dateEnd,
-        wage,
-        position,
-        name,
-        comments
-      );
 
       await this.authService
         .addUserShift(
@@ -60,15 +49,24 @@ export class ShiftComponent {
         )
         .then(
           () => {
-            console.log('entering in "then"');
-
-            this.router.navigate(['/shifts']);
+            (this.isLoading = false), this.router.navigate(['/shifts']);
             this.authService.showSnackBar('Shift added successfuly.');
           },
           (error) => {
-            console.log('Error adding the shift', error);
+            this.authService.showSnackBar(
+              'Error adding the shift. Name already exists.',
+              'snack-bar-warning'
+            );
+            this.isLoading = false;
           }
-        );
+        )
+        .catch(() => {
+          this.isLoading = false;
+          this.authService.showSnackBar(
+            'Error adding the shift. Name already exists.',
+            'snack-bar-warning'
+          );
+        });
     }
   }
 }

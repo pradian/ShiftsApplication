@@ -8,12 +8,15 @@ import {
 } from '@angular/fire/auth';
 import {
   Firestore,
+  Timestamp,
   addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
+  query,
   setDoc,
+  where,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Member, Shift } from '../types';
@@ -111,11 +114,23 @@ export class FirebaseAuthService {
     userId: string,
     comments: string
   ): Promise<void> {
-    const shiftRef = doc(this.firestore, 'shifts');
-    const shiftDoc = await getDoc(shiftRef);
+    const shiftCollection = collection(this.firestore, 'shifts');
+
+    const existingShiftQuerry = query(
+      shiftCollection,
+      where('name', '==', name),
+      where('userId', '==', userId)
+    );
+    const existingShifts = await getDocs(existingShiftQuerry);
+
+    if (!existingShifts.empty) {
+      throw new Error();
+    }
+    const formattedDateStart = new Date(dateStart);
+    const formattedDateEnd = new Date(dateEnd);
     const shiftData = {
-      dateStart,
-      dateEnd,
+      dateStart: formattedDateStart,
+      dateEnd: formattedDateEnd,
       wage,
       position,
       name,
@@ -123,7 +138,7 @@ export class FirebaseAuthService {
       comments,
     };
 
-    await addDoc(collection(this.firestore, 'shifts'), shiftData);
+    await addDoc(shiftCollection, shiftData);
   }
 
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {
