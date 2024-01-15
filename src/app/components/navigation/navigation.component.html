@@ -25,14 +25,6 @@
         Add shift
       </li>
     </ul>
-    <ul
-      class="flex flex-col gap-1 list-none font-black text-sky-700"
-      *ngIf="!isLoggedIn"
-    >
-      <div class="w-full border-b-sky-500 border-b-1 h-1"></div>
-      <li class="cursor-pointer text-xl">Login</li>
-      <li class="cursor-pointer text-xl">Register</li>
-    </ul>
   </div>
   <div>
     <ng-container *ngIf="isLoggedIn" class="flex flex-col">
