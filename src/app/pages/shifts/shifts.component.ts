@@ -46,4 +46,13 @@ export class ShiftsComponent implements OnChanges, OnInit {
       ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
     );
   }
+  async deleteShift(shiftId: string) {
+    try {
+      w;
+      await this.authService.deleteShift(this.firestore, 'shifts', shiftId);
+      this.userShift = this.userShift.filter((shift) => shift.id !== shiftId);
+    } catch (error) {
+      console.error('error deleting shift: ', error);
+    }
+  }
 }

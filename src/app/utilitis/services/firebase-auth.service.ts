@@ -21,6 +21,7 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Member, Shift } from '../types';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { deleteDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -161,6 +162,16 @@ export class FirebaseAuthService {
     });
 
     return usersShifts;
+  }
+  async deleteShift(fdb: Firestore, coll: string, shiftId: string) {
+    const shiftRef = doc(fdb, coll, shiftId);
+
+    try {
+      await deleteDoc(shiftRef);
+    } catch (error) {
+      console.error('Error deleting shift', error);
+      throw new Error('Unable to delete shift. Please try again');
+    }
   }
 
   async logout() {

@@ -38,7 +38,7 @@
         <li><span class="font-bold">Wage:</span> {{ shift.wage }} $</li>
         <li><span class="font-bold">Work place:</span> {{ shift.position }}</li>
         <li><span class="font-bold">Comments:</span> {{ shift.comments }}</li>
-        <li class="w-full text-lime-800">
+        <li class="w-full text-sky-800 text-lg">
           <span class="font-bold">Total income:</span>
           {{ shiftTotal(shift.dateStart, shift.dateEnd, shift.wage) }} $
         </li>
