@@ -33,7 +33,6 @@ export class FirebaseAuthService {
   createdUser?: User;
   currentUser?: User;
   authService: any;
-  // firestore: any;
   isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
@@ -48,6 +47,8 @@ export class FirebaseAuthService {
   isLoggedIn(): boolean {
     return !!localStorage.getItem('userId');
   }
+
+  // User Login
 
   async login(email: string, password: string) {
     try {
@@ -66,6 +67,8 @@ export class FirebaseAuthService {
     }
   }
 
+  // Register user
+
   async register(email: string, password: string) {
     const credentials = await createUserWithEmailAndPassword(
       this.auth,
@@ -76,6 +79,8 @@ export class FirebaseAuthService {
     alert(`Welcome ${this.createdUser.email}!`);
     return credentials.user;
   }
+
+  // Update user profile
 
   async updateUserProfile(
     id: string,
@@ -105,6 +110,8 @@ export class FirebaseAuthService {
       await setDoc(userRef, userData);
     }
   }
+
+  // Add user shift
 
   async addUserShift(
     dateStart: Date,
@@ -142,6 +149,8 @@ export class FirebaseAuthService {
     await addDoc(shiftCollection, shiftData);
   }
 
+  // Read members data
+
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {
     const usersDBCol = collection(fdb, coll);
     const fetchedUsers: Member[] = [];
@@ -152,6 +161,8 @@ export class FirebaseAuthService {
 
     return fetchedUsers;
   }
+
+  // Read user shifts
 
   async readUserShifts(fdb: any, coll: string, userId: any): Promise<Shift[]> {
     const usersShifts: Shift[] = [];
@@ -165,6 +176,9 @@ export class FirebaseAuthService {
 
     return usersShifts;
   }
+
+  // Delete shifts
+
   async deleteShift(shiftId: string) {
     const shiftRef = doc(this.firestore, 'shifts', shiftId);
 
@@ -176,12 +190,16 @@ export class FirebaseAuthService {
     }
   }
 
+  // Logout
+
   async logout() {
     await signOut(this.auth);
     this.currentUser = undefined;
     this.isLoggedInSubject.next(false);
     return;
   }
+
+  // SnackBar
   showSnackBar(
     message: string,
     snackBarClass: string = 'snack-bar-success'

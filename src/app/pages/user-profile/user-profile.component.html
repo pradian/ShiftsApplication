@@ -1,5 +1,9 @@
-<div class="flex flex-col justify-center items-center font-normal h-full">
-  <h1 class="m-5 text-xl">Update profile</h1>
+<div
+  class="flex flex-col justify-center items-center font-normal h-full w-[calc(100vw-9rem)]"
+>
+  <div class="w-full text-center shadow p-3">
+    <h1 class="mt-5 text-[24px]">User Settings</h1>
+  </div>
   <form
     [formGroup]="userProfileForm"
     (ngSubmit)="handleUpdateProfile()"
@@ -14,7 +18,7 @@
         class="border-b-2 border-b-sky-500 w-full outline-none"
       />
       <div *ngIf="userProfileForm.get('firstName')?.errors">
-        <small class="text-danger"
+        <small class="text-red-700 text-sm"
           >Minimum 3 characters required for First Name</small
         >
       </div>
@@ -29,7 +33,7 @@
         class="border-b-2 border-b-sky-500 w-full outline-none"
       />
       <div *ngIf="userProfileForm.get('lastName')?.errors">
-        <small class="text-danger"
+        <small class="text-red-700 text-sm"
           >Minimum 3 characters required for Last Name</small
         >
       </div>
@@ -59,7 +63,7 @@
           userProfileForm.get('birthDate')?.touched
         "
       >
-        <small class="text-danger">Birth Date is required</small>
+        <small class="text-red-700 text-sm">Birth Date is required</small>
       </div>
     </div>
 
@@ -77,14 +81,14 @@
           userProfileForm.get('email')?.touched
         "
       >
-        <small class="text-danger">Please enter a valid email</small>
+        <small class="text-red-700 text-sm">Please enter a valid email</small>
       </div>
     </div>
     <div>
       Role: {{ userData?.role }} <br />
       User ID: {{ userData?.uid }}
     </div>
-    <!-- Add other profile fields as needed -->
+
     <div *ngIf="isLoading" role="status">
       <svg
         aria-hidden="true"

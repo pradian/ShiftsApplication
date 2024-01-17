@@ -28,25 +28,40 @@
     *ngIf="userShifts.length > 0"
   >
     <div class="ml-2" *ngFor="let shift of userShifts">
-      <ul class="w-70 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] p-2">
-        <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
-        <li>
-          <span class="font-bold">Start Date:</span>
-          {{ shift.dateStart.toDate() | date : "dd/MMM/yyyy HH:MM" }}
-        </li>
-        <li>
-          <span class="font-bold">End Date:</span>
-          {{ shift.dateEnd.toDate() | date : "dd/MMM/yyyy HH:MM" }}
-        </li>
-        <li><span class="font-bold">Wage:</span> {{ shift.wage }} $</li>
-        <li><span class="font-bold">Work place:</span> {{ shift.position }}</li>
-        <li><span class="font-bold">Comments:</span> {{ shift.comments }}</li>
-        <li class="w-full text-sky-800 text-lg">
-          <span class="font-bold">Total income:</span>
-          {{ shiftTotal(shift.dateStart, shift.dateEnd, shift.wage) }} $
-        </li>
-      </ul>
-      <div><button (click)="deleteShift(shift.id)">Delete</button></div>
+      <div
+        class="w-70 shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2"
+      >
+        <ul class="shadow-sm">
+          <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
+          <li>
+            <span class="font-bold">Start Date:</span>
+            {{ shift.dateStart.toDate() | date : "dd/MMM/yyyy HH:MM" }}
+          </li>
+          <li>
+            <span class="font-bold">End Date:</span>
+            {{ shift.dateEnd.toDate() | date : "dd/MMM/yyyy HH:MM" }}
+          </li>
+          <li><span class="font-bold">Wage:</span> {{ shift.wage }} $</li>
+          <li>
+            <span class="font-bold">Work place:</span> {{ shift.position }}
+          </li>
+          <li><span class="font-bold">Comments:</span> {{ shift.comments }}</li>
+          <li class="w-full text-sky-800 text-lg">
+            <span class="font-bold">Total income:</span>
+            {{ shiftTotal(shift.dateStart, shift.dateEnd, shift.wage) }} $
+          </li>
+        </ul>
+        <div class="mt-1 flex justify-between">
+          <button class="flex items-center">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+          <button (click)="deleteShift(shift.id)" class="flex items-center">
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="mt-10" *ngIf="userShifts.length <= 0 && !isLoading">

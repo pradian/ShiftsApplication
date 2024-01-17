@@ -49,6 +49,7 @@ export class RegisterComponent implements OnInit {
         .then((result) => {
           console.log(result);
           this.isLoading = false;
+
           this.router.navigate(['/login']);
           this.authService.showSnackBar('Successfuly registered');
         })

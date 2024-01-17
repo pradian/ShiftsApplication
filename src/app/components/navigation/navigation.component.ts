@@ -6,6 +6,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-navigation',
