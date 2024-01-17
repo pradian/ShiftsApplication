@@ -158,19 +158,21 @@ export class FirebaseAuthService {
     const shiftsDBCol = collection(fdb, coll);
     const querySnapshot = await getDocs(shiftsDBCol);
     querySnapshot.forEach((doc) => {
+      const shiftData = doc.data() as Shift;
+      shiftData.id = doc.id;
       usersShifts.push(doc.data() as Shift);
     });
 
     return usersShifts;
   }
-  async deleteShift(fdb: Firestore, coll: string, shiftId: string) {
-    const shiftRef = doc(fdb, coll, shiftId);
+  async deleteShift(shiftId: string) {
+    const shiftRef = doc(this.firestore, 'shifts', shiftId);
 
     try {
       await deleteDoc(shiftRef);
     } catch (error) {
-      console.error('Error deleting shift', error);
-      throw new Error('Unable to delete shift. Please try again');
+      console.error('Error deleting doc', error);
+      throw new Error('Unable to delete document. Please try again');
     }
   }
 

@@ -1,7 +1,7 @@
 import { Timestamp } from '@angular/fire/firestore';
 
 export type Member = {
-  [x: string]: any;
+  // [x: string]: any;
   birthDate: Timestamp;
   firstName: string;
   lastName: string;
@@ -18,4 +18,5 @@ export type Shift = {
   name: string;
   userId: string;
   comments: string;
+  id: string;
 };

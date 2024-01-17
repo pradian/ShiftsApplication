@@ -23,8 +23,11 @@
     </svg>
     <span class="sr-only">Loading...</span>
   </div>
-  <div class="mt-10 flex flex-wrap flex-row gap-2" *ngIf="userShift.length > 0">
-    <div class="ml-2" *ngFor="let shift of userShift">
+  <div
+    class="mt-10 flex flex-wrap flex-row gap-2"
+    *ngIf="userShifts.length > 0"
+  >
+    <div class="ml-2" *ngFor="let shift of userShifts">
       <ul class="w-70 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] p-2">
         <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
         <li>
@@ -43,9 +46,10 @@
           {{ shiftTotal(shift.dateStart, shift.dateEnd, shift.wage) }} $
         </li>
       </ul>
+      <div><button (click)="deleteShift(shift.id)">Delete</button></div>
     </div>
   </div>
-  <div class="mt-10" *ngIf="userShift.length <= 0 && !isLoading">
+  <div class="mt-10" *ngIf="userShifts.length <= 0 && !isLoading">
     <p>No shifts for this user</p>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
-import { Firestore, Timestamp } from '@angular/fire/firestore';
+import { Firestore, Timestamp, deleteDoc, doc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-shifts',
@@ -9,7 +9,7 @@ import { Firestore, Timestamp } from '@angular/fire/firestore';
   styleUrls: ['./shifts.component.css'],
 })
 export class ShiftsComponent implements OnChanges, OnInit {
-  userShift: Shift[] = [];
+  userShifts: Shift[] = [];
   userId?: string | null = localStorage.getItem('userId');
   isLoading = false;
 
@@ -21,7 +21,7 @@ export class ShiftsComponent implements OnChanges, OnInit {
     this.fetchUserShifts();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.userShift;
+    this.userShifts;
   }
 
   async fetchUserShifts() {
@@ -35,7 +35,7 @@ export class ShiftsComponent implements OnChanges, OnInit {
       data.forEach((shift) => {
         if (shift.userId === this.userId) {
           const shiftWithTotal = shift;
-          this.userShift.push(shift);
+          this.userShifts.push(shift);
         }
       });
     }
@@ -46,13 +46,25 @@ export class ShiftsComponent implements OnChanges, OnInit {
       ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
     );
   }
-  async deleteShift(shiftId: string) {
-    try {
-      w;
-      await this.authService.deleteShift(this.firestore, 'shifts', shiftId);
-      this.userShift = this.userShift.filter((shift) => shift.id !== shiftId);
-    } catch (error) {
-      console.error('error deleting shift: ', error);
-    }
+  deleteShift(shiftId: string) {
+    deleteDoc(doc(this.firestore, 'shifts', shiftId))
+      .then((doc) => {
+        console.log('in then:', doc);
+        console.log('shift id:', shiftId);
+
+        this.authService.showSnackBar('Shift deleted successfuly');
+      })
+      .catch(() => {
+        this.authService.showSnackBar(
+          'Shift was not deleted. Please try again',
+          'snack-bar-warning'
+        );
+      });
   }
+  // removeEmployee(id: string) {
+  //   deleteDoc(doc(this.firestore, 'shifts', id)).then(
+  //     console.log,
+  //     console.error
+  //   );
+  // }
 }
