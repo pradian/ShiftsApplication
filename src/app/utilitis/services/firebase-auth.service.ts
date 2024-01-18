@@ -177,6 +177,96 @@ export class FirebaseAuthService {
     return usersShifts;
   }
 
+  // Calculate total earnings per month
+
+  calculateBestMonth(sortedShifts: Shift[]): string {
+    console.log('Sorted Shifts in calculateBestMonth:', sortedShifts);
+
+    const monthsEarnings: any = [];
+
+    sortedShifts.forEach((shift) => {
+      const date = new Date(shift.dateStart.toMillis());
+      console.log('Shift Date:', date);
+
+      const year = date.getFullYear();
+      const month = date.getMonth();
+
+      const existingMonth = monthsEarnings.find(
+        (item: any) => item.year === year && item.month === month
+      );
+
+      const shiftTotal = this.shiftTotal(
+        shift.dateStart,
+        shift.dateEnd,
+        shift.wage
+      ); // Adjust this line based on your calculation logic
+
+      if (existingMonth) {
+        existingMonth.total += shiftTotal;
+      } else {
+        monthsEarnings.push({
+          year: year,
+          month: month,
+          total: shiftTotal,
+        });
+      }
+    });
+
+    console.log('Months Earnings:', monthsEarnings);
+
+    const sortedMonths = monthsEarnings.sort(
+      (a: { total: number }, b: { total: number }) => b.total - a.total
+    );
+
+    if (sortedMonths.length > 0) {
+      const monthNames = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+
+      return `Your Best Month is: ${monthNames[sortedMonths[0].month]} ${
+        sortedMonths[0].year
+      } with ${sortedMonths[0].total} $`;
+    } else {
+      return 'No shifts found!';
+    }
+  }
+
+  shiftTotal(startDate: Timestamp, endDate: Timestamp, wage: number) {
+    return Math.round(
+      ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
+    );
+  }
+  // Sorted shifts
+
+  async getSortedShifts(userId: string): Promise<Shift[]> {
+    const shiftsCollection = collection(this.firestore, 'shifts');
+    const shiftsQuery = query(shiftsCollection, where('userId', '==', userId));
+    const shiftsSnapshot = await getDocs(shiftsQuery);
+
+    const shifts: Shift[] = [];
+
+    shiftsSnapshot.forEach((doc) => {
+      const shiftData = doc.data() as Shift;
+      shiftData.id = doc.id;
+      shifts.push(shiftData);
+    });
+
+    return shifts.sort(
+      (a, b) => a.dateStart.toMillis() - b.dateStart.toMillis()
+    );
+  }
+
   // Delete shifts
 
   async deleteShift(shiftId: string) {

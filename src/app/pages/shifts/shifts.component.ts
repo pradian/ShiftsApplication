@@ -1,7 +1,13 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
-import { Firestore, Timestamp, deleteDoc, doc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  Timestamp,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-shifts',
@@ -12,6 +18,9 @@ export class ShiftsComponent implements OnChanges, OnInit {
   userShifts: Shift[] = [];
   userId?: string | null = localStorage.getItem('userId');
   isLoading = false;
+  itemsPerPage = 20;
+  currentPage = 1;
+  totalItems = 0;
 
   constructor(
     private authService: FirebaseAuthService,
@@ -32,13 +41,23 @@ export class ShiftsComponent implements OnChanges, OnInit {
       this.userId
     );
     if (data) {
-      data.forEach((shift) => {
-        if (shift.userId === this.userId) {
-          const shiftWithTotal = shift;
-          this.userShifts.push(shift);
-        }
-      });
+      this.totalItems = data.filter(
+        (shift) => shift.userId === this.userId
+      ).length;
+
+      this.userShifts = data
+        .filter((shift) => shift.userId === this.userId)
+        .sort((a, b) => {
+          const dateA = a.dateStart.toMillis();
+          const dateB = b.dateStart.toMillis();
+          return dateB - dateA; // Sort in descending order
+        })
+        .slice(
+          (this.currentPage - 1) * this.itemsPerPage,
+          this.currentPage * this.itemsPerPage
+        );
     }
+
     this.isLoading = false;
   }
   shiftTotal(startDate: Timestamp, endDate: Timestamp, wage: number) {
@@ -61,10 +80,14 @@ export class ShiftsComponent implements OnChanges, OnInit {
         );
       });
   }
-  // removeEmployee(id: string) {
-  //   deleteDoc(doc(this.firestore, 'shifts', id)).then(
-  //     console.log,
-  //     console.error
-  //   );
-  // }
+  editShift(shift: Shift) {
+    updateDoc(doc(this.firestore, 'shifts', shift.id), shift)
+      .then(() => this.authService.showSnackBar('Shift updated successfuly'))
+      .catch(() =>
+        this.authService.showSnackBar(
+          'Shift was not updated. Please try again',
+          'snack-bar-warning'
+        )
+      );
+  }
 }
