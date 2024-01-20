@@ -103,10 +103,8 @@ export class FirebaseAuthService {
     };
 
     if (userDoc.exists()) {
-      // Update existing user profile in the database
       await setDoc(userRef, userData, { merge: true });
     } else {
-      // Create a new user profile in the database
       await setDoc(userRef, userData);
     }
   }
@@ -187,14 +185,10 @@ export class FirebaseAuthService {
   // Calculate total earnings per month
 
   calculateBestMonth(sortedShifts: Shift[]): string {
-    console.log('Sorted Shifts in calculateBestMonth:', sortedShifts);
-
     const monthsEarnings: any = [];
 
     sortedShifts.forEach((shift) => {
       const date = new Date(shift.dateStart.toMillis());
-      console.log('Shift Date:', date);
-
       const year = date.getFullYear();
       const month = date.getMonth();
 
@@ -206,7 +200,7 @@ export class FirebaseAuthService {
         shift.dateStart,
         shift.dateEnd,
         shift.wage
-      ); // Adjust this line based on your calculation logic
+      );
 
       if (existingMonth) {
         existingMonth.total += shiftTotal;
@@ -219,7 +213,7 @@ export class FirebaseAuthService {
       }
     });
 
-    console.log('Months Earnings:', monthsEarnings);
+    // console.log('Months Earnings:', monthsEarnings);
 
     const sortedMonths = monthsEarnings.sort(
       (a: { total: number }, b: { total: number }) => b.total - a.total
@@ -249,15 +243,23 @@ export class FirebaseAuthService {
     }
   }
 
+  // Total income per shift
+
   shiftTotal(startDate: Timestamp, endDate: Timestamp, wage: number) {
     return Math.round(
       ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
     );
   }
+
   // Sorted shifts
 
   async getSortedShifts(userId: string): Promise<Shift[]> {
-    const shiftsCollection = collection(this.firestore, 'shifts');
+    const userUid = localStorage.getItem('userId');
+
+    const shiftsCollection = collection(
+      this.firestore,
+      `shifts/${userId}/shifts`
+    );
     const shiftsQuery = query(shiftsCollection, where('userId', '==', userId));
     const shiftsSnapshot = await getDocs(shiftsQuery);
 

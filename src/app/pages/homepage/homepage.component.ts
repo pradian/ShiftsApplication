@@ -8,19 +8,17 @@ import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.ser
 })
 export class HomepageComponent implements OnInit {
   bestMonthMessage = '';
-  // userId?: string = this.authService.currentUser?.uid;
   constructor(private authService: FirebaseAuthService) {}
 
   ngOnInit(): void {
     const userId: string | null = localStorage.getItem('userId');
     if (userId) {
       this.authService.getSortedShifts(userId).then((sortedShifts) => {
-        console.log('Sorted Shifts:', sortedShifts);
         this.bestMonthMessage =
           this.authService.calculateBestMonth(sortedShifts);
       });
     } else {
-      console.error('User ID not found in localStorage');
+      this.bestMonthMessage = 'No shifts found';
     }
   }
 

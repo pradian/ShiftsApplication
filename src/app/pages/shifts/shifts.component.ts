@@ -67,9 +67,10 @@ export class ShiftsComponent implements OnChanges, OnInit {
     );
   }
   async deleteShift(shiftId: string) {
-    console.log(shiftId);
     if (!shiftId) return;
-    await deleteDoc(doc(this.firestore, 'shifts', shiftId))
+    await deleteDoc(
+      doc(this.firestore, `shifts/${this.userId}/shifts`, shiftId)
+    )
       .then((doc) => {
         this.userShifts = this.userShifts.filter(
           (shift) => shift.uid !== shiftId
