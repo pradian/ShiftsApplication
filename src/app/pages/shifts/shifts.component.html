@@ -1,9 +1,10 @@
 <div
   class="flex flex-col justify-center items-center font-normal h-full w-[calc(100vw-9rem)]"
 >
-  <div class="w-full text-center shadow p-3">
-    <h1 class="mt-5 text-[24px] font-mono">Your shifts</h1>
+  <div class="w-full text-center p-3">
+    <h1 class="mt-4 text-[24px] font-mono">Your shifts</h1>
   </div>
+  <div class="w-full border-b-sky-500 border-b-[0.5px] h-1 mb-4"></div>
   <div *ngIf="isLoading" role="status" class="mt-10">
     <svg
       aria-hidden="true"
@@ -24,14 +25,14 @@
     <span class="sr-only">Loading...</span>
   </div>
   <div
-    class="mt-10 flex flex-wrap flex-row gap-2"
+    class="mt-10 flex flex-wrap flex-row gap-2 items-start w-full ml-4"
     *ngIf="userShifts.length > 0"
   >
     <div class="ml-2" *ngFor="let shift of userShifts">
       <div
-        class="w-70 shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2"
+        class="w-72 shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2"
       >
-        <ul class="shadow-sm">
+        <ul class="shadow-sm flex flex-col gap-2">
           <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
           <li>
             <span class="font-bold">Start Date:</span>

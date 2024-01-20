@@ -9,11 +9,11 @@
     <!-- <div> -->
     <div class="w-full border-b-sky-500 border-b-[0.5px] h-1"></div>
     <ul
-      class="flex flex-col list-none font-normal text-sky-700 w-full"
+      class="flex flex-col list-none font-normal text-sky-700 w-full gap-1"
       *ngIf="isLoggedIn"
     >
       <li
-        class="cursor-pointer hover:bg-orange-200 w-full rounded-md flex items-center gap-1 text-base"
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
         routerLink="/"
       >
         <mat-icon
@@ -39,8 +39,14 @@
         Add shift
       </li>
     </ul>
-    <div class="w-full border-b-sky-500 border-b-[0.5px] h-1"></div>
-    <ul class="flex flex-col list-none font-normal text-sky-700 w-full">
+    <div
+      class="w-full border-b-sky-500 border-b-[0.5px] h-1"
+      *ngIf="isLoggedIn"
+    ></div>
+    <ul
+      class="flex flex-col list-none font-normal text-sky-700 w-full"
+      *ngIf="isLoggedIn"
+    >
       <li
         class="cursor-pointer hover:bg-orange-200 w-full rounded-md flex items-center gap-1 text-base"
         routerLink="/userprofile"
@@ -52,7 +58,7 @@
   </div>
   <div>
     <ng-container *ngIf="isLoggedIn" class="flex flex-col">
-      <div class="w-full border-b-sky-500 border-b-[0.5px] h-1 mb-1"></div>
+      <div class="w-full border-b-sky-500 border-b-[0.5px] h-1 mb-4"></div>
       <p>Welcome</p>
       <p class="hover:underline text-sky-700 font-medium">
         {{ userData?.lastName }}

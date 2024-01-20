@@ -184,62 +184,70 @@ export class FirebaseAuthService {
 
   // Calculate total earnings per month
 
-  calculateBestMonth(sortedShifts: Shift[]): string {
-    const monthsEarnings: any = [];
+  calculateBestMonth(sortedShifts: Shift[]): {
+    bestMonth: string;
+    income: number;
+    totalShifts: number;
+  } {
+    const monthsEarnings: any[] = [];
+
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
 
     sortedShifts.forEach((shift) => {
       const date = new Date(shift.dateStart.toMillis());
       const year = date.getFullYear();
       const month = date.getMonth();
+      const newDate = new Date(Date.now());
+      if (shift.dateStart.toDate() <= newDate) {
+        const existingMonth = monthsEarnings.find(
+          (item: any) => item.year === year && item.month === month
+        );
 
-      const existingMonth = monthsEarnings.find(
-        (item: any) => item.year === year && item.month === month
-      );
+        const shiftTotal = this.shiftTotal(
+          shift.dateStart,
+          shift.dateEnd,
+          shift.wage
+        );
 
-      const shiftTotal = this.shiftTotal(
-        shift.dateStart,
-        shift.dateEnd,
-        shift.wage
-      );
-
-      if (existingMonth) {
-        existingMonth.total += shiftTotal;
-      } else {
-        monthsEarnings.push({
-          year: year,
-          month: month,
-          total: shiftTotal,
-        });
+        if (existingMonth) {
+          existingMonth.total += shiftTotal;
+        } else {
+          monthsEarnings.push({
+            year: year,
+            month: month,
+            total: shiftTotal,
+          });
+        }
       }
     });
-
-    // console.log('Months Earnings:', monthsEarnings);
 
     const sortedMonths = monthsEarnings.sort(
       (a: { total: number }, b: { total: number }) => b.total - a.total
     );
 
     if (sortedMonths.length > 0) {
-      const monthNames = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-      ];
-
-      return `Your Best Month is: ${monthNames[sortedMonths[0].month]} ${
+      const bestMonth = `${monthNames[sortedMonths[0].month]} ${
         sortedMonths[0].year
-      } with ${sortedMonths[0].total} $`;
+      }`;
+      const income = sortedMonths[0].total;
+      const totalShifts = sortedMonths.length;
+
+      return { bestMonth, income, totalShifts };
     } else {
-      return 'No shifts found!';
+      return { bestMonth: 'No shifts found!', income: 0, totalShifts: 0 };
     }
   }
 
@@ -249,6 +257,12 @@ export class FirebaseAuthService {
     return Math.round(
       ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
     );
+  }
+
+  // Upcomming shifts
+
+  async upcommingShifts(shift: Shift) {
+    const upcomming = [];
   }
 
   // Sorted shifts
@@ -275,18 +289,18 @@ export class FirebaseAuthService {
     );
   }
 
-  // Delete shifts
+  // // Delete shifts
 
-  async deleteShift(shiftId: string) {
-    const shiftRef = doc(this.firestore, 'shifts', shiftId);
+  // async deleteShift(shiftId: string) {
+  //   const shiftRef = doc(this.firestore, 'shifts', shiftId);
 
-    try {
-      await deleteDoc(shiftRef);
-    } catch (error) {
-      console.error('Error deleting doc', error);
-      throw new Error('Unable to delete document. Please try again');
-    }
-  }
+  //   try {
+  //     await deleteDoc(shiftRef);
+  //   } catch (error) {
+  //     console.error('Error deleting doc', error);
+  //     throw new Error('Unable to delete document. Please try again');
+  //   }
+  // }
 
   // Logout
 

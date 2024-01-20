@@ -85,14 +85,4 @@ export class ShiftsComponent implements OnChanges, OnInit {
         );
       });
   }
-  // editShift(shift: Shift) {
-  //   updateDoc(doc(this.firestore, 'shifts', shift.id), shift)
-  //     .then(() => this.authService.showSnackBar('Shift updated successfuly'))
-  //     .catch(() =>
-  //       this.authService.showSnackBar(
-  //         'Shift was not updated. Please try again',
-  //         'snack-bar-warning'
-  //       )
-  //     );
-  // }
 }
