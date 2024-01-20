@@ -18,5 +18,5 @@ export type Shift = {
   name: string;
   userId: string;
   comments: string;
-  id: string;
+  uid: string;
 };

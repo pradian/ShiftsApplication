@@ -120,9 +120,16 @@ export class FirebaseAuthService {
     position: string,
     name: string,
     userId: string,
-    comments: string
+    comments: string,
+    uid: string
   ): Promise<void> {
+    const userUId = localStorage.getItem('userId');
     const shiftCollection = collection(this.firestore, 'shifts');
+    const shiftCollectionRef = doc(
+      this.firestore,
+      `shifts/${userUId}/shifts`,
+      uid
+    );
 
     const existingShiftQuerry = query(
       shiftCollection,
@@ -144,9 +151,10 @@ export class FirebaseAuthService {
       name,
       userId: userId,
       comments,
+      uid: uid,
     };
 
-    await addDoc(shiftCollection, shiftData);
+    await setDoc(shiftCollectionRef, shiftData);
   }
 
   // Read members data
@@ -170,7 +178,6 @@ export class FirebaseAuthService {
     const querySnapshot = await getDocs(shiftsDBCol);
     querySnapshot.forEach((doc) => {
       const shiftData = doc.data() as Shift;
-      shiftData.id = doc.id;
       usersShifts.push(doc.data() as Shift);
     });
 
@@ -258,7 +265,6 @@ export class FirebaseAuthService {
 
     shiftsSnapshot.forEach((doc) => {
       const shiftData = doc.data() as Shift;
-      shiftData.id = doc.id;
       shifts.push(shiftData);
     });
 

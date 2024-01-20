@@ -34,10 +34,11 @@ export class ShiftsComponent implements OnChanges, OnInit {
   }
 
   async fetchUserShifts() {
+    const userUId = localStorage.getItem('userId');
     this.isLoading = true;
     const data = await this.authService.readUserShifts(
       this.firestore,
-      'shifts',
+      `shifts/${this.userId}/shifts`,
       this.userId
     );
     if (data) {
@@ -65,11 +66,14 @@ export class ShiftsComponent implements OnChanges, OnInit {
       ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
     );
   }
-  deleteShift(shiftId: string) {
-    deleteDoc(doc(this.firestore, 'shifts', shiftId))
+  async deleteShift(shiftId: string) {
+    console.log(shiftId);
+    if (!shiftId) return;
+    await deleteDoc(doc(this.firestore, 'shifts', shiftId))
       .then((doc) => {
-        console.log('in then:', doc);
-        console.log('shift id:', shiftId);
+        this.userShifts = this.userShifts.filter(
+          (shift) => shift.uid !== shiftId
+        );
 
         this.authService.showSnackBar('Shift deleted successfuly');
       })
@@ -80,14 +84,14 @@ export class ShiftsComponent implements OnChanges, OnInit {
         );
       });
   }
-  editShift(shift: Shift) {
-    updateDoc(doc(this.firestore, 'shifts', shift.id), shift)
-      .then(() => this.authService.showSnackBar('Shift updated successfuly'))
-      .catch(() =>
-        this.authService.showSnackBar(
-          'Shift was not updated. Please try again',
-          'snack-bar-warning'
-        )
-      );
-  }
+  // editShift(shift: Shift) {
+  //   updateDoc(doc(this.firestore, 'shifts', shift.id), shift)
+  //     .then(() => this.authService.showSnackBar('Shift updated successfuly'))
+  //     .catch(() =>
+  //       this.authService.showSnackBar(
+  //         'Shift was not updated. Please try again',
+  //         'snack-bar-warning'
+  //       )
+  //     );
+  // }
 }

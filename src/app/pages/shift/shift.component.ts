@@ -3,6 +3,7 @@ import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-shift',
@@ -11,8 +12,8 @@ import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.ser
 })
 export class ShiftComponent {
   shiftForm: FormGroup;
-  userId? = localStorage.getItem('userId');
-  id = this.userId + '';
+  userId = localStorage.getItem('userId');
+  id = this.userId as string;
   isLoading = false;
   constructor(
     private fb: FormBuilder,
@@ -45,7 +46,8 @@ export class ShiftComponent {
           position,
           name,
           this.id,
-          comments
+          comments,
+          uuidv4()
         )
         .then(
           () => {
