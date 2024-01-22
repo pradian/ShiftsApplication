@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
+import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
+import { Shift } from 'src/app/utilitis/types';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -10,25 +13,79 @@ import { v4 as uuidv4 } from 'uuid';
   templateUrl: './shift.component.html',
   styleUrls: ['./shift.component.css'],
 })
-export class ShiftComponent {
+export class ShiftComponent implements OnInit {
+  @Input() shiftData: Shift | undefined;
   shiftForm: FormGroup;
   userId = localStorage.getItem('userId');
   id = this.userId as string;
   isLoading = false;
+  shiftIdfromUrl: string | null;
   constructor(
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
     private firestore: Firestore,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private validators: ValidatorsService
   ) {
-    this.shiftForm = this.fb.group({
-      dateStart: ['', Validators.required],
-      dateEnd: ['', Validators.required],
-      wage: ['', Validators.required],
-      position: ['', Validators.required],
-      name: ['', [Validators.min(3), Validators.required]],
-      comments: [''],
+    this.shiftForm = this.fb.group(
+      {
+        dateStart: ['', Validators.required],
+        dateEnd: ['', [Validators.required]],
+        wage: ['', Validators.required],
+        position: ['', Validators.required],
+        name: ['', [Validators.min(3), Validators.required]],
+        comments: [''],
+      },
+      { validators: this.validators.dateEndAfterStartValidator }
+    );
+    this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');
+  }
+  ngOnInit(): void {
+    console.log('ngOnInit', this.shiftData);
+
+    if (this.shiftData) {
+      this.populateFormWithData(this.shiftData);
+    } else if (this.shiftIdfromUrl) {
+      this.fetchShiftData(this.shiftIdfromUrl);
+    }
+  }
+
+  private populateFormWithData(shift: Shift) {
+    console.log(shift);
+    const formattedDateStart = formatDate(
+      shift.dateStart.toDate(),
+      'yyyy-MM-dd HH:mm',
+      'en'
+    );
+    const formattedDateEnd = formatDate(
+      shift.dateEnd.toDate(),
+      'yyyy-MM-dd HH:mm',
+      'en'
+    );
+    this.shiftForm.setValue({
+      dateStart: formattedDateStart,
+      dateEnd: formattedDateEnd,
+      wage: shift.wage,
+      position: shift.position,
+      name: shift.name,
+      comments: shift.comments,
     });
+  }
+  private async fetchShiftData(uid: string) {
+    const shift = await this.authService.readUserShifts(
+      this.firestore,
+      `shifts/${this.userId}/shifts`,
+      this.userId
+    );
+    const shiftData = shift.find((shift) => shift.uid === uid);
+    if (shiftData) {
+      console.log(shiftData);
+
+      this.populateFormWithData(shiftData);
+    }
+
+    console.log(this.shiftIdfromUrl);
   }
 
   async handleAddShift() {

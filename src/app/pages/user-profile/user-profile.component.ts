@@ -35,7 +35,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    // await this.readData();
     this.autofillForm();
   }
 
@@ -45,7 +44,6 @@ export class UserProfileComponent implements OnInit {
         this.firestore,
         'users'
       );
-      console.log(fetchedUsers);
       if (fetchedUsers.length > 0) {
         const currentUser = fetchedUsers.find(
           (user) => user.uid === this.userId

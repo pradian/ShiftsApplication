@@ -120,7 +120,11 @@
       </div>
     </div>
     <div class="mt-10 w-full" *ngIf="upcomingShifts.length < 1">
-      <p>No shifts for this user</p>
+      <p>No upcoming shifts</p>
     </div>
+    <div
+      class="w-full border-b-sky-500 border-b-[0.5px] h-1 mb-4"
+      *ngIf="isLoggedIn()"
+    ></div>
   </div>
 </div>

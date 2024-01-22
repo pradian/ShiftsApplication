@@ -38,6 +38,7 @@ const routes: Routes = [
     component: ShiftComponent,
     canActivate: [authGuard],
   },
+  { path: 'shift/:id', component: ShiftComponent, canActivate: [authGuard] },
 ];
 
 @NgModule({

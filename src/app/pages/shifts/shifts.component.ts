@@ -8,6 +8,7 @@ import {
   doc,
   updateDoc,
 } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shifts',
@@ -24,7 +25,8 @@ export class ShiftsComponent implements OnChanges, OnInit {
 
   constructor(
     private authService: FirebaseAuthService,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.fetchUserShifts();
@@ -65,6 +67,9 @@ export class ShiftsComponent implements OnChanges, OnInit {
     return Math.round(
       ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
     );
+  }
+  navigateEditShift(uid: string) {
+    this.router.navigate(['/shift', uid]);
   }
   async deleteShift(shiftId: string) {
     if (!shiftId) return;

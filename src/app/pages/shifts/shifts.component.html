@@ -53,7 +53,10 @@
           </li>
         </ul>
         <div class="mt-1 flex justify-between">
-          <button class="flex items-center">
+          <button
+            class="flex items-center"
+            (click)="navigateEditShift(shift.uid)"
+          >
             <mat-icon>edit</mat-icon>
             Edit
           </button>

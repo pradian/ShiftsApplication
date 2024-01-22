@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  user,
 } from '@angular/fire/auth';
 import {
   Firestore,
@@ -176,10 +177,32 @@ export class FirebaseAuthService {
     const querySnapshot = await getDocs(shiftsDBCol);
     querySnapshot.forEach((doc) => {
       const shiftData = doc.data() as Shift;
-      usersShifts.push(doc.data() as Shift);
+      usersShifts.push(shiftData);
+      console.log('read User Shifts', shiftData);
     });
 
     return usersShifts;
+  }
+
+  // Get shift by id
+
+  async getShiftById(shiftId: string): Promise<Shift | null> {
+    const userId = localStorage.getItem('userId');
+    try {
+      const shiftDoc = await getDoc(
+        doc(this.firestore, `shifts/${userId}/shifts`, shiftId)
+      );
+
+      if (shiftDoc.exists()) {
+        const shiftData = shiftDoc.data() as Shift;
+        return { ...shiftData, uid: shiftDoc.id };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching shift data:', error);
+      return null;
+    }
   }
 
   // Calculate total earnings per month
