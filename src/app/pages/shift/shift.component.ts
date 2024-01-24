@@ -19,7 +19,9 @@ export class ShiftComponent implements OnInit {
   userId = localStorage.getItem('userId');
   id = this.userId as string;
   isLoading = false;
-  shiftIdfromUrl: string | null;
+  shiftIdfromUrl?: string | null;
+  formButton: string = '';
+  positions: string[] = ['Mechanic', 'Curier', 'Accounting', 'Electrician'];
   constructor(
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
@@ -39,20 +41,26 @@ export class ShiftComponent implements OnInit {
       },
       { validators: this.validators.dateEndAfterStartValidator }
     );
-    this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');
   }
   ngOnInit(): void {
+    this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');
     console.log('ngOnInit', this.shiftData);
-
-    if (this.shiftData) {
-      this.populateFormWithData(this.shiftData);
-    } else if (this.shiftIdfromUrl) {
+    if (this.shiftIdfromUrl) {
       this.fetchShiftData(this.shiftIdfromUrl);
+      this.formButton = 'Edit Shift';
+    } else {
+      this.formButton = 'Add Shift';
     }
+    // if (this.shiftData) {
+    //   this.populateFormWithData(this.shiftData);
+    // } else if (this.shiftIdfromUrl) {
+    //   this.fetchShiftData(this.shiftIdfromUrl);
+    // }
+    console.log('ngOnInit', this.shiftData);
   }
 
   private populateFormWithData(shift: Shift) {
-    console.log(shift);
+    console.log('populateFormWithData', shift);
     const formattedDateStart = formatDate(
       shift.dateStart.toDate(),
       'yyyy-MM-dd HH:mm',
@@ -90,39 +98,76 @@ export class ShiftComponent implements OnInit {
 
   async handleAddShift() {
     this.isLoading = true;
+    if (!this.shiftIdfromUrl) {
+      console.log('handleAddShift, first if:', this.shiftData);
 
-    if (this.shiftForm.valid) {
+      if (this.shiftForm.valid) {
+        const { dateStart, dateEnd, wage, position, name, comments } =
+          this.shiftForm.value;
+
+        await this.authService
+          .addUserShift(
+            dateStart,
+            dateEnd,
+            wage,
+            position,
+            name,
+            this.id,
+            comments,
+            uuidv4()
+          )
+          .then(
+            () => {
+              (this.isLoading = false), this.router.navigate(['/shifts']);
+              this.authService.showSnackBar('Shift added successfuly.');
+            },
+            (error) => {
+              this.authService.showSnackBar(
+                'Error adding the shift. Name already exists.',
+                'snack-bar-warning'
+              );
+              this.isLoading = false;
+            }
+          )
+          .catch(() => {
+            this.isLoading = false;
+            this.authService.showSnackBar(
+              'Error adding the shift. Name already exists.',
+              'snack-bar-warning'
+            );
+          });
+      }
+    } else {
+      console.log('handleAddShift, else', this.shiftData);
+
+      await this.updateShift();
+    }
+  }
+
+  private async updateShift() {
+    if (this.shiftIdfromUrl) {
       const { dateStart, dateEnd, wage, position, name, comments } =
         this.shiftForm.value;
 
       await this.authService
-        .addUserShift(
+        .updateUserShift(
           dateStart,
           dateEnd,
           wage,
           position,
           name,
-          this.id,
           comments,
-          uuidv4()
+          this.shiftIdfromUrl as string
         )
-        .then(
-          () => {
-            (this.isLoading = false), this.router.navigate(['/shifts']);
-            this.authService.showSnackBar('Shift added successfuly.');
-          },
-          (error) => {
-            this.authService.showSnackBar(
-              'Error adding the shift. Name already exists.',
-              'snack-bar-warning'
-            );
-            this.isLoading = false;
-          }
-        )
+        .then(() => {
+          this.isLoading = false;
+          this.router.navigate(['/shifts']);
+          this.authService.showSnackBar('Shift updated successfully.');
+        })
         .catch(() => {
           this.isLoading = false;
           this.authService.showSnackBar(
-            'Error adding the shift. Name already exists.',
+            'Error updating the shift.',
             'snack-bar-warning'
           );
         });

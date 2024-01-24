@@ -19,7 +19,7 @@
         class="border-b-2 border-b-sky-500 w-full outline-none"
       />
       <div *ngIf="shiftForm.get('name')?.errors">
-        <small class="text-danger"
+        <small class="text-red-700"
           >Minimum 3 characters required for Shift Name</small
         >
       </div>
@@ -39,7 +39,7 @@
           shiftForm.get('dateStart')?.touched
         "
       >
-        <small class="text-danger">Full date is required</small>
+        <small class="text-red-800">Full date is required</small>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
           shiftForm.get('dateEnd')?.invalid && shiftForm.get('dateEnd')?.touched
         "
       >
-        <small class="text-sm text-red-800">Full date is required</small>
+        <small class="text-red-800">Full date is required</small>
       </div>
     </div>
 
@@ -69,20 +69,30 @@
         class="border-b-2 border-b-sky-500 w-full outline-none"
       />
       <div *ngIf="shiftForm.get('dateEnd')?.errors">
-        <small class="text-danger">Wage is required</small>
+        <small class="text-red-800">Wage is required</small>
       </div>
     </div>
 
-    <div class="my-4 h-14">
-      <label for="position" class="text-cyan-800 my-4">Your position</label>
-      <input
-        type="text"
+    <div class="flex flex-col">
+      <label for="position" class="text-cyan-800 mb-1">Your position</label>
+      <select
+        name="position"
         id="position"
         formControlName="position"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
-      />
-      <div *ngIf="shiftForm.get('position')?.errors">
-        <small class="text-danger">Position is required</small>
+        class="bg-gray-100 border border-gray-200 text-gray-900 text-sm rounded focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
+      >
+        <option value="" disabled>--- Select ---</option>
+        <ng-container *ngFor="let position of positions; let idx = index">
+          <option value="{{ positions[idx] }}">{{ position }}</option>
+        </ng-container>
+      </select>
+      <div
+        *ngIf="
+          shiftForm.get('position')?.errors &&
+          shiftForm.get('position')?.value !== null
+        "
+      >
+        <small class="text-red-800">Position is required</small>
       </div>
     </div>
 
@@ -114,14 +124,14 @@
       </svg>
       <span class="sr-only">Loading...</span>
     </div>
-    <!-- Add other profile fields as needed -->
+
     <div *ngIf="!isLoading">
       <button
         type="submit"
         [disabled]="shiftForm.invalid"
         class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
       >
-        Add shift
+        {{ formButton }}
       </button>
     </div>
   </form>

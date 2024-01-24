@@ -156,6 +156,38 @@ export class FirebaseAuthService {
     await setDoc(shiftCollectionRef, shiftData);
   }
 
+  async updateUserShift(
+    dateStart: Date,
+    dateEnd: Date,
+    wage: number,
+    position: string,
+    name: string,
+    comments: string,
+    shiftId: string
+  ): Promise<void> {
+    const userUId = localStorage.getItem('userId');
+    const shiftCollection = collection(this.firestore, 'shifts');
+    const shiftDocRef = doc(
+      this.firestore,
+      `shifts/${userUId}/shifts`,
+      shiftId
+    );
+    const shiftDoc = await getDoc(shiftDocRef);
+
+    const formattedDateStart = new Date(dateStart);
+    const formattedDateEnd = new Date(dateEnd);
+    const shiftData = {
+      dateStart: formattedDateStart,
+      dateEnd: formattedDateEnd,
+      wage,
+      position,
+      name,
+      comments,
+      uid: shiftId,
+    };
+    if (shiftDoc) await setDoc(shiftDocRef, shiftData, { merge: true });
+  }
+
   // Read members data
 
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {
@@ -178,7 +210,6 @@ export class FirebaseAuthService {
     querySnapshot.forEach((doc) => {
       const shiftData = doc.data() as Shift;
       usersShifts.push(shiftData);
-      console.log('read User Shifts', shiftData);
     });
 
     return usersShifts;

@@ -49,7 +49,11 @@ export class ShiftsComponent implements OnChanges, OnInit {
       ).length;
 
       this.userShifts = data
-        .filter((shift) => shift.userId === this.userId)
+        .filter(
+          (shift) =>
+            shift.userId === this.userId &&
+            shift.dateStart.toMillis() < Date.now()
+        )
         .sort((a, b) => {
           const dateA = a.dateStart.toMillis();
           const dateB = b.dateStart.toMillis();
