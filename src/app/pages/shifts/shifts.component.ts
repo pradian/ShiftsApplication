@@ -1,4 +1,5 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import {
@@ -22,6 +23,13 @@ export class ShiftsComponent implements OnChanges, OnInit {
   itemsPerPage = 20;
   currentPage = 1;
   totalItems = 0;
+
+  // Filters
+
+  toDateFilter: any = '';
+  fromDateFilter: any = '';
+  positionFilter: any = '';
+  nameFilter: any = '';
 
   constructor(
     private authService: FirebaseAuthService,
@@ -52,7 +60,16 @@ export class ShiftsComponent implements OnChanges, OnInit {
         .filter(
           (shift) =>
             shift.userId === this.userId &&
-            shift.dateStart.toMillis() < Date.now()
+            shift.dateStart.toMillis() < Date.now() &&
+            (this.nameFilter === '' ||
+              shift.name
+                .toLowerCase()
+                .includes(this.nameFilter.toLowerCase())) &&
+            (this.positionFilter === '' ||
+              shift.position
+                .toLowerCase()
+                .includes(this.positionFilter.toLowerCase())) &&
+            this.isDateInRange(shift.dateStart, shift.dateEnd)
         )
         .sort((a, b) => {
           const dateA = a.dateStart.toMillis();
@@ -93,5 +110,31 @@ export class ShiftsComponent implements OnChanges, OnInit {
           'snack-bar-warning'
         );
       });
+  }
+  applyFilters() {
+    this.fetchUserShifts();
+  }
+  isDateInRange(dateStart: Timestamp, dateEnd: Timestamp): boolean {
+    const fromDate = this.fromDateFilter ? new Date(this.fromDateFilter) : null;
+    const toDate = this.toDateFilter ? new Date(this.toDateFilter) : null;
+
+    if (fromDate && toDate) {
+      return (
+        dateStart.toMillis() >= fromDate.getTime() &&
+        dateEnd.toMillis() <= toDate.getTime()
+      );
+    } else if (fromDate) {
+      return dateStart.toMillis() >= fromDate.getTime();
+    } else if (toDate) {
+      return dateEnd.toMillis() <= toDate.getTime();
+    }
+    return true;
+  }
+  resetFilters() {
+    this.fromDateFilter = '';
+    this.toDateFilter = '';
+    this.positionFilter = '';
+    this.nameFilter = '';
+    this.fetchUserShifts();
   }
 }

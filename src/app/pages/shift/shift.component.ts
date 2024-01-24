@@ -44,23 +44,15 @@ export class ShiftComponent implements OnInit {
   }
   ngOnInit(): void {
     this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');
-    console.log('ngOnInit', this.shiftData);
     if (this.shiftIdfromUrl) {
       this.fetchShiftData(this.shiftIdfromUrl);
       this.formButton = 'Edit Shift';
     } else {
       this.formButton = 'Add Shift';
     }
-    // if (this.shiftData) {
-    //   this.populateFormWithData(this.shiftData);
-    // } else if (this.shiftIdfromUrl) {
-    //   this.fetchShiftData(this.shiftIdfromUrl);
-    // }
-    console.log('ngOnInit', this.shiftData);
   }
 
   private populateFormWithData(shift: Shift) {
-    console.log('populateFormWithData', shift);
     const formattedDateStart = formatDate(
       shift.dateStart.toDate(),
       'yyyy-MM-dd HH:mm',
@@ -88,19 +80,13 @@ export class ShiftComponent implements OnInit {
     );
     const shiftData = shift.find((shift) => shift.uid === uid);
     if (shiftData) {
-      console.log(shiftData);
-
       this.populateFormWithData(shiftData);
     }
-
-    console.log(this.shiftIdfromUrl);
   }
 
   async handleAddShift() {
     this.isLoading = true;
     if (!this.shiftIdfromUrl) {
-      console.log('handleAddShift, first if:', this.shiftData);
-
       if (this.shiftForm.valid) {
         const { dateStart, dateEnd, wage, position, name, comments } =
           this.shiftForm.value;
@@ -138,8 +124,6 @@ export class ShiftComponent implements OnInit {
           });
       }
     } else {
-      console.log('handleAddShift, else', this.shiftData);
-
       await this.updateShift();
     }
   }
