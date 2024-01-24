@@ -104,14 +104,21 @@
             <span class="font-bold">End Date:</span>
             {{ shift.dateEnd.toDate() | date : "dd/MMM/yyyy HH:MM" }}
           </li>
-          <li><span class="font-bold">Wage:</span> {{ shift.wage }} $</li>
+          <li>
+            <span class="font-bold">Wage:</span>
+            {{ shift.wage | currency : "EUR" }}
+          </li>
           <li>
             <span class="font-bold">Work place:</span> {{ shift.position }}
           </li>
           <li><span class="font-bold">Comments:</span> {{ shift.comments }}</li>
           <li class="w-full text-sky-800 text-lg">
             <span class="font-bold">Total income:</span>
-            {{ shiftTotal(shift.dateStart, shift.dateEnd, shift.wage) }} $
+            {{
+              shiftTotal(shift.dateStart, shift.dateEnd, shift.wage)
+                | currency : "EUR"
+            }}
+            $
           </li>
         </ul>
         <div class="w-full border-b-sky-500 border-b-[0.5px] mb-1"></div>

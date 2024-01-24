@@ -34,7 +34,6 @@ export class HomepageComponent implements OnInit {
   ngOnInit(): void {
     this.handleCalculateTheBestMonth();
     this.handleUpcomingShifts();
-    console.log('ngOnInit', this.upcomingShifts);
   }
 
   async handleCalculateTheBestMonth() {
@@ -62,7 +61,6 @@ export class HomepageComponent implements OnInit {
     this.isLoading = true;
     const newDate = new Date(Date.now());
     const userId = localStorage.getItem('userId');
-    console.log(this.authService.currentUser?.uid);
     if (!userId) return;
 
     const shiftsCollection = collection(
