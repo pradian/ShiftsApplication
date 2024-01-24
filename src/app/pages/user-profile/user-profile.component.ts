@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { Firestore, doc, docSnapshots, getDoc } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
@@ -19,13 +17,12 @@ export class UserProfileComponent implements OnInit {
   usersData: Member[] = [];
   userId? = localStorage.getItem('userId');
   id = this.userId + '';
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
-    private auth: Auth,
     protected firestore: Firestore,
-    private _snackBar: MatSnackBar,
     private router: Router
   ) {
     this.userProfileForm = this.fb.group({
@@ -38,7 +35,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    // await this.readData();
     this.autofillForm();
   }
 
@@ -48,7 +44,6 @@ export class UserProfileComponent implements OnInit {
         this.firestore,
         'users'
       );
-      console.log(fetchedUsers);
       if (fetchedUsers.length > 0) {
         const currentUser = fetchedUsers.find(
           (user) => user.uid === this.userId
@@ -71,6 +66,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   async handleUpdateProfile() {
+    this.isLoading = true;
     if (this.userProfileForm.valid) {
       const { firstName, lastName, role, email, birthDate } =
         this.userProfileForm.value;
@@ -81,7 +77,7 @@ export class UserProfileComponent implements OnInit {
           () => {
             this.router.navigate(['/']);
             console.log('Profile updated successfully!');
-            this._snackBar.open('Profile updated successfuly.');
+            this.authService.showSnackBar('Profile updated successfuly.');
 
             // Perform any additional actions upon successful update if needed
           },

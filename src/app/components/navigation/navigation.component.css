@@ -1,0 +1,12 @@
+.snack-bar-success {
+  background-color: rgb(47, 255, 203);
+  color: rgb(0, 0, 0);
+}
+.snack-bar-warning {
+  background-color: rgba(240, 173, 78);
+  color: rgb(0, 0, 0);
+}
+.snack-bar-error {
+  background-color: rga(187, 33, 36);
+  color: rgb(250, 250, 250);
+}

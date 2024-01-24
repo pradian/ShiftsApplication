@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-navigation',
@@ -21,10 +23,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private router: Router,
-    private auth: Auth
+    private auth: Auth,
+    private _snackBar: MatSnackBar
   ) {}
   ngOnInit(): void {
-    this.auth.onAuthStateChanged(() => this.checkUserStatus());
     this.checkUserStatus();
 
     this.router.events
@@ -72,8 +74,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
         localStorage.removeItem('userId');
         this.updateLoginStatus();
         this.router.navigate(['/login']);
+
+        this.authService.showSnackBar('Successfuly logged out.');
       })
       .catch((error) => {
+        this.authService.showSnackBar('There was an error when logged out.');
         console.log('Error');
       });
   }

@@ -5,14 +5,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile,
+  user,
 } from '@angular/fire/auth';
 import {
-  DocumentData,
   Firestore,
-  Query,
-  QueryDocumentSnapshot,
-  QuerySnapshot,
+  Timestamp,
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -22,9 +20,9 @@ import {
   where,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Member } from '../types';
+import { Member, Shift } from '../types';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ToastComponent } from 'src/app/components/toast/toast.component';
+import { deleteDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +34,6 @@ export class FirebaseAuthService {
   createdUser?: User;
   currentUser?: User;
   authService: any;
-  // firestore: any;
   isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
@@ -44,13 +41,15 @@ export class FirebaseAuthService {
 
   constructor(
     private auth: Auth,
-    private snackBar: MatSnackBar,
+    private _snackBar: MatSnackBar,
     protected firestore: Firestore
   ) {}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('userId');
   }
+
+  // User Login
 
   async login(email: string, password: string) {
     try {
@@ -62,20 +61,14 @@ export class FirebaseAuthService {
 
       this.currentUser = credentials.user;
       localStorage.setItem('userId', this.currentUser.uid);
-      // this.snackBar.openFromComponent(ToastComponent, {
-      //   duration: 3000,
-      //   data: 'Login successful!',
-      // });
       this.isLoggedInSubject.next(true);
       return credentials.user;
     } catch {
-      // this.snackBar.open(message, {
-      //   duration: 3000,
-      //   data: 'Login unsuccessful! Try again',
-      // });
       throw new Error('Invalid credentials. Please try again');
     }
   }
+
+  // Register user
 
   async register(email: string, password: string) {
     const credentials = await createUserWithEmailAndPassword(
@@ -87,6 +80,8 @@ export class FirebaseAuthService {
     alert(`Welcome ${this.createdUser.email}!`);
     return credentials.user;
   }
+
+  // Update user profile
 
   async updateUserProfile(
     id: string,
@@ -109,13 +104,91 @@ export class FirebaseAuthService {
     };
 
     if (userDoc.exists()) {
-      // Update existing user profile in the database
       await setDoc(userRef, userData, { merge: true });
     } else {
-      // Create a new user profile in the database
       await setDoc(userRef, userData);
     }
   }
+
+  // Add user shift
+
+  async addUserShift(
+    dateStart: Date,
+    dateEnd: Date,
+    wage: number,
+    position: string,
+    name: string,
+    userId: string,
+    comments: string,
+    uid: string
+  ): Promise<void> {
+    const userUId = localStorage.getItem('userId');
+    const shiftCollection = collection(this.firestore, 'shifts');
+    const shiftCollectionRef = doc(
+      this.firestore,
+      `shifts/${userUId}/shifts`,
+      uid
+    );
+
+    const existingShiftQuerry = query(
+      shiftCollection,
+      where('name', '==', name),
+      where('userId', '==', userId)
+    );
+    const existingShifts = await getDocs(existingShiftQuerry);
+
+    if (!existingShifts.empty) {
+      throw new Error();
+    }
+    const formattedDateStart = new Date(dateStart);
+    const formattedDateEnd = new Date(dateEnd);
+    const shiftData = {
+      dateStart: formattedDateStart,
+      dateEnd: formattedDateEnd,
+      wage,
+      position,
+      name,
+      userId: userId,
+      comments,
+      uid: uid,
+    };
+
+    await setDoc(shiftCollectionRef, shiftData);
+  }
+
+  async updateUserShift(
+    dateStart: Date,
+    dateEnd: Date,
+    wage: number,
+    position: string,
+    name: string,
+    comments: string,
+    shiftId: string
+  ): Promise<void> {
+    const userUId = localStorage.getItem('userId');
+    const shiftCollection = collection(this.firestore, 'shifts');
+    const shiftDocRef = doc(
+      this.firestore,
+      `shifts/${userUId}/shifts`,
+      shiftId
+    );
+    const shiftDoc = await getDoc(shiftDocRef);
+
+    const formattedDateStart = new Date(dateStart);
+    const formattedDateEnd = new Date(dateEnd);
+    const shiftData = {
+      dateStart: formattedDateStart,
+      dateEnd: formattedDateEnd,
+      wage,
+      position,
+      name,
+      comments,
+      uid: shiftId,
+    };
+    if (shiftDoc) await setDoc(shiftDocRef, shiftData, { merge: true });
+  }
+
+  // Read members data
 
   async readMembersData(fdb: any, coll: string): Promise<Member[]> {
     const usersDBCol = collection(fdb, coll);
@@ -128,10 +201,180 @@ export class FirebaseAuthService {
     return fetchedUsers;
   }
 
+  // Read user shifts
+
+  async readUserShifts(fdb: any, coll: string, userId: any): Promise<Shift[]> {
+    const usersShifts: Shift[] = [];
+    const shiftsDBCol = collection(fdb, coll);
+    const querySnapshot = await getDocs(shiftsDBCol);
+    querySnapshot.forEach((doc) => {
+      const shiftData = doc.data() as Shift;
+      usersShifts.push(shiftData);
+    });
+
+    return usersShifts;
+  }
+
+  // Get shift by id
+
+  async getShiftById(shiftId: string): Promise<Shift | null> {
+    const userId = localStorage.getItem('userId');
+    try {
+      const shiftDoc = await getDoc(
+        doc(this.firestore, `shifts/${userId}/shifts`, shiftId)
+      );
+
+      if (shiftDoc.exists()) {
+        const shiftData = shiftDoc.data() as Shift;
+        return { ...shiftData, uid: shiftDoc.id };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching shift data:', error);
+      return null;
+    }
+  }
+
+  // Calculate total earnings per month
+
+  calculateBestMonth(sortedShifts: Shift[]): {
+    bestMonth: string;
+    income: number;
+    totalShifts: number;
+  } {
+    const monthsEarnings: any[] = [];
+
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    sortedShifts.forEach((shift) => {
+      const date = new Date(shift.dateStart.toMillis());
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const newDate = new Date(Date.now());
+      if (shift.dateStart.toDate() <= newDate) {
+        const existingMonth = monthsEarnings.find(
+          (item: any) => item.year === year && item.month === month
+        );
+
+        const shiftTotal = this.shiftTotal(
+          shift.dateStart,
+          shift.dateEnd,
+          shift.wage
+        );
+
+        if (existingMonth) {
+          existingMonth.total += shiftTotal;
+        } else {
+          monthsEarnings.push({
+            year: year,
+            month: month,
+            total: shiftTotal,
+          });
+        }
+      }
+    });
+
+    const sortedMonths = monthsEarnings.sort(
+      (a: { total: number }, b: { total: number }) => b.total - a.total
+    );
+
+    if (sortedMonths.length > 0) {
+      const bestMonth = `${monthNames[sortedMonths[0].month]} ${
+        sortedMonths[0].year
+      }`;
+      const income = sortedMonths[0].total;
+      const totalShifts = sortedMonths.length;
+
+      return { bestMonth, income, totalShifts };
+    } else {
+      return { bestMonth: 'No shifts found!', income: 0, totalShifts: 0 };
+    }
+  }
+
+  // Total income per shift
+
+  shiftTotal(startDate: Timestamp, endDate: Timestamp, wage: number) {
+    return Math.round(
+      ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
+    );
+  }
+
+  // Upcomming shifts
+
+  async upcommingShifts(shift: Shift) {
+    const upcomming = [];
+  }
+
+  // Sorted shifts
+
+  async getSortedShifts(userId: string): Promise<Shift[]> {
+    const userUid = localStorage.getItem('userId');
+
+    const shiftsCollection = collection(
+      this.firestore,
+      `shifts/${userId}/shifts`
+    );
+    const shiftsQuery = query(shiftsCollection, where('userId', '==', userId));
+    const shiftsSnapshot = await getDocs(shiftsQuery);
+
+    const shifts: Shift[] = [];
+
+    shiftsSnapshot.forEach((doc) => {
+      const shiftData = doc.data() as Shift;
+      shifts.push(shiftData);
+    });
+
+    return shifts.sort(
+      (a, b) => a.dateStart.toMillis() - b.dateStart.toMillis()
+    );
+  }
+
+  // // Delete shifts
+
+  // async deleteShift(shiftId: string) {
+  //   const shiftRef = doc(this.firestore, 'shifts', shiftId);
+
+  //   try {
+  //     await deleteDoc(shiftRef);
+  //   } catch (error) {
+  //     console.error('Error deleting doc', error);
+  //     throw new Error('Unable to delete document. Please try again');
+  //   }
+  // }
+
+  // Logout
+
   async logout() {
     await signOut(this.auth);
     this.currentUser = undefined;
     this.isLoggedInSubject.next(false);
     return;
+  }
+
+  // SnackBar
+  showSnackBar(
+    message: string,
+    snackBarClass: string = 'snack-bar-success'
+  ): void {
+    this._snackBar.open(message, 'Close!', {
+      duration: 3000,
+      panelClass: [snackBarClass],
+      verticalPosition: 'bottom',
+      horizontalPosition: 'right',
+    });
   }
 }

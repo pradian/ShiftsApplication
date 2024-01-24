@@ -1,7 +1,5 @@
-import { MatIconModule } from '@angular/material/icon';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -10,18 +8,17 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { RegisterComponent } from './pages/register/register.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './pages/login/login.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { ToastComponent } from './components/toast/toast.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ShiftsComponent } from './pages/shifts/shifts.component';
-// import { MatIconModule } from '@angular/material/icon';
+import { MaterialModule } from './utilitis/material/material-module';
+import { ShiftComponent } from './pages/shift/shift.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,16 +29,15 @@ import { ShiftsComponent } from './pages/shifts/shifts.component';
     UserProfileComponent,
     ToastComponent,
     ShiftsComponent,
+    ShiftComponent,
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    MatProgressSpinnerModule,
+    MaterialModule,
     BrowserAnimationsModule,
-    MatSnackBarModule,
-    MatButtonModule,
-    MatIconModule,
+    FormsModule,
     AngularFireModule,
     AngularFirestoreModule,
     provideFirebaseApp(() =>

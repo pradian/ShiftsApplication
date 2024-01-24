@@ -16,4 +16,14 @@ export class ValidatorsService {
       g.get('confirmPassword')?.setErrors(null);
     }
   }
+
+  dateEndAfterStartValidator(g: FormGroup) {
+    const dateStart = g.get('dateStart')?.value as Date;
+    const dateEnd = g.get('dateEnd')?.value as Date;
+    if (dateEnd < dateStart) {
+      g.get('dateEnd')?.setErrors({ dateEndAfterStart: true });
+    } else {
+      g.get('dateEnd')?.setErrors(null);
+    }
+  }
 }

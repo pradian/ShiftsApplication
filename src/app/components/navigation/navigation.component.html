@@ -1,36 +1,75 @@
-<div class="w-full h-full flex justify-between items-center p-4">
-  <div>
-    <h1>Shifts logo</h1>
-  </div>
-  <div>
-    <ul class="flex gap-6 list-none font-black text-sky-700" *ngIf="isLoggedIn">
-      <li class="cursor-pointer text-xl">Shifts</li>
-      <li class="cursor-pointer text-xl">Add shift</li>
-    </ul>
+<div class="w-full h-full flex flex-col justify-between p-3">
+  <div class="flex items-start justify-between flex-col gap-5 w-full">
+    <img
+      src="../../../assets/images/logo.png"
+      alt="Shift logo"
+      class="text-left h-9"
+    />
+    <!-- </div> -->
+    <!-- <div> -->
+    <div class="w-full border-b-sky-500 border-b-[0.5px] h-1"></div>
     <ul
-      class="flex gap-6 list-none font-black text-sky-700"
-      *ngIf="!isLoggedIn"
+      class="flex flex-col list-none font-normal text-sky-700 w-full gap-1"
+      *ngIf="isLoggedIn"
     >
-      <li class="cursor-pointer text-xl">Login</li>
-      <li class="cursor-pointer text-xl">Register</li>
+      <li
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
+        routerLink="/"
+      >
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Example home icon"
+          fontIcon="home"
+        ></mat-icon>
+
+        Homepage
+      </li>
+      <li
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
+        routerLink="/shifts"
+      >
+        <mat-icon>apps</mat-icon>
+        Shifts
+      </li>
+      <li
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
+        routerLink="/shift"
+      >
+        <mat-icon>note_add</mat-icon>
+        Add shift
+      </li>
+    </ul>
+    <div
+      class="w-full border-b-sky-500 border-b-[0.5px] h-1"
+      *ngIf="isLoggedIn"
+    ></div>
+    <ul
+      class="flex flex-col list-none font-normal text-sky-700 w-full"
+      *ngIf="isLoggedIn"
+    >
+      <li
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
+        routerLink="/userprofile"
+      >
+        <mat-icon>account_circle</mat-icon>
+        Settings
+      </li>
     </ul>
   </div>
   <div>
-    <ng-container *ngIf="isLoggedIn">
-      Welcome
-      <span
-        routerLink="/userprofile"
-        class="hover:underline cursor-pointer text-sky-700 font-medium"
-      >
-        {{ userData?.firstName }} {{ userData?.lastName }}</span
-      >
-      |
+    <ng-container *ngIf="isLoggedIn" class="flex flex-col">
+      <div class="w-full border-b-sky-500 border-b-[0.5px] h-1 mb-4"></div>
+      <p>Welcome</p>
+      <p class="hover:underline text-sky-700 font-medium">
+        {{ userData?.lastName }}
+      </p>
       <button
-        class="font-semibold text-lg text-red-700 cursor-pointer underline"
+        class="font-semibold text-lg text-red-700 cursor-pointer hover:underline flex items-center gap-1"
         (click)="handleLogout()"
       >
+        <mat-icon>exit_to_app</mat-icon>
         Logout
-      </button></ng-container
-    >
+      </button>
+    </ng-container>
   </div>
 </div>
