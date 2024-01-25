@@ -25,7 +25,7 @@ export class ShiftsComponent implements OnChanges, OnInit {
   totalItems = 0;
 
   // Filters
-
+  positions: string[] = ['Mechanic', 'Curier', 'Accounting', 'Electrician'];
   toDateFilter: any = '';
   fromDateFilter: any = '';
   positionFilter: any = '';
@@ -66,9 +66,7 @@ export class ShiftsComponent implements OnChanges, OnInit {
                 .toLowerCase()
                 .includes(this.nameFilter.toLowerCase())) &&
             (this.positionFilter === '' ||
-              shift.position
-                .toLowerCase()
-                .includes(this.positionFilter.toLowerCase())) &&
+              shift.position.toLocaleLowerCase() === this.positionFilter) &&
             this.isDateInRange(shift.dateStart, shift.dateEnd)
         )
         .sort((a, b) => {
@@ -112,6 +110,9 @@ export class ShiftsComponent implements OnChanges, OnInit {
       });
   }
   applyFilters() {
+    this.positionFilter = this.positionFilter
+      ? this.positionFilter.toLowerCase()
+      : '';
     this.fetchUserShifts();
   }
   isDateInRange(dateStart: Timestamp, dateEnd: Timestamp): boolean {

@@ -22,12 +22,16 @@
       </div>
       <div class="flex flex-col w-32">
         <label for="positionFilter" class="mr-2">Position:</label>
-        <input
-          type="text"
+        <select
           id="positionFilter"
           [(ngModel)]="positionFilter"
-          class="border-b-2 border-b-sky-500 w-full outline-none"
-        />
+          class="bg-gray-100 border border-sky-500 text-gray-900 text-sm rounded focus:ring-sky-500 focus:border-sky-500 block w-full p-1"
+        >
+          <option value="" [disabled]="true">All Positions</option>
+          <option *ngFor="let position of positions" [value]="position">
+            {{ position }}
+          </option>
+        </select>
       </div>
       <div class="flex flex-col w-32">
         <label for="fromDateFilter" class="mr-2">From Date:</label>
