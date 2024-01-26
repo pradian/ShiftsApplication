@@ -33,6 +33,10 @@ export class RegisterComponent implements OnInit {
         ],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
+        firstName: ['', Validators.min(3)],
+        lastName: ['', Validators.min(3)],
+        role: [''],
+        birthDate: ['', Validators.required],
       },
       { validators: this.validators.passwordMatchValidator }
     );
@@ -42,19 +46,33 @@ export class RegisterComponent implements OnInit {
 
   register() {
     if (this.registerForm?.valid) {
-      const { email, password } = this.registerForm.value;
+      const { email, password, firstName, lastName, birthDate } =
+        this.registerForm.value;
       this.isLoading = true;
       this.authService
         .register(email, password)
         .then((result) => {
-          console.log(result);
           this.isLoading = false;
-
+          const user = this.authService.createdUser;
+          if (user) {
+            this.authService
+              .updateUserProfile(
+                user.uid,
+                firstName,
+                lastName,
+                'user',
+                email,
+                birthDate
+              )
+              .then(() => {
+                // this.authService.showSnackBar('User profile added successfuly');
+              })
+              .catch((error) => console.error('Error adding the profile'));
+          }
           this.router.navigate(['/login']);
           this.authService.showSnackBar('Successfuly registered');
         })
         .catch((error) => {
-          alert(error.message);
           this.isLoading = false;
           this.authService.showSnackBar(
             'Error, please check the form',
@@ -64,23 +82,5 @@ export class RegisterComponent implements OnInit {
     } else {
       this.registerForm?.markAllAsTouched();
     }
-  }
-  addEmployee(
-    firstName: string,
-    lastName: string,
-    email: string | undefined | null,
-    birthDate: Date | string
-  ) {
-    const data: any = {};
-    if (firstName) data.firstName = firstName;
-    if (lastName) data.lastName = lastName;
-    if (email) data.email = email;
-    if (birthDate) data.bithDate = birthDate;
-    data.role = 'user';
-    data.uid = this.authService.createdUser?.uid;
-
-    setDoc(doc(this.firestore, 'users', data.uid), data, {
-      merge: true,
-    }).then(console.log, console.error);
   }
 }

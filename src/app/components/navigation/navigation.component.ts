@@ -16,7 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
 export class NavigationComponent implements OnInit, OnDestroy {
   userId = localStorage.getItem('userId');
   userData?: Member | null;
-  isLoggedIn?: boolean = false;
+  isLoggedIn: boolean = false;
+  isAdmin: boolean = false;
 
   private unsubscribe: Subject<void> = new Subject<void>();
   constructor(
@@ -28,7 +29,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.checkUserStatus();
-
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -40,11 +40,25 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
+  async checkUserIsAdmin() {
+    this.userId = localStorage.getItem('userId');
+    console.log(this.userId);
+    const users = await this.authService
+      .readMembersData(this.firestore, 'users')
+      .then((members) => {
+        members.forEach((member) => {
+          if (member.uid === this.userId && member.role === 'admin') {
+            this.isAdmin = true;
+          }
+        });
+      });
+  }
 
   checkUserStatus() {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
       this.getUser();
+      this.checkUserIsAdmin();
     }
   }
   getisLoggedIn(): boolean {

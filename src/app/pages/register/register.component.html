@@ -66,6 +66,63 @@
         </span>
       </p>
     </div>
+    <div class="my-4 h-14">
+      <label for="firstName" class="text-cyan-800 my-4">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        formControlName="firstName"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div *ngIf="registerForm.get('firstName')?.errors">
+        <small class="text-red-700 text-sm"
+          >Minimum 3 characters required for First Name</small
+        >
+      </div>
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="lastName" class="text-cyan-800 my-4">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        formControlName="lastName"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div *ngIf="registerForm.get('lastName')?.errors">
+        <small class="text-red-700 text-sm"
+          >Minimum 3 characters required for Last Name</small
+        >
+      </div>
+    </div>
+
+    <div class="my-4 h-14 hidden">
+      <label for="role" class="text-cyan-800 my-4">Role</label>
+      <input
+        type="text"
+        id="role"
+        formControlName="role"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+    </div>
+
+    <div class="my-4 h-14">
+      <label for="birthDate" class="text-cyan-800 my-4">Birth Date</label>
+      <input
+        type="date"
+        id="birthDate"
+        formControlName="birthDate"
+        class="border-b-2 border-b-sky-500 w-full outline-none"
+      />
+      <div
+        *ngIf="
+          registerForm.get('birthDate')?.invalid &&
+          registerForm.get('birthDate')?.touched
+        "
+      >
+        <small class="text-red-700 text-sm">Birth Date is required</small>
+      </div>
+    </div>
     <div *ngIf="isLoading" role="status">
       <svg
         aria-hidden="true"

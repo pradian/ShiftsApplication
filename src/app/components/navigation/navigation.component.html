@@ -54,7 +54,16 @@
         <mat-icon>account_circle</mat-icon>
         Settings
       </li>
+      <!-- <li
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
+        routerLink="/userprofile"
+        *ngIf="isAdmin"
+      >
+        <mat-icon>people</mat-icon>
+        All Users
+      </li> -->
     </ul>
+    <div></div>
   </div>
   <div>
     <ng-container *ngIf="isLoggedIn" class="flex flex-col">

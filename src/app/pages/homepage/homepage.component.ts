@@ -22,6 +22,7 @@ export class HomepageComponent implements OnInit {
   bestMonthStats = { bestMonth: '', income: 0, totalShifts: 0 };
   upcomingShifts: Shift[] = [];
   isLoading: boolean = false;
+  isLoadingUpcoming: boolean = false;
   userId?: string | null = localStorage.getItem('userId');
   userShifts: Shift[] = [];
 
@@ -58,7 +59,7 @@ export class HomepageComponent implements OnInit {
   // Upcoming shifts
 
   async handleUpcomingShifts() {
-    this.isLoading = true;
+    this.isLoadingUpcoming = true;
     const newDate = new Date(Date.now());
     const userId = localStorage.getItem('userId');
     if (!userId) return;
@@ -78,7 +79,7 @@ export class HomepageComponent implements OnInit {
       this.upcomingShifts = shiftsSnapshot.docs.map(
         (doc) => doc.data() as Shift
       );
-      this.isLoading = false;
+      this.isLoadingUpcoming = false;
     } catch (error) {
       console.error('Error fetching upcoming shifts:', error);
     }
