@@ -42,7 +42,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
   async checkUserIsAdmin() {
     this.userId = localStorage.getItem('userId');
-    console.log(this.userId);
     const users = await this.authService
       .readMembersData(this.firestore, 'users')
       .then((members) => {
@@ -93,7 +92,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
       })
       .catch((error) => {
         this.authService.showSnackBar('There was an error when logged out.');
-        console.log('Error');
       });
   }
 }
