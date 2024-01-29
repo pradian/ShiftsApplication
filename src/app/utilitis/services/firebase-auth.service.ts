@@ -2,10 +2,14 @@ import { Injectable } from '@angular/core';
 import {
   Auth,
   User,
+  reauthenticateWithCredential,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   user,
+  EmailAuthCredential,
+  EmailAuthProvider,
 } from '@angular/fire/auth';
 import {
   Firestore,
@@ -68,6 +72,21 @@ export class FirebaseAuthService {
     }
   }
 
+  async reAuth(email: string, password: string): Promise<User> {
+    try {
+      const user = this.currentUser;
+      if (!user) {
+        throw new Error('User not found');
+      }
+      const credential = EmailAuthProvider.credential(email, password);
+      await reauthenticateWithCredential(user, credential);
+      return user;
+    } catch (error) {
+      console.error('Error reauthenticating user:', error);
+      throw new Error('Invalid credentials. Please try again');
+    }
+  }
+
   // Register user
 
   async register(email: string, password: string) {
@@ -77,7 +96,6 @@ export class FirebaseAuthService {
       password
     );
     this.createdUser = credentials.user;
-    alert(`Welcome ${this.createdUser.email}!`);
     return credentials.user;
   }
 
@@ -107,6 +125,20 @@ export class FirebaseAuthService {
       await setDoc(userRef, userData, { merge: true });
     } else {
       await setDoc(userRef, userData);
+    }
+  }
+  // Change password
+
+  async newPassword(pwd: string) {
+    try {
+      const user = this.currentUser;
+      if (!user) {
+        throw new Error('User not found');
+      }
+      await updatePassword(user, pwd);
+    } catch (error) {
+      console.error('Error changing password:', error);
+      throw new Error('Error changing password');
     }
   }
 
