@@ -26,7 +26,7 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Member, Shift } from '../types';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { deleteDoc } from 'firebase/firestore';
+// import { deleteDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -62,7 +62,6 @@ export class FirebaseAuthService {
         email,
         password
       );
-
       this.currentUser = credentials.user;
       localStorage.setItem('userId', this.currentUser.uid);
       this.isLoggedInSubject.next(true);
@@ -72,14 +71,19 @@ export class FirebaseAuthService {
     }
   }
 
-  async reAuth(email: string, password: string): Promise<User> {
+  async reAuth(password: string): Promise<User> {
     try {
-      const user = this.currentUser;
-      if (!user) {
+      const user = this.auth.currentUser;
+      console.log('Reauth', user, this.auth.currentUser?.email, password);
+      if (!this.auth.currentUser?.email || !user) {
         throw new Error('User not found');
       }
-      const credential = EmailAuthProvider.credential(email, password);
+      const credential = EmailAuthProvider.credential(
+        this.auth.currentUser?.email,
+        password
+      );
       await reauthenticateWithCredential(user, credential);
+
       return user;
     } catch (error) {
       console.error('Error reauthenticating user:', error);
@@ -131,7 +135,7 @@ export class FirebaseAuthService {
 
   async newPassword(pwd: string) {
     try {
-      const user = this.currentUser;
+      const user = this.auth.currentUser;
       if (!user) {
         throw new Error('User not found');
       }

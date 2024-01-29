@@ -18,6 +18,7 @@ import { ToastComponent } from './components/toast/toast.component';
 import { ShiftsComponent } from './pages/shifts/shifts.component';
 import { MaterialModule } from './utilitis/material/material-module';
 import { ShiftComponent } from './pages/shift/shift.component';
+import { BestmonthComponent } from './pages/homepage/bestmonth/bestmonth.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ShiftComponent } from './pages/shift/shift.component';
     ToastComponent,
     ShiftsComponent,
     ShiftComponent,
+    BestmonthComponent,
   ],
   imports: [
     BrowserModule,

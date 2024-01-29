@@ -23,6 +23,7 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+
     private authService: FirebaseAuthService,
     protected firestore: Firestore,
     private router: Router,
@@ -100,12 +101,9 @@ export class UserProfileComponent implements OnInit {
   }
   changePassword() {
     this.isLoading = true;
-    if (this.authService.currentUser) {
+    if (!this.authService.currentUser) {
       this.authService
-        .reAuth(
-          this.userProfileForm.value.email,
-          this.changePwdForm.value.oldPassword
-        )
+        .reAuth(this.changePwdForm.value.oldPassword)
         .then(() => {
           return this.authService.newPassword(
             this.changePwdForm.value.password
