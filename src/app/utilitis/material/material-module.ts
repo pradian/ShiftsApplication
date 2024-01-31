@@ -13,15 +13,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-/*
-  we export the Material modules here, then they can be used in another modules
-  which will import only this material-module. For example, heroes-module
-  
-  Also notice we don´t use here any imports[] array, since we only need the Material modules to be exported and used elsewhere
-  
-  https://stackoverflow.com/questions/39062930/what-is-the-difference-between-declarations-providers-and-import-in-ngmodule
-  
-*/
 @NgModule({
   exports: [
     MatSidenavModule,

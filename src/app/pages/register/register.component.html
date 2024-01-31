@@ -76,7 +76,7 @@
       />
       <div *ngIf="registerForm.get('firstName')?.errors">
         <small class="text-red-700 text-sm"
-          >Minimum 3 characters required for First Name</small
+          >Minimum 3 characters required</small
         >
       </div>
     </div>
@@ -91,12 +91,12 @@
       />
       <div *ngIf="registerForm.get('lastName')?.errors">
         <small class="text-red-700 text-sm"
-          >Minimum 3 characters required for Last Name</small
+          >Minimum 3 characters required</small
         >
       </div>
     </div>
 
-    <div class="my-4 h-14 hidden">
+    <!-- <div class="my-4 h-14 hidden">
       <label for="role" class="text-cyan-800 my-4">Role</label>
       <input
         type="text"
@@ -104,7 +104,7 @@
         formControlName="role"
         class="border-b-2 border-b-sky-500 w-full outline-none"
       />
-    </div>
+    </div> -->
 
     <div class="my-4 h-14">
       <label for="birthDate" class="text-cyan-800 my-4">Birth Date</label>

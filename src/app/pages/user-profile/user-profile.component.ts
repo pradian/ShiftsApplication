@@ -3,6 +3,7 @@ import { Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
+import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
 import { Member } from 'src/app/utilitis/types';
 
 @Component({
@@ -12,6 +13,7 @@ import { Member } from 'src/app/utilitis/types';
 })
 export class UserProfileComponent implements OnInit {
   userProfileForm: FormGroup;
+  changePwdForm: FormGroup;
   authState = 'Loading....';
   userData?: Member;
   usersData: Member[] = [];
@@ -21,17 +23,27 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+
     private authService: FirebaseAuthService,
     protected firestore: Firestore,
-    private router: Router
+    private router: Router,
+    private validators: ValidatorsService
   ) {
     this.userProfileForm = this.fb.group({
       firstName: ['', Validators.min(3)],
       lastName: ['', Validators.min(3)],
       role: [''],
       birthDate: ['', Validators.required],
-      email: ['', Validators.email],
+      email: [{ value: '', disabled: true }],
     });
+    this.changePwdForm = this.fb.group(
+      {
+        oldPassword: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: this.validators.passwordMatchValidator }
+    );
   }
 
   async ngOnInit(): Promise<void> {
@@ -76,10 +88,8 @@ export class UserProfileComponent implements OnInit {
         .then(
           () => {
             this.router.navigate(['/']);
-            console.log('Profile updated successfully!');
-            this.authService.showSnackBar('Profile updated successfuly.');
 
-            // Perform any additional actions upon successful update if needed
+            this.authService.showSnackBar('Profile updated successfuly.');
           },
           (error) => {
             console.error('Error updating profile:', error);
@@ -87,6 +97,30 @@ export class UserProfileComponent implements OnInit {
         );
     } else {
       console.error('Profile update failed. Please check form fields.');
+    }
+  }
+  changePassword() {
+    this.isLoading = true;
+    if (!this.authService.currentUser) {
+      this.authService
+        .reAuth(this.changePwdForm.value.oldPassword)
+        .then(() => {
+          return this.authService.newPassword(
+            this.changePwdForm.value.password
+          );
+        })
+        .then(() => {
+          this.isLoading = false;
+          this.router.navigate(['/']);
+          this.authService.showSnackBar('Password changed successfuly');
+        })
+        .catch(() => {
+          this.isLoading = false;
+          this.authService.showSnackBar(
+            'Password change failed',
+            'snack-bar-warning'
+          );
+        });
     }
   }
   formatISODate(date: Date): string {
