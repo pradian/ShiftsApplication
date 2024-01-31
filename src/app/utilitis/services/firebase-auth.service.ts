@@ -7,14 +7,11 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updatePassword,
-  user,
-  EmailAuthCredential,
   EmailAuthProvider,
 } from '@angular/fire/auth';
 import {
   Firestore,
   Timestamp,
-  addDoc,
   collection,
   doc,
   getDoc,
@@ -26,7 +23,6 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Member, Shift } from '../types';
 import { MatSnackBar } from '@angular/material/snack-bar';
-// import { deleteDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -70,7 +66,7 @@ export class FirebaseAuthService {
       throw new Error('Invalid credentials. Please try again');
     }
   }
-
+  // Reauth
   async reAuth(password: string): Promise<User> {
     try {
       const user = this.auth.currentUser;
@@ -110,7 +106,7 @@ export class FirebaseAuthService {
     firstName: string,
     lastName: string,
     role: string,
-    email: string,
+    email = this.auth.currentUser?.email,
     birthDate: Date
   ): Promise<void> {
     const userRef = doc(this.firestore, 'users', id);
@@ -131,7 +127,8 @@ export class FirebaseAuthService {
       await setDoc(userRef, userData);
     }
   }
-  // Change password
+
+  // Change user password
 
   async newPassword(pwd: string) {
     try {
@@ -192,6 +189,8 @@ export class FirebaseAuthService {
     await setDoc(shiftCollectionRef, shiftData);
   }
 
+  // Update shift
+
   async updateUserShift(
     dateStart: Date,
     dateEnd: Date,
@@ -202,7 +201,6 @@ export class FirebaseAuthService {
     shiftId: string
   ): Promise<void> {
     const userUId = localStorage.getItem('userId');
-    const shiftCollection = collection(this.firestore, 'shifts');
     const shiftDocRef = doc(
       this.firestore,
       `shifts/${userUId}/shifts`,
@@ -402,6 +400,7 @@ export class FirebaseAuthService {
   }
 
   // SnackBar
+
   showSnackBar(
     message: string,
     snackBarClass: string = 'snack-bar-success'

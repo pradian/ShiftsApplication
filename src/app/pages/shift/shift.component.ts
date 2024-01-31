@@ -52,6 +52,8 @@ export class ShiftComponent implements OnInit {
     }
   }
 
+  // Fill the form
+
   private populateFormWithData(shift: Shift) {
     const formattedDateStart = formatDate(
       shift.dateStart.toDate(),
@@ -72,6 +74,7 @@ export class ShiftComponent implements OnInit {
       comments: shift.comments,
     });
   }
+
   private async fetchShiftData(uid: string) {
     const shift = await this.authService.readUserShifts(
       this.firestore,
@@ -83,6 +86,8 @@ export class ShiftComponent implements OnInit {
       this.populateFormWithData(shiftData);
     }
   }
+
+  // Add shift
 
   async handleAddShift() {
     this.isLoading = true;
@@ -127,6 +132,8 @@ export class ShiftComponent implements OnInit {
       await this.updateShift();
     }
   }
+
+  // Update shift
 
   private async updateShift() {
     if (this.shiftIdfromUrl) {

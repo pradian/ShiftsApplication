@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { HomepageComponent } from '../homepage.component';
+import { Component, OnChanges, OnInit } from '@angular/core';
+// import { HomepageComponent } from '../homepage.component';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Shift } from 'src/app/utilitis/types';
 
@@ -8,7 +8,7 @@ import { Shift } from 'src/app/utilitis/types';
   templateUrl: './bestmonth.component.html',
   styleUrls: ['./bestmonth.component.css'],
 })
-export class BestmonthComponent implements OnInit {
+export class BestmonthComponent implements OnInit, OnChanges {
   bestMonthStats = { bestMonth: '', income: 0, totalShifts: 0 };
   upcomingShifts: Shift[] = [];
   isLoading: boolean = false;
@@ -20,6 +20,10 @@ export class BestmonthComponent implements OnInit {
 
   ngOnInit(): void {
     this.handleCalculateTheBestMonth();
+  }
+  ngOnChanges(): void {
+    this.handleCalculateTheBestMonth();
+    this.bestMonthStats;
   }
 
   async handleCalculateTheBestMonth() {

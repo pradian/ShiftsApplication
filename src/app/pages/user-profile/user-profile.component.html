@@ -90,10 +90,7 @@
         <small class="text-red-700 text-sm">Please enter a valid email</small>
       </div>
     </div>
-    <div>
-      <!-- Role: {{ userData?.role }} <br />
-      User ID: {{ userData?.uid }} -->
-    </div>
+    <div></div>
 
     <div *ngIf="isLoading" role="status">
       <svg
@@ -114,7 +111,7 @@
       </svg>
       <span class="sr-only">Loading...</span>
     </div>
-    <!-- Add other profile fields as needed -->
+
     <div *ngIf="!isLoading">
       <button
         type="submit"
