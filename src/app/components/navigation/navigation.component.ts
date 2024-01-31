@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,7 +25,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
   userData?: Member | null;
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
-  // @Output() sidenav: boolean = false;
+
+  @Output() reqCloseNav = new EventEmitter<void>();
 
   private unsubscribe: Subject<void> = new Subject<void>();
 
@@ -58,7 +65,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       });
   }
   buttonClicked() {
-    this.appC.sidenavOppen = false;
+    this.reqCloseNav.emit();
   }
   checkUserStatus() {
     this.isLoggedIn = this.authService.isLoggedIn();
