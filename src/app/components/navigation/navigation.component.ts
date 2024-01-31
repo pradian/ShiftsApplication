@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,6 +7,7 @@ import { Subject, filter, takeUntil } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
 import { MatIconModule } from '@angular/material/icon';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-navigation',
@@ -18,14 +19,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
   userData?: Member | null;
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
+  // @Output() sidenav: boolean = false;
 
   private unsubscribe: Subject<void> = new Subject<void>();
+
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private router: Router,
     private auth: Auth,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private appC: AppComponent
   ) {}
   ngOnInit(): void {
     this.checkUserStatus();
@@ -53,7 +57,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
         });
       });
   }
-
+  buttonClicked() {
+    this.appC.sidenavOppen = false;
+  }
   checkUserStatus() {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
