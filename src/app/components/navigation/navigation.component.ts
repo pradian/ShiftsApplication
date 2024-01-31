@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,6 +13,7 @@ import { Subject, filter, takeUntil } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
 import { MatIconModule } from '@angular/material/icon';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-navigation',
@@ -19,13 +26,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
 
+  @Output() reqCloseNav = new EventEmitter<void>();
+
   private unsubscribe: Subject<void> = new Subject<void>();
+
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private router: Router,
     private auth: Auth,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private appC: AppComponent
   ) {}
   ngOnInit(): void {
     this.checkUserStatus();
@@ -42,7 +53,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
   async checkUserIsAdmin() {
     this.userId = localStorage.getItem('userId');
-    console.log(this.userId);
     const users = await this.authService
       .readMembersData(this.firestore, 'users')
       .then((members) => {
@@ -53,7 +63,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
         });
       });
   }
-
+  buttonClicked() {
+    this.reqCloseNav.emit();
+  }
   checkUserStatus() {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
@@ -93,7 +105,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
       })
       .catch((error) => {
         this.authService.showSnackBar('There was an error when logged out.');
-        console.log('Error');
       });
   }
 }

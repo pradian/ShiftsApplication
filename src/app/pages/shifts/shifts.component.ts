@@ -1,14 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { NgControl } from '@angular/forms';
 import { Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
-import {
-  Firestore,
-  Timestamp,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from '@angular/fire/firestore';
+import { Firestore, Timestamp, deleteDoc, doc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 
 @Component({
@@ -25,6 +18,7 @@ export class ShiftsComponent implements OnChanges, OnInit {
   totalItems = 0;
 
   // Filters
+
   positions: string[] = ['Mechanic', 'Curier', 'Accounting', 'Electrician'];
   toDateFilter: any = '';
   fromDateFilter: any = '';
@@ -39,7 +33,7 @@ export class ShiftsComponent implements OnChanges, OnInit {
   ngOnInit(): void {
     this.fetchUserShifts();
   }
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.userShifts;
   }
 
@@ -87,9 +81,15 @@ export class ShiftsComponent implements OnChanges, OnInit {
       ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
     );
   }
+
+  // Edit shift
+
   navigateEditShift(uid: string) {
     this.router.navigate(['/shift', uid]);
   }
+
+  // Delete shift
+
   async deleteShift(shiftId: string) {
     if (!shiftId) return;
     await deleteDoc(
@@ -109,6 +109,9 @@ export class ShiftsComponent implements OnChanges, OnInit {
         );
       });
   }
+
+  // Filter shift
+
   applyFilters() {
     this.positionFilter = this.positionFilter
       ? this.positionFilter.toLowerCase()
@@ -131,6 +134,9 @@ export class ShiftsComponent implements OnChanges, OnInit {
     }
     return true;
   }
+
+  // Reset filters inputs
+
   resetFilters() {
     this.fromDateFilter = '';
     this.toDateFilter = '';

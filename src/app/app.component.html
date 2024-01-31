@@ -1,9 +1,20 @@
-<div class="h-[100vh] flex flex-row relative">
-  <div class="w-36 shadow sticky h-[100vh]">
-    <app-navigation></app-navigation>
+<div class="h-[100vh] relative">
+  <div>
+    <mat-toolbar color="primary">
+      <button (click)="nav.toggle()" *ngIf="isLoggedIn()">
+        <mat-icon *ngIf="!nav.opened">menu</mat-icon
+        ><mat-icon *ngIf="nav.opened">close</mat-icon> Menu
+      </button>
+      <img src="../assets/images/logo.png" alt="" />
+    </mat-toolbar>
   </div>
-  <div class="h-max w-full">
-    <router-outlet></router-outlet>
-  </div>
+  <!-- <div class="w-36 shadow sticky h-[100vh]"> -->
+  <mat-sidenav-container color="white">
+    <mat-sidenav #nav mode="over">
+      <app-navigation (reqCloseNav)="nav.close()"></app-navigation>
+    </mat-sidenav>
+    <!-- </div> -->
+    <mat-sidenav-content> <router-outlet></router-outlet></mat-sidenav-content
+  ></mat-sidenav-container>
   <!-- <div class="h-14 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"></div> -->
 </div>
