@@ -1,23 +1,19 @@
-<div
-  class="flex flex-col justify-center items-center font-normal h-full w-[calc(100vw-9rem)]"
->
-  <div class="w-full text-center p-3">
-    <h1 class="mt-5 text-[24px]">Add shift</h1>
-  </div>
-  <div class="w-full border-b-sky-500 border-b-[0.5px] h-1 mb-4"></div>
-
+<div class="flex flex-col items-center font-normal h-full w-full">
   <form
     [formGroup]="shiftForm"
     (ngSubmit)="handleAddShift()"
     class="m-4 shadow-md p-5 w-80"
   >
+    <div>
+      <h2>Add Shift</h2>
+    </div>
     <div class="my-4 h-14">
-      <label for="name" class="text-cyan-800 my-4">Shift Name</label>
+      <label for="name" class="text-[#673ab7] my-4">Shift Name</label>
       <input
         type="text"
         id="name"
         formControlName="name"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
       />
       <div *ngIf="shiftForm.get('name')?.errors">
         <small class="text-red-700"
@@ -27,12 +23,12 @@
     </div>
 
     <div class="my-4 h-14">
-      <label for="dateStart" class="text-cyan-800 my-4">Start Date</label>
+      <label for="dateStart" class="text-[#673ab7] my-4">Start Date</label>
       <input
         type="datetime-local"
         id="dateStart"
         formControlName="dateStart"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
       />
       <div
         *ngIf="
@@ -45,12 +41,12 @@
     </div>
 
     <div class="my-4 h-14">
-      <label for="dateEnd" class="text-cyan-800 my-4">End Date</label>
+      <label for="dateEnd" class="text-[#673ab7] my-4">End Date</label>
       <input
         type="datetime-local"
         id="dateEnd"
         formControlName="dateEnd"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
       />
       <div
         *ngIf="
@@ -62,12 +58,12 @@
     </div>
 
     <div class="my-4 h-14">
-      <label for="wage" class="text-cyan-800 my-4">Wage / h</label>
+      <label for="wage" class="text-[#673ab7] my-4">Wage / h</label>
       <input
         type="number"
         id="wage"
         formControlName="wage"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
       />
       <div *ngIf="shiftForm.get('dateEnd')?.errors">
         <small class="text-red-800">Wage is required</small>
@@ -75,12 +71,12 @@
     </div>
 
     <div class="flex flex-col">
-      <label for="position" class="text-cyan-800 mb-1">Your position</label>
+      <label for="position" class="text-[#673ab7] mb-1">Your position</label>
       <select
         name="position"
         id="position"
         formControlName="position"
-        class="bg-gray-100 border border-gray-200 text-gray-900 text-sm rounded focus:ring-sky-500 focus:border-sky-500 block w-full p-2"
+        class="bg-gray-100 border border-gray-200 text-gray-900 text-sm rounded focus:ring-[#673ab7] focus:border-[#673ab7] block w-full p-2"
       >
         <option value="" disabled>--- Select ---</option>
         <ng-container *ngFor="let position of positions; let idx = index">
@@ -98,18 +94,18 @@
     </div>
 
     <div class="my-4 h-14">
-      <label for="comments" class="text-cyan-800 my-4">Shift comments</label>
+      <label for="comments" class="text-[#673ab7] my-4">Shift comments</label>
       <input
         type="text"
         id="comments"
         formControlName="comments"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
       />
     </div>
     <div *ngIf="isLoading" role="status">
       <svg
         aria-hidden="true"
-        class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
+        class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[#673ab7]"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +126,7 @@
       <button
         type="submit"
         [disabled]="shiftForm.invalid"
-        class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+        class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
       >
         {{ formButton }}
       </button>

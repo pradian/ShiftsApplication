@@ -26,4 +26,33 @@ export class ValidatorsService {
       g.get('dateEnd')?.setErrors(null);
     }
   }
+  ageValidation(g: FormGroup) {
+    const birthDate = g.get('birthDate')?.value as Date;
+    const age = this.calculateAge(birthDate);
+
+    if (age < 18 && age < 65) {
+      g.get('birthDate')?.setErrors({ invalidAge: true });
+    } else {
+      g.get('birthDate')?.setErrors(null);
+    }
+  }
+
+  private calculateAge(birthDate: Date): number {
+    const today = new Date();
+    const birthYear = birthDate.getFullYear();
+    const currentYear = today.getFullYear();
+    let age = currentYear - birthYear;
+
+    const birthMonth = birthDate.getMonth();
+    const currentMonth = today.getMonth();
+
+    if (
+      currentMonth < birthMonth ||
+      (currentMonth === birthMonth && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  }
 }

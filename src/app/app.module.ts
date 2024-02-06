@@ -20,6 +20,7 @@ import { MaterialModule } from './utilitis/material/material-module';
 import { ShiftComponent } from './pages/shift/shift.component';
 import { BestmonthComponent } from './pages/homepage/bestmonth/bestmonth.component';
 import { UpcomingshiftsComponent } from './pages/homepage/upcomingshifts/upcomingshifts.component';
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { UpcomingshiftsComponent } from './pages/homepage/upcomingshifts/upcomin
     ShiftComponent,
     BestmonthComponent,
     UpcomingshiftsComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,9 @@
-<div
-  class="flex flex-col justify-center items-center font-normal h-full w-full relative"
->
+<div class="flex flex-col items-center font-normal h-full w-full relative">
   <div
     class="w-full text-center mt-1 sticky top-0 bg-white flex flex-col items-center"
   >
     <h1 class="mt-4 text-[24px] font-mono">Your shifts</h1>
-    <div class="w-11/12 border-b-sky-500 border-b-[0.5px]"></div>
+    <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
   </div>
 
   <div class="w-full flex flex-col mb-2 p-2">
@@ -17,7 +15,7 @@
           type="text"
           id="nameFilter"
           [(ngModel)]="nameFilter"
-          class="border-b-2 border-b-sky-500 w-full outline-none"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none"
         />
       </div>
       <div class="flex flex-col w-32">
@@ -25,7 +23,7 @@
         <select
           id="positionFilter"
           [(ngModel)]="positionFilter"
-          class="bg-gray-100 border border-sky-500 text-gray-900 text-sm rounded focus:ring-sky-500 focus:border-sky-500 block w-full p-1"
+          class="bg-gray-100 border border-[#673ab7] text-gray-900 text-sm rounded focus:ring-[#673ab7] focus:border-[#673ab7] block w-full p-1"
         >
           <option value="" [disabled]="true">All Positions</option>
           <option *ngFor="let position of positions" [value]="position">
@@ -39,7 +37,7 @@
           type="date"
           id="fromDateFilter"
           [(ngModel)]="fromDateFilter"
-          class="border-b-2 border-b-sky-500 w-full outline-none"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none"
         />
       </div>
       <div class="flex flex-col w-32">
@@ -48,18 +46,18 @@
           type="date"
           id="toDateFilter"
           [(ngModel)]="toDateFilter"
-          class="border-b-2 border-b-sky-500 w-full outline-none"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none"
         />
       </div>
       <div class="flex flex-row w-28 gap-1">
         <button
-          class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white"
+          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white"
           (click)="applyFilters()"
         >
           Apply
         </button>
         <button
-          class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white"
+          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white"
           (click)="resetFilters()"
         >
           Reset
@@ -67,14 +65,15 @@
       </div>
     </div>
   </div>
-  <div class="w-11/12 border-b-sky-500 border-b-[0.5px] mb-4"></div>
+  <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
+
   <div class="text-left w-full p-2">
     <h2>Shifts:</h2>
   </div>
   <div *ngIf="isLoading" role="status" class="mt-10">
     <svg
       aria-hidden="true"
-      class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
+      class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[#673ab7]"
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -91,14 +90,14 @@
     <span>Loading...</span>
   </div>
   <div
-    class="flex flex-wrap flex-row gap-2 items-start w-full ml-4"
+    class="flex flex-wrap flex-row gap-2 items-center sm:items-start justify-center sm:justify-start w-full sm:ml-4 p-3"
     *ngIf="userShifts.length > 0"
   >
-    <div class="ml-2" *ngFor="let shift of userShifts">
+    <ng-container class="ml-0 w-full" *ngFor="let shift of userShifts">
       <div
-        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-grow"
+        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink w-full sm:w-[230px]"
       >
-        <ul class="flex flex-col gap-1 flex-grow w-full">
+        <ul class="flex flex-col gap-1 flex-grow w-auto">
           <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
           <li>
             <span class="font-bold">Start Date:</span>
@@ -124,7 +123,7 @@
             }}
           </li>
         </ul>
-        <div class="w-full border-b-sky-500 border-b-[0.5px] mb-1"></div>
+        <div class="w-full border-b-[#673ab7] border-b-[0.5px] mb-1"></div>
         <div class="mt-1 flex justify-between">
           <button
             class="flex items-center text-sky-700"
@@ -135,14 +134,14 @@
           </button>
           <button
             (click)="deleteShift(shift.uid)"
-            class="flex items-center text-red-400"
+            class="flex items-center text-red-600"
           >
             <mat-icon>delete</mat-icon>
             Delete
           </button>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
   <div class="mt-10" *ngIf="userShifts.length <= 0 && !isLoading">
     <p>No shifts for this user</p>

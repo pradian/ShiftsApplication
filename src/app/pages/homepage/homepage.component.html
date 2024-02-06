@@ -1,12 +1,10 @@
-<div
-  class="flex flex-col justify-center items-center font-normal h-full w-[calc(100vw-9rem)] relative"
->
+<div class="flex flex-col items-center font-normal h-full w-full relative">
   <div
     class="w-full text-center mt-1 sticky top-0 bg-white flex flex-col items-center"
   >
     <h1 class="mt-5 text-[24px]">Welcome to your dashboard</h1>
   </div>
-  <div class="w-11/12 border-b-sky-500 border-b-[0.5px]"></div>
+  <!-- <div class="w-11/12 border-b-sky-500 border-b-[0.5px]"></div>
   <div *ngIf="!isLoggedIn()" class="mt-8">
     <p>
       If you need to access this application, you need to register or login:
@@ -41,5 +39,12 @@
   <div
     class="w-11/12 border-b-sky-500 border-b-[0.5px]"
     *ngIf="isLoggedIn()"
-  ></div>
+  ></div> -->
+  <div class="w-full p-4" *ngIf="isLoggedIn()">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="stretch">
+      <mat-tab label="Best month"> <app-bestmonth></app-bestmonth></mat-tab>
+      <mat-tab label="Upcoming shifts"
+        ><app-upcomingshifts></app-upcomingshifts></mat-tab
+    ></mat-tab-group>
+  </div>
 </div>

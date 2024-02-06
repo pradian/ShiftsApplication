@@ -312,11 +312,13 @@ export class FirebaseAuthService {
 
         if (existingMonth) {
           existingMonth.total += shiftTotal;
+          existingMonth.totalShifts++;
         } else {
           monthsEarnings.push({
             year: year,
             month: month,
             total: shiftTotal,
+            totalShifts: 1,
           });
         }
       }
@@ -331,7 +333,7 @@ export class FirebaseAuthService {
         sortedMonths[0].year
       }`;
       const income = sortedMonths[0].total;
-      const totalShifts = sortedMonths.length;
+      const totalShifts = sortedMonths[0].totalShifts;
 
       return { bestMonth, income, totalShifts };
     } else {
@@ -376,19 +378,6 @@ export class FirebaseAuthService {
       (a, b) => a.dateStart.toMillis() - b.dateStart.toMillis()
     );
   }
-
-  // // Delete shifts
-
-  // async deleteShift(shiftId: string) {
-  //   const shiftRef = doc(this.firestore, 'shifts', shiftId);
-
-  //   try {
-  //     await deleteDoc(shiftRef);
-  //   } catch (error) {
-  //     console.error('Error deleting doc', error);
-  //     throw new Error('Unable to delete document. Please try again');
-  //   }
-  // }
 
   // Logout
 

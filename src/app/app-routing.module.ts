@@ -7,11 +7,18 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
 import { authGuard } from './utilitis/guards/auth.guard';
 import { ShiftsComponent } from './pages/shifts/shifts.component';
 import { ShiftComponent } from './pages/shift/shift.component';
+import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: HomeComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard',
     component: HomepageComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'register',

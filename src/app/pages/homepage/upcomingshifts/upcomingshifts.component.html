@@ -5,7 +5,7 @@
 >
   <svg
     aria-hidden="true"
-    class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
+    class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-400 fill-[#673ab7]"
     viewBox="0 0 100 101"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -22,19 +22,22 @@
   <span class="sr-only">Loading...</span>
 </div>
 <div
-  class="w-full text-left mt-5 ml-4 mb-4"
+  class="text-center sm:text-left mt-5 ml-0 mb-4"
   *ngIf="isLoggedIn() && !isLoadingUpcoming"
 >
   <h2>Upcoming shifts</h2>
   <div
-    class="mt-4 flex flex-wrap flex-row gap-2 text-left w-full"
+    class="mt-4 flex flex-wrap flex-row items-start justify-center sm:justify-start gap-2 text-left w-full"
     *ngIf="upcomingShifts.length > 0"
   >
-    <div class="" *ngFor="let shift of upcomingShifts">
+    <ng-container
+      class="w-full overflow-hidden"
+      *ngFor="let shift of upcomingShifts"
+    >
       <div
-        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-grow"
+        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 w-full sm:w-[230px] flex-shrink sm:flex-shrink-0"
       >
-        <ul class="flex flex-col gap-1 flex-grow w-full">
+        <ul class="flex flex-col gap-1 flex-grow w-auto">
           <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
           <li>
             <span class="font-bold">Start Date:</span>
@@ -44,7 +47,7 @@
             <span class="font-bold">End Date:</span>
             {{ shift.dateEnd.toDate() | date : "dd/MMM/yyyy HH:MM" }}
           </li>
-          <!-- <li><span class="font-bold">Wage:</span> {{ shift.wage }} $</li> -->
+
           <li>
             <span class="font-bold">Work place:</span> {{ shift.position }}
           </li>
@@ -61,14 +64,14 @@
           </button>
           <button
             (click)="deleteShift(shift.uid)"
-            class="flex items-center text-red-400"
+            class="flex items-center text-red-700"
           >
             <mat-icon>delete</mat-icon>
             Delete
           </button>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
   <div
     class="mt-10 w-full"
