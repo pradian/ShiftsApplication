@@ -56,7 +56,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     const users = await this.authService
       .readMembersData(this.firestore, 'users')
       .then((members) => {
-        members.forEach((member) => {
+        members.find((member) => {
           if (member.uid === this.userId && member.role === 'admin') {
             this.isAdmin = true;
           }

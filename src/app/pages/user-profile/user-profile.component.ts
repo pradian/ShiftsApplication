@@ -20,6 +20,7 @@ export class UserProfileComponent implements OnInit {
   userId? = localStorage.getItem('userId');
   id = this.userId + '';
   isLoading = false;
+  isLoadingPwd = false;
 
   constructor(
     private fb: FormBuilder,
@@ -100,7 +101,7 @@ export class UserProfileComponent implements OnInit {
     }
   }
   changePassword() {
-    this.isLoading = true;
+    this.isLoadingPwd = true;
     if (!this.authService.currentUser) {
       this.authService
         .reAuth(this.changePwdForm.value.oldPassword)
@@ -110,12 +111,12 @@ export class UserProfileComponent implements OnInit {
           );
         })
         .then(() => {
-          this.isLoading = false;
+          this.isLoadingPwd = false;
           this.router.navigate(['/']);
           this.authService.showSnackBar('Password changed successfuly');
         })
         .catch(() => {
-          this.isLoading = false;
+          this.isLoadingPwd = false;
           this.authService.showSnackBar(
             'Password change failed',
             'snack-bar-warning'

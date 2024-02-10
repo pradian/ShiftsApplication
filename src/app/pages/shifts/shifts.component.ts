@@ -2,7 +2,7 @@ import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Firestore, Timestamp, deleteDoc, doc } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-shifts',
@@ -11,7 +11,8 @@ import { Router } from '@angular/router';
 })
 export class ShiftsComponent implements OnChanges, OnInit {
   userShifts: Shift[] = [];
-  userId?: string | null = localStorage.getItem('userId');
+  userId?: string | null =
+    this.route.snapshot.paramMap.get('id') || localStorage.getItem('userId');
   isLoading = false;
   itemsPerPage = 20;
   currentPage = 1;
@@ -28,7 +29,8 @@ export class ShiftsComponent implements OnChanges, OnInit {
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
   ngOnInit(): void {
     this.fetchUserShifts();

@@ -90,12 +90,12 @@
     <span>Loading...</span>
   </div>
   <div
-    class="flex flex-wrap flex-row gap-2 items-center sm:items-start justify-center sm:justify-start w-full sm:ml-4 p-3"
+    class="flex flex-wrap flex-row gap-2 items-center sm:items-start justify-center sm:justify-start w-11/12 sm:ml-4 p-3"
     *ngIf="userShifts.length > 0"
   >
     <ng-container class="ml-0 w-full" *ngFor="let shift of userShifts">
       <div
-        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink w-full sm:w-[230px]"
+        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink flex-grow sm:w-[230px]"
       >
         <ul class="flex flex-col gap-1 flex-grow w-auto">
           <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>

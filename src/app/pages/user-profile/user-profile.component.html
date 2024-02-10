@@ -1,230 +1,234 @@
-<div
-  class="flex flex-col justify-center items-center font-normal h-full w-[calc(100vw-9rem)] relative"
->
+<div class="flex flex-col items-center font-normal h-full w-full relative">
   <div
     class="w-full text-center mt-1 sticky top-0 bg-white flex flex-col items-center"
   >
     <h1 class="mt-5 text-[24px]">User Settings</h1>
-    <div class="w-11/12 border-b-sky-500 border-b-[0.5px]"></div>
+    <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
   </div>
-  <form
-    [formGroup]="userProfileForm"
-    (ngSubmit)="handleUpdateProfile()"
-    class="m-4 shadow-md p-5 w-80"
-  >
-    <div class="font-semibold text-[32px]">
-      <h3 class="underline">User details</h3>
-    </div>
-    <div class="my-4 h-14">
-      <label for="firstName" class="text-cyan-800 my-4">First Name</label>
-      <input
-        type="text"
-        id="firstName"
-        formControlName="firstName"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
-      />
-      <div *ngIf="userProfileForm.get('firstName')?.errors">
-        <small class="text-red-700 text-sm"
-          >Minimum 3 characters required for First Name</small
-        >
+  <div class="flex flex-wrap gap-2">
+    <form
+      [formGroup]="userProfileForm"
+      (ngSubmit)="handleUpdateProfile()"
+      class="m-4 shadow-md p-5 w-80"
+    >
+      <div class="font-semibold text-[32px]">
+        <h3 class="underline">User details</h3>
       </div>
-    </div>
-
-    <div class="my-4 h-14">
-      <label for="lastName" class="text-cyan-800 my-4">Last Name</label>
-      <input
-        type="text"
-        id="lastName"
-        formControlName="lastName"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
-      />
-      <div *ngIf="userProfileForm.get('lastName')?.errors">
-        <small class="text-red-700 text-sm"
-          >Minimum 3 characters required for Last Name</small
-        >
+      <div class="my-4 h-14">
+        <label for="firstName" class="text-[#673ab7] my-4">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          formControlName="firstName"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none"
+        />
+        <div *ngIf="userProfileForm.get('firstName')?.errors">
+          <small class="text-red-700 text-sm"
+            >Minimum 3 characters required for First Name</small
+          >
+        </div>
       </div>
-    </div>
 
-    <div class="my-4 h-14 hidden">
-      <label for="role" class="text-cyan-800 my-4">Role</label>
-      <input
-        type="text"
-        id="role"
-        formControlName="role"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
-      />
-    </div>
-
-    <div class="my-4 h-14">
-      <label for="birthDate" class="text-cyan-800 my-4">Birth Date</label>
-      <input
-        type="date"
-        id="birthDate"
-        formControlName="birthDate"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
-      />
-      <div
-        *ngIf="
-          userProfileForm.get('birthDate')?.invalid &&
-          userProfileForm.get('birthDate')?.touched
-        "
-      >
-        <small class="text-red-700 text-sm">Birth Date is required</small>
+      <div class="my-4 h-14">
+        <label for="lastName" class="text-[#673ab7] my-4">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          formControlName="lastName"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none"
+        />
+        <div *ngIf="userProfileForm.get('lastName')?.errors">
+          <small class="text-red-700 text-sm"
+            >Minimum 3 characters required for Last Name</small
+          >
+        </div>
       </div>
-    </div>
 
-    <div class="my-4 h-14">
-      <label for="email" class="text-cyan-800 my-4">Email</label>
-      <input
-        type="email"
-        id="email"
-        formControlName="email"
-        class="border-b-2 border-b-sky-500 w-full outline-none disabled:text-gray-500"
-      />
-      <div
-        *ngIf="
-          userProfileForm.get('email')?.invalid &&
-          userProfileForm.get('email')?.touched
-        "
-      >
-        <small class="text-red-700 text-sm">Please enter a valid email</small>
+      <div class="my-4 h-14 hidden">
+        <label for="role" class="text-[#673ab7] my-4">Role</label>
+        <input
+          type="text"
+          id="role"
+          formControlName="role"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none"
+        />
       </div>
-    </div>
-    <div></div>
 
-    <div *ngIf="isLoading" role="status">
-      <svg
-        aria-hidden="true"
-        class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
-        viewBox="0 0 100 101"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-          fill="currentColor"
+      <div class="my-4 h-14">
+        <label for="birthDate" class="text-[#673ab7] my-4">Birth Date</label>
+        <input
+          type="date"
+          id="birthDate"
+          formControlName="birthDate"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none"
         />
-        <path
-          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-          fill="currentFill"
-        />
-      </svg>
-      <span class="sr-only">Loading...</span>
-    </div>
+        <div
+          *ngIf="
+            userProfileForm.get('birthDate')?.invalid &&
+            userProfileForm.get('birthDate')?.touched
+          "
+        >
+          <small class="text-red-700 text-sm">Birth Date is required</small>
+        </div>
+      </div>
 
-    <div *ngIf="!isLoading">
-      <button
-        type="submit"
-        [disabled]="userProfileForm.invalid"
-        class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
-      >
-        Save Profile
-      </button>
-    </div>
-  </form>
-  <form
-    [formGroup]="changePwdForm"
-    (ngSubmit)="changePassword()"
-    class="m-4 shadow-md p-5 w-80"
-  >
-    <div class="font-semibold text-[32px]">
-      <h3 class="underline">Change password</h3>
-    </div>
-    <div class="my-4 h-14">
-      <label for="oldPassword" class="text-cyan-800 my-4 outline-0"
-        >Old Password:</label
-      >
-      <input
-        type="password"
-        id="oldPassword"
-        formControlName="oldPassword"
-        class="border-b-2 border-b-sky-500 w-full outline-0"
-        autocomplete="off"
-      />
-      <p
-        *ngIf="changePwdForm.get('oldPassword')?.errors"
-        class="text-red-700 text-sm"
-      >
-        Password minim length 6 characters
-      </p>
-    </div>
-    <div class="my-4 h-14">
-      <label for="password" class="text-cyan-800 my-4 outline-0"
-        >New Password:</label
-      >
-      <input
-        type="password"
-        id="password"
-        formControlName="password"
-        class="border-b-2 border-b-sky-500 w-full outline-0"
-        autocomplete="off"
-      />
-      <p
-        *ngIf="changePwdForm.get('password')?.errors"
-        class="text-red-700 text-sm"
-      >
-        Password minim length 6 characters
-      </p>
-    </div>
-    <div class="my-4 h-14">
-      <label for="confirmPassword" class="text-cyan-800 my-4">
-        Confirm Password:
-      </label>
-      <input
-        type="password"
-        id="confirmPassword"
-        formControlName="confirmPassword"
-        class="border-b-2 border-b-sky-500 w-full outline-0"
-        autocomplete="off"
-      />
-      <p
-        *ngIf="
-          changePwdForm.get('confirmPassword')?.invalid &&
-          changePwdForm.get('confirmPassword')?.touched
-        "
-        class="text-red-700 text-sm"
-      >
-        <span
-          *ngIf="changePwdForm.get('confirmPassword')?.hasError('required')"
-        >
-          Confirm password is required
-        </span>
-        <span
-          *ngIf="changePwdForm.get('confirmPassword')?.hasError('mismatch')"
-        >
-          Confirm password must match password
-        </span>
-      </p>
-    </div>
-    <div *ngIf="isLoading" role="status">
-      <svg
-        aria-hidden="true"
-        class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
-        viewBox="0 0 100 101"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-          fill="currentColor"
+      <div class="my-4 h-14">
+        <label for="email" class="text-[#673ab7] my-4">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="border-b-2 border-b-[#673ab7] w-full outline-none disabled:text-gray-500"
         />
-        <path
-          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-          fill="currentFill"
-        />
-      </svg>
-      <span class="sr-only">Loading...</span>
-    </div>
-    <div>
-      <button
-        *ngIf="!isLoading"
-        type="submit"
-        [disabled]="changePwdForm.invalid"
-        class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
-      >
-        Change password
-      </button>
-      <div class="text-sm"></div>
-    </div>
-  </form>
+        <div
+          *ngIf="
+            userProfileForm.get('email')?.invalid &&
+            userProfileForm.get('email')?.touched
+          "
+        >
+          <small class="text-red-700 text-sm">Please enter a valid email</small>
+        </div>
+      </div>
+      <div></div>
+
+      <div *ngIf="isLoading" role="status">
+        <svg
+          aria-hidden="true"
+          class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[#673ab7]"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+            fill="currentColor"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+            fill="currentFill"
+          />
+        </svg>
+        <span class="sr-only">Loading...</span>
+      </div>
+
+      <div *ngIf="!isLoading">
+        <button
+          type="submit"
+          [disabled]="userProfileForm.invalid"
+          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+        >
+          Save Profile
+        </button>
+      </div>
+    </form>
+    <form
+      [formGroup]="changePwdForm"
+      (ngSubmit)="changePassword()"
+      class="m-4 shadow-md p-5 w-80 flex flex-col justify-between items-start"
+    >
+      <div class="flex flex-col justify-start items-start">
+        <div class="font-semibold text-[32px]">
+          <h3 class="underline">Change password</h3>
+        </div>
+
+        <div class="my-4 h-14">
+          <label for="oldPassword" class="text-[#673ab7] my-4 outline-0"
+            >Old Password:</label
+          >
+          <input
+            type="password"
+            id="oldPassword"
+            formControlName="oldPassword"
+            class="border-b-2 border-b-[#673ab7] w-full outline-0"
+            autocomplete="off"
+          />
+          <p
+            *ngIf="changePwdForm.get('oldPassword')?.errors"
+            class="text-red-700 text-sm"
+          >
+            Password minim length 6 characters
+          </p>
+        </div>
+
+        <div class="my-4 h-14">
+          <label for="password" class="text-[#673ab7] my-4 outline-0"
+            >New Password:</label
+          >
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="border-b-2 border-b-[#673ab7] w-full outline-0"
+            autocomplete="off"
+          />
+          <p
+            *ngIf="changePwdForm.get('password')?.errors"
+            class="text-red-700 text-sm"
+          >
+            Password minim length 6 characters
+          </p>
+        </div>
+        <div class="my-4 h-14">
+          <label for="confirmPassword" class="text-[#673ab7] my-4">
+            Confirm Password:
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="border-b-2 border-b-[#673ab7] w-full outline-0"
+            autocomplete="off"
+          />
+          <p
+            *ngIf="
+              changePwdForm.get('confirmPassword')?.invalid &&
+              changePwdForm.get('confirmPassword')?.touched
+            "
+            class="text-red-700 text-sm"
+          >
+            <span
+              *ngIf="changePwdForm.get('confirmPassword')?.hasError('required')"
+            >
+              Confirm password is required
+            </span>
+            <span
+              *ngIf="changePwdForm.get('confirmPassword')?.hasError('mismatch')"
+            >
+              Confirm password must match password
+            </span>
+          </p>
+        </div>
+      </div>
+      <div *ngIf="isLoadingPwd" role="status">
+        <svg
+          aria-hidden="true"
+          class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[#673ab7]"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+            fill="currentColor"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+            fill="currentFill"
+          />
+        </svg>
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div>
+        <button
+          *ngIf="!isLoading"
+          type="submit"
+          [disabled]="changePwdForm.invalid"
+          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+        >
+          Change password
+        </button>
+        <div class="text-sm"></div>
+      </div>
+    </form>
+  </div>
 </div>

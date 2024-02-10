@@ -1,0 +1,35 @@
+<div class="w-full">
+  <div class="flex flex-col items-center font-normal h-full w-full relative">
+    <div
+      class="w-full text-center mt-1 sticky top-0 bg-white flex flex-col items-center"
+    >
+      <h1 class="mt-4 text-[24px] font-mono">All users</h1>
+      <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
+    </div>
+
+    <div class="p-10">
+      <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
+        <ng-container *ngFor="let user of allUsers">
+          <div
+            class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink flex-grow w-full sm:w-[330px]"
+          >
+            <p class="flex flex-col" #userUid>
+              <span class="font-semibold">Name: </span> {{ user.firstName }}
+              {{ user.lastName }}
+            </p>
+            <p>{{ user.email }}</p>
+            <p>{{ user.role }}</p>
+            <p>{{ user.birthDate.toString() | date : "dd MMM yyyy" }}</p>
+            <button
+              (click)="navigate(user.uid, 'shifts')"
+              class="flex items-center text-sky-700"
+            >
+              <mat-icon>apps</mat-icon>
+              See Shifts
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

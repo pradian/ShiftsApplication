@@ -50,14 +50,15 @@
         <mat-icon>account_circle</mat-icon>
         Settings
       </li>
-      <!-- <li
+      <li
         class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
-        routerLink="/userprofile"
+        routerLink="/admin/allUsers"
         *ngIf="isAdmin"
+        (click)="buttonClicked()"
       >
         <mat-icon>people</mat-icon>
         All Users
-      </li> -->
+      </li>
     </ul>
     <div></div>
   </div>
