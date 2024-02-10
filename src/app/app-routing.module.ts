@@ -9,7 +9,6 @@ import { ShiftsComponent } from './pages/shifts/shifts.component';
 import { ShiftComponent } from './pages/shift/shift.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AllusersComponent } from './admin/allusers/allusers.component';
-import { UserComponent } from './admin/user/user.component';
 
 const routes: Routes = [
   {
@@ -54,13 +53,23 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'admin/user/:id',
-    component: UserComponent,
+    path: 'admin/editUser/:id',
+    component: UserProfileComponent,
     canActivate: [authGuard],
   },
   {
     path: 'admin/userShifts/:id',
     component: ShiftsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/editUserShift/:id1/:id2',
+    component: ShiftComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/addUserShift/:id1/:id2',
+    component: ShiftComponent,
     canActivate: [authGuard],
   },
 ];

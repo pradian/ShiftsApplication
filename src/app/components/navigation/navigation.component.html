@@ -33,6 +33,14 @@
         <mat-icon>note_add</mat-icon>
         Add shift
       </li>
+      <li
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
+        routerLink="/userprofile"
+        (click)="buttonClicked()"
+      >
+        <mat-icon>account_circle</mat-icon>
+        Settings
+      </li>
     </ul>
     <div
       class="w-full border-b-[#673ab7] border-b-[0.5px] h-1"
@@ -42,14 +50,6 @@
       class="flex flex-col list-none font-normal text-[#673ab7] w-full"
       *ngIf="isLoggedIn"
     >
-      <li
-        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
-        routerLink="/userprofile"
-        (click)="buttonClicked()"
-      >
-        <mat-icon>account_circle</mat-icon>
-        Settings
-      </li>
       <li
         class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
         routerLink="/admin/allUsers"

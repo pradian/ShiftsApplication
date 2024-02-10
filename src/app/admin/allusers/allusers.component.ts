@@ -30,6 +30,7 @@ export class AllusersComponent implements OnInit {
     );
     usersDBCol.forEach((member) => this.allUsers.push(member));
   }
+
   async getUserBestMonth(id: string) {
     const userShifts = await this.authService.getSortedShifts(id);
 
@@ -39,7 +40,9 @@ export class AllusersComponent implements OnInit {
     if (path === 'shifts') {
       this.router.navigate(['admin/userShifts', id]);
     } else if (path === 'user') {
-      this.router.navigate(['admin/user', id]);
+      this.router.navigate(['admin/editUser', id]);
+    } else if (path === 'addShift') {
+      this.router.navigate(['/admin/addUserShift/', '', id]);
     }
   }
 }

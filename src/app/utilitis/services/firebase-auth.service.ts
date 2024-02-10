@@ -106,7 +106,7 @@ export class FirebaseAuthService {
     firstName: string,
     lastName: string,
     role: string,
-    email = this.auth.currentUser?.email,
+    email: string,
     birthDate: Date
   ): Promise<void> {
     const userRef = doc(this.firestore, 'users', id);
@@ -155,11 +155,10 @@ export class FirebaseAuthService {
     comments: string,
     uid: string
   ): Promise<void> {
-    const userUId = localStorage.getItem('userId');
     const shiftCollection = collection(this.firestore, 'shifts');
     const shiftCollectionRef = doc(
       this.firestore,
-      `shifts/${userUId}/shifts`,
+      `shifts/${userId}/shifts`,
       uid
     );
 
@@ -198,14 +197,10 @@ export class FirebaseAuthService {
     position: string,
     name: string,
     comments: string,
-    shiftId: string
+    shiftId: string,
+    userId: string
   ): Promise<void> {
-    const userUId = localStorage.getItem('userId');
-    const shiftDocRef = doc(
-      this.firestore,
-      `shifts/${userUId}/shifts`,
-      shiftId
-    );
+    const shiftDocRef = doc(this.firestore, `shifts/${userId}/shifts`, shiftId);
     const shiftDoc = await getDoc(shiftDocRef);
 
     const formattedDateStart = new Date(dateStart);
@@ -237,7 +232,7 @@ export class FirebaseAuthService {
 
   // Read user shifts
 
-  async readUserShifts(fdb: any, coll: string, userId: any): Promise<Shift[]> {
+  async readUserShifts(fdb: any, coll: string): Promise<Shift[]> {
     const usersShifts: Shift[] = [];
     const shiftsDBCol = collection(fdb, coll);
     const querySnapshot = await getDocs(shiftsDBCol);

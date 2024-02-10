@@ -2,7 +2,9 @@
   <div
     class="w-full text-center mt-1 sticky top-0 bg-white flex flex-col items-center"
   >
-    <h1 class="mt-4 text-[24px] font-mono">Your shifts</h1>
+    <h1 class="mt-4 text-[24px] font-mono">
+      {{ userData?.firstName }} {{ userData?.lastName }}`s shifts
+    </h1>
     <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
   </div>
 
@@ -66,6 +68,18 @@
     </div>
   </div>
   <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
+
+  <ng-container *ngIf="idFromUrl">
+    <div class="w-11/12 flex justify-start">
+      <button
+        (click)="adminAddShift()"
+        class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 text-sm rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300 my-2"
+      >
+        Add shift
+      </button>
+    </div>
+    <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
+  </ng-container>
 
   <div class="text-left w-full p-2">
     <h2>Shifts:</h2>
