@@ -5,11 +5,13 @@
     <h1 class="mt-5 text-[24px]">User Settings</h1>
     <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
   </div>
-  <div class="flex flex-wrap gap-2">
+  <div
+    class="w-full flex flex-wrap flex-col sm:flex-row items-center sm:items-start sm:justify-center gap-2"
+  >
     <form
       [formGroup]="userProfileForm"
       (ngSubmit)="handleUpdateProfile()"
-      class="m-4 shadow-md p-5 w-80"
+      class="shadow-md p-5 w-80"
     >
       <div class="font-semibold text-[32px]">
         <h3 class="underline">User details</h3>
@@ -125,7 +127,7 @@
       *ngIf="!idFromUrl"
       [formGroup]="changePwdForm"
       (ngSubmit)="changePassword()"
-      class="m-4 shadow-md p-5 w-80 flex flex-col justify-between items-start"
+      class="shadow-md p-5 w-80 flex flex-col justify-between items-start"
     >
       <div class="flex flex-col justify-start items-start">
         <div class="font-semibold text-[32px]">

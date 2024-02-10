@@ -10,8 +10,10 @@
 
   <div class="w-full flex flex-col mb-2 p-2">
     <h2>Filters:</h2>
-    <div class="w-full flex flex-wrap mb-2 justify-center px-2 gap-4">
-      <div class="flex flex-col w-32">
+    <div
+      class="w-full flex flex-col sm:flex-row sm:flex-wrap mb-2 justify-center items-center px-2 gap-4"
+    >
+      <div class="w-full flex flex-col sm:w-32 flex-grow flex-shrink">
         <label for="nameFilter" class="mr-2">Name:</label>
         <input
           type="text"
@@ -20,7 +22,7 @@
           class="border-b-2 border-b-[#673ab7] w-full outline-none"
         />
       </div>
-      <div class="flex flex-col w-32">
+      <div class="w-full flex flex-col sm:w-32 flex-grow flex-shrink">
         <label for="positionFilter" class="mr-2">Position:</label>
         <select
           id="positionFilter"
@@ -33,7 +35,7 @@
           </option>
         </select>
       </div>
-      <div class="flex flex-col w-32">
+      <div class="w-full flex flex-col sm:w-32 flex-grow flex-shrink">
         <label for="fromDateFilter" class="mr-2">From Date:</label>
         <input
           type="date"
@@ -42,7 +44,7 @@
           class="border-b-2 border-b-[#673ab7] w-full outline-none"
         />
       </div>
-      <div class="flex flex-col w-32">
+      <div class="w-full flex flex-col sm:w-32 flex-grow flex-shrink">
         <label for="toDateFilter" class="mr-2">To Date:</label>
         <input
           type="date"
@@ -70,7 +72,7 @@
   <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
 
   <ng-container *ngIf="idFromUrl">
-    <div class="w-11/12 flex justify-start">
+    <div class="w-11/12 flex justify-center sm:justify-start">
       <button
         (click)="adminAddShift()"
         class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 text-sm rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300 my-2"
