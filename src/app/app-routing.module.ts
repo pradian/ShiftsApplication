@@ -9,6 +9,7 @@ import { ShiftsComponent } from './pages/shifts/shifts.component';
 import { ShiftComponent } from './pages/shift/shift.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AllusersComponent } from './admin/allusers/allusers.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
@@ -71,6 +72,10 @@ const routes: Routes = [
     path: 'admin/addUserShift/:id1/:id2',
     component: ShiftComponent,
     canActivate: [authGuard],
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
   },
 ];
 
