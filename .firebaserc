@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "shiftapp-16b21": {
+      "hosting": {
+        "ShiftApp": [
+          "shiftapp-16b21"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "shiftapp-16b21"
+  }
+}
