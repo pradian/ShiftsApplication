@@ -1,54 +1,50 @@
-<div
-  class="flex flex-col justify-center items-center font-normal h-full w-[calc(100vw-9rem)]"
->
-  <div class="w-full text-center shadow p-3">
+<div class="flex flex-col items-center font-normal h-full w-full">
+  <!-- <div class="w-full text-center shadow p-3">
     <h1 class="mt-5 text-[24px]">Register</h1>
-  </div>
+  </div> -->
   <form
     [formGroup]="registerForm"
     (ngSubmit)="register()"
-    class="ml-4 mt-10 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] p-5 w-80 h-[100wh]"
+    class="mt-10 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] p-5 w-80 h-[100wh]"
   >
+    <h2>Register</h2>
     <div class="my-4 h-14">
-      <label for="email" class="text-cyan-800 my-4">Email:</label>
+      <label for="email" class="text-[#673ab7] my-4">Email:</label>
       <input
         type="email"
         id="email"
         formControlName="email"
-        class="border-b-2 border-b-sky-500 w-full outline-0"
+        class="border-b-2 border-b-[#673ab7] w-full outline-0"
         autocomplete="off"
       />
-      <p *ngIf="registerForm.get('email')?.errors" class="text-red-700 text-sm">
+      <p *ngIf="registerForm.get('email')?.errors" class="text-red-700">
         Email format "name@domain.com"
       </p>
     </div>
     <div class="my-4 h-14">
-      <label for="password" class="text-cyan-800 my-4 outline-0"
+      <label for="password" class="text-[#673ab7] my-4 outline-0"
         >Password:</label
       >
       <input
         type="password"
         id="password"
         formControlName="password"
-        class="border-b-2 border-b-sky-500 w-full outline-0"
+        class="border-b-2 border-b-[#673ab7] w-full outline-0"
         autocomplete="off"
       />
-      <p
-        *ngIf="registerForm.get('password')?.errors"
-        class="text-red-700 text-sm"
-      >
+      <p *ngIf="registerForm.get('password')?.errors" class="text-red-700">
         Password minim length 6 characters
       </p>
     </div>
     <div class="my-4 h-14">
-      <label for="confirmPassword" class="text-cyan-800 my-4">
+      <label for="confirmPassword" class="text-[#673ab7] my-4">
         Confirm Password:
       </label>
       <input
         type="password"
         id="confirmPassword"
         formControlName="confirmPassword"
-        class="border-b-2 border-b-sky-500 w-full outline-0"
+        class="border-b-2 border-b-[#673ab7] w-full outline-0"
         autocomplete="off"
       />
       <p
@@ -56,7 +52,7 @@
           registerForm.get('confirmPassword')?.invalid &&
           registerForm.get('confirmPassword')?.touched
         "
-        class="text-red-700 text-sm"
+        class="text-red-700"
       >
         <span *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
           Confirm password is required
@@ -67,66 +63,73 @@
       </p>
     </div>
     <div class="my-4 h-14">
-      <label for="firstName" class="text-cyan-800 my-4">First Name</label>
+      <label for="firstName" class="text-[#673ab7] my-4">First Name</label>
       <input
         type="text"
         id="firstName"
         formControlName="firstName"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
       />
       <div *ngIf="registerForm.get('firstName')?.errors">
-        <small class="text-red-700 text-sm"
-          >Minimum 3 characters required</small
-        >
+        <small class="text-red-700">Minimum 3 characters required</small>
       </div>
     </div>
 
     <div class="my-4 h-14">
-      <label for="lastName" class="text-cyan-800 my-4">Last Name</label>
+      <label for="lastName" class="text-[#673ab7] my-4">Last Name</label>
       <input
         type="text"
         id="lastName"
         formControlName="lastName"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
       />
       <div *ngIf="registerForm.get('lastName')?.errors">
-        <small class="text-red-700 text-sm"
-          >Minimum 3 characters required</small
-        >
+        <small class="text-red-700">Minimum 3 characters required</small>
       </div>
     </div>
-
-    <!-- <div class="my-4 h-14 hidden">
-      <label for="role" class="text-cyan-800 my-4">Role</label>
-      <input
-        type="text"
-        id="role"
-        formControlName="role"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
-      />
-    </div> -->
-
-    <div class="my-4 h-14">
-      <label for="birthDate" class="text-cyan-800 my-4">Birth Date</label>
-      <input
+    <div class="my-5 h-19">
+      <label for="birthDate" class="text-[#673ab7] my-4">Birth Date</label>
+      <!-- <input
         type="date"
         id="birthDate"
         formControlName="birthDate"
-        class="border-b-2 border-b-sky-500 w-full outline-none"
-      />
+        class="border-b-2 border-b-[#673ab7] w-full outline-none"
+      /> -->
+      <mat-form-field class="w-full outline-none mb-[-20px]">
+        <mat-label>Choose a date</mat-label>
+        <input
+          matInput
+          [min]="minDate"
+          [max]="maxDate"
+          [matDatepicker]="picker"
+          formControlName="birthDate"
+          class="border-b-2 border-b-[#673ab7] w-full"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
       <div
         *ngIf="
           registerForm.get('birthDate')?.invalid &&
           registerForm.get('birthDate')?.touched
         "
       >
-        <small class="text-red-700 text-sm">Birth Date is required</small>
+        <small
+          *ngIf="registerForm.get('birthDate')?.hasError('required')"
+          class="text-red-700"
+        >
+          Birth day is required
+        </small>
       </div>
     </div>
     <div *ngIf="isLoading" role="status">
       <svg
         aria-hidden="true"
-        class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
+        class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[#673ab7]"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -142,12 +145,12 @@
       </svg>
       <span class="sr-only">Loading...</span>
     </div>
-    <div>
+    <div class="mt-2">
       <button
         *ngIf="!isLoading"
         type="submit"
         [disabled]="registerForm.invalid"
-        class="bg-sky-500 hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+        class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300"
       >
         Register
       </button>
@@ -159,7 +162,7 @@
     <p>
       Already have account?
       <span
-        class="cursor-pointer font-semibold text-sky-700"
+        class="cursor-pointer font-semibold text-[#673ab7]"
         routerLink="/login"
         >Login here</span
       >

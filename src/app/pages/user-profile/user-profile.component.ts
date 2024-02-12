@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
 import { Member } from 'src/app/utilitis/types';
@@ -17,9 +18,11 @@ export class UserProfileComponent implements OnInit {
   authState = 'Loading....';
   userData?: Member;
   usersData: Member[] = [];
-  userId? = localStorage.getItem('userId');
-  id = this.userId + '';
+  userId?: string;
+  // id = this.userId + '';
   isLoading = false;
+  isLoadingPwd = false;
+  idFromUrl?: string | null;
 
   constructor(
     private fb: FormBuilder,
@@ -27,7 +30,9 @@ export class UserProfileComponent implements OnInit {
     private authService: FirebaseAuthService,
     protected firestore: Firestore,
     private router: Router,
-    private validators: ValidatorsService
+    private validators: ValidatorsService,
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.userProfileForm = this.fb.group({
       firstName: ['', Validators.min(3)],
@@ -47,6 +52,14 @@ export class UserProfileComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.idFromUrl = this.route.snapshot.paramMap.get('id');
+    if (this.idFromUrl) {
+      this.userId = this.idFromUrl as string;
+    } else {
+      this.userId = localStorage.getItem('userId') as string;
+    }
+    console.log(this.userId);
+
     this.autofillForm();
   }
 
@@ -80,14 +93,26 @@ export class UserProfileComponent implements OnInit {
   async handleUpdateProfile() {
     this.isLoading = true;
     if (this.userProfileForm.valid) {
-      const { firstName, lastName, role, email, birthDate } =
-        this.userProfileForm.value;
+      const {
+        firstName,
+        lastName,
+        role,
+        email = this.userData?.email,
+        birthDate,
+      } = this.userProfileForm.value;
 
       await this.authService
-        .updateUserProfile(this.id, firstName, lastName, role, email, birthDate)
+        .updateUserProfile(
+          this.userId as string,
+          firstName,
+          lastName,
+          role,
+          email,
+          birthDate
+        )
         .then(
           () => {
-            this.router.navigate(['/']);
+            this.location.back();
 
             this.authService.showSnackBar('Profile updated successfuly.');
           },
@@ -100,7 +125,7 @@ export class UserProfileComponent implements OnInit {
     }
   }
   changePassword() {
-    this.isLoading = true;
+    this.isLoadingPwd = true;
     if (!this.authService.currentUser) {
       this.authService
         .reAuth(this.changePwdForm.value.oldPassword)
@@ -110,12 +135,12 @@ export class UserProfileComponent implements OnInit {
           );
         })
         .then(() => {
-          this.isLoading = false;
-          this.router.navigate(['/']);
+          this.isLoadingPwd = false;
+          this.router.navigate(['..']);
           this.authService.showSnackBar('Password changed successfuly');
         })
         .catch(() => {
-          this.isLoading = false;
+          this.isLoadingPwd = false;
           this.authService.showSnackBar(
             'Password change failed',
             'snack-bar-warning'

@@ -7,11 +7,20 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
 import { authGuard } from './utilitis/guards/auth.guard';
 import { ShiftsComponent } from './pages/shifts/shifts.component';
 import { ShiftComponent } from './pages/shift/shift.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AllusersComponent } from './admin/allusers/allusers.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: HomeComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard',
     component: HomepageComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'register',
@@ -39,6 +48,35 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   { path: 'shift/:id', component: ShiftComponent, canActivate: [authGuard] },
+  {
+    path: 'admin/allUsers',
+    component: AllusersComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/editUser/:id',
+    component: UserProfileComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/userShifts/:id',
+    component: ShiftsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/editUserShift/:id1/:id2',
+    component: ShiftComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/addUserShift/:id1/:id2',
+    component: ShiftComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
+  },
 ];
 
 @NgModule({

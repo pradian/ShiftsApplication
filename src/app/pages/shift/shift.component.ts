@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { formatDate, Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -22,13 +22,16 @@ export class ShiftComponent implements OnInit {
   shiftIdfromUrl?: string | null;
   formButton: string = '';
   positions: string[] = ['Mechanic', 'Curier', 'Accounting', 'Electrician'];
+  id_1?: string;
+  id_2?: string;
   constructor(
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private router: Router,
     private route: ActivatedRoute,
-    private validators: ValidatorsService
+    private validators: ValidatorsService,
+    private location: Location
   ) {
     this.shiftForm = this.fb.group(
       {
@@ -43,7 +46,18 @@ export class ShiftComponent implements OnInit {
     );
   }
   ngOnInit(): void {
-    this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');
+    this.route.paramMap.subscribe((params) => {
+      this.shiftIdfromUrl = params.get('id1');
+      this.id_1 = params.get('id2') as string;
+    });
+    if (this.id_1) {
+      this.userId = this.id_1;
+    }
+    if (this.shiftIdfromUrl === '') {
+      this.shiftIdfromUrl = null;
+    }
+
+    // this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');
     if (this.shiftIdfromUrl) {
       this.fetchShiftData(this.shiftIdfromUrl);
       this.formButton = 'Edit Shift';
@@ -78,8 +92,7 @@ export class ShiftComponent implements OnInit {
   private async fetchShiftData(uid: string) {
     const shift = await this.authService.readUserShifts(
       this.firestore,
-      `shifts/${this.userId}/shifts`,
-      this.userId
+      `shifts/${this.userId}/shifts`
     );
     const shiftData = shift.find((shift) => shift.uid === uid);
     if (shiftData) {
@@ -103,13 +116,13 @@ export class ShiftComponent implements OnInit {
             wage,
             position,
             name,
-            this.id,
+            this.userId as string,
             comments,
             uuidv4()
           )
           .then(
             () => {
-              (this.isLoading = false), this.router.navigate(['/shifts']);
+              (this.isLoading = false), this.location.back();
               this.authService.showSnackBar('Shift added successfuly.');
             },
             (error) => {
@@ -148,11 +161,12 @@ export class ShiftComponent implements OnInit {
           position,
           name,
           comments,
-          this.shiftIdfromUrl as string
+          this.shiftIdfromUrl as string,
+          this.userId as string
         )
         .then(() => {
           this.isLoading = false;
-          this.router.navigate(['/shifts']);
+          this.location.back();
           this.authService.showSnackBar('Shift updated successfully.');
         })
         .catch(() => {

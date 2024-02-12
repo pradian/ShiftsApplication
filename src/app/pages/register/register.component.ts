@@ -15,6 +15,9 @@ export class RegisterComponent implements OnInit {
   [x: string]: any;
   registerForm: FormGroup;
   isLoading = false;
+  maxDate: Date;
+  minDate: Date;
+
   constructor(
     private firestore: Firestore,
     private authService: FirebaseAuthService,
@@ -22,6 +25,9 @@ export class RegisterComponent implements OnInit {
     private validators: ValidatorsService,
     private router: Router
   ) {
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 65, 0, 1);
+    this.maxDate = new Date(currentYear - 18, 11, 31);
     this.registerForm = this.fb.group(
       {
         email: [
@@ -38,7 +44,10 @@ export class RegisterComponent implements OnInit {
         role: [''],
         birthDate: ['', Validators.required],
       },
-      { validators: this.validators.passwordMatchValidator }
+      {
+        validators: this.validators.passwordMatchValidator,
+        age: this.ageValidation,
+      }
     );
   }
 
@@ -64,9 +73,7 @@ export class RegisterComponent implements OnInit {
                 email,
                 birthDate
               )
-              .then(() => {
-                // this.authService.showSnackBar('User profile added successfuly');
-              })
+              .then(() => {})
               .catch((error) => console.error('Error adding the profile'));
           }
           this.router.navigate(['/login']);
@@ -82,5 +89,34 @@ export class RegisterComponent implements OnInit {
     } else {
       this.registerForm?.markAllAsTouched();
     }
+  }
+  ageValidation(g: FormGroup) {
+    const birthDate = g.get('birthDate')?.value as Date;
+    const age = this.calculateAge(birthDate);
+
+    if (age < 18 && age < 65) {
+      g.get('birthDate')?.setErrors({ invalidAge: true });
+    } else {
+      g.get('birthDate')?.setErrors(null);
+    }
+  }
+
+  private calculateAge(birthDate: Date): number {
+    const today = new Date();
+    const birthYear = birthDate.getFullYear();
+    const currentYear = today.getFullYear();
+    let age = currentYear - birthYear;
+
+    const birthMonth = birthDate.getMonth();
+    const currentMonth = today.getMonth();
+
+    if (
+      currentMonth < birthMonth ||
+      (currentMonth === birthMonth && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
   }
 }

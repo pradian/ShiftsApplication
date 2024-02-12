@@ -1,8 +1,8 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Shift } from '../../utilitis/types';
+import { Member, Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Firestore, Timestamp, deleteDoc, doc } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-shifts',
@@ -11,11 +11,14 @@ import { Router } from '@angular/router';
 })
 export class ShiftsComponent implements OnChanges, OnInit {
   userShifts: Shift[] = [];
-  userId?: string | null = localStorage.getItem('userId');
+  userId?: string | null =
+    this.route.snapshot.paramMap.get('id') || localStorage.getItem('userId');
   isLoading = false;
   itemsPerPage = 20;
   currentPage = 1;
   totalItems = 0;
+  idFromUrl: string | null = this.route.snapshot.paramMap.get('id');
+  userData?: Member;
 
   // Filters
 
@@ -28,22 +31,27 @@ export class ShiftsComponent implements OnChanges, OnInit {
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
   ngOnInit(): void {
     this.fetchUserShifts();
+    this.getUser();
   }
   ngOnChanges(): void {
     this.userShifts;
+    this.userData;
+  }
+
+  adminAddShift() {
+    this.router.navigate(['/admin/addUserShift/', '', this.userId]);
   }
 
   async fetchUserShifts() {
-    const userUId = localStorage.getItem('userId');
     this.isLoading = true;
     const data = await this.authService.readUserShifts(
       this.firestore,
-      `shifts/${this.userId}/shifts`,
-      this.userId
+      `shifts/${this.userId}/shifts`
     );
     if (data) {
       this.totalItems = data.filter(
@@ -85,7 +93,11 @@ export class ShiftsComponent implements OnChanges, OnInit {
   // Edit shift
 
   navigateEditShift(uid: string) {
-    this.router.navigate(['/shift', uid]);
+    if (!this.idFromUrl) {
+      this.router.navigate(['/shift', uid]);
+    } else {
+      this.router.navigate(['/admin/editUserShift', uid, this.idFromUrl]);
+    }
   }
 
   // Delete shift
@@ -133,6 +145,20 @@ export class ShiftsComponent implements OnChanges, OnInit {
       return dateEnd.toMillis() <= toDate.getTime();
     }
     return true;
+  }
+
+  // Get user data
+  async getUser() {
+    const users = await this.authService
+      .readMembersData(this.firestore, 'users')
+
+      .then((members) => {
+        members.forEach((member) => {
+          if (member.uid === this.userId) {
+            this.userData = member;
+          }
+        });
+      });
   }
 
   // Reset filters inputs

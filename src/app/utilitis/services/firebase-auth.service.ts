@@ -106,7 +106,7 @@ export class FirebaseAuthService {
     firstName: string,
     lastName: string,
     role: string,
-    email = this.auth.currentUser?.email,
+    email: string,
     birthDate: Date
   ): Promise<void> {
     const userRef = doc(this.firestore, 'users', id);
@@ -155,11 +155,10 @@ export class FirebaseAuthService {
     comments: string,
     uid: string
   ): Promise<void> {
-    const userUId = localStorage.getItem('userId');
     const shiftCollection = collection(this.firestore, 'shifts');
     const shiftCollectionRef = doc(
       this.firestore,
-      `shifts/${userUId}/shifts`,
+      `shifts/${userId}/shifts`,
       uid
     );
 
@@ -198,14 +197,10 @@ export class FirebaseAuthService {
     position: string,
     name: string,
     comments: string,
-    shiftId: string
+    shiftId: string,
+    userId: string
   ): Promise<void> {
-    const userUId = localStorage.getItem('userId');
-    const shiftDocRef = doc(
-      this.firestore,
-      `shifts/${userUId}/shifts`,
-      shiftId
-    );
+    const shiftDocRef = doc(this.firestore, `shifts/${userId}/shifts`, shiftId);
     const shiftDoc = await getDoc(shiftDocRef);
 
     const formattedDateStart = new Date(dateStart);
@@ -237,7 +232,7 @@ export class FirebaseAuthService {
 
   // Read user shifts
 
-  async readUserShifts(fdb: any, coll: string, userId: any): Promise<Shift[]> {
+  async readUserShifts(fdb: any, coll: string): Promise<Shift[]> {
     const usersShifts: Shift[] = [];
     const shiftsDBCol = collection(fdb, coll);
     const querySnapshot = await getDocs(shiftsDBCol);
@@ -312,11 +307,13 @@ export class FirebaseAuthService {
 
         if (existingMonth) {
           existingMonth.total += shiftTotal;
+          existingMonth.totalShifts++;
         } else {
           monthsEarnings.push({
             year: year,
             month: month,
             total: shiftTotal,
+            totalShifts: 1,
           });
         }
       }
@@ -331,7 +328,7 @@ export class FirebaseAuthService {
         sortedMonths[0].year
       }`;
       const income = sortedMonths[0].total;
-      const totalShifts = sortedMonths.length;
+      const totalShifts = sortedMonths[0].totalShifts;
 
       return { bestMonth, income, totalShifts };
     } else {
@@ -376,19 +373,6 @@ export class FirebaseAuthService {
       (a, b) => a.dateStart.toMillis() - b.dateStart.toMillis()
     );
   }
-
-  // // Delete shifts
-
-  // async deleteShift(shiftId: string) {
-  //   const shiftRef = doc(this.firestore, 'shifts', shiftId);
-
-  //   try {
-  //     await deleteDoc(shiftRef);
-  //   } catch (error) {
-  //     console.error('Error deleting doc', error);
-  //     throw new Error('Unable to delete document. Please try again');
-  //   }
-  // }
 
   // Logout
 

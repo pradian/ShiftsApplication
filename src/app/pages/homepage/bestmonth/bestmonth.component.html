@@ -1,7 +1,7 @@
 <div *ngIf="isLoading && isLoggedIn()" role="status" class="mt-10 mb-3 ml-10">
   <svg
     aria-hidden="true"
-    class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-sky-500"
+    class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[#673ab7]"
     viewBox="0 0 100 101"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -17,10 +17,13 @@
   </svg>
   <span class="sr-only">Loading...</span>
 </div>
-<div *ngIf="isLoggedIn() && !isLoading" class="w-full text-left mt-5 ml-4 mb-4">
+<div
+  *ngIf="isLoggedIn() && !isLoading"
+  class="w-full text-center sm:text-left mt-5 mb-4 flex flex-col"
+>
   <h2>Best Month Statistics</h2>
   <div
-    class="w-72 shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2"
+    class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] w-full sm:w-[300px] p-2 flex-shrink"
   >
     <div *ngIf="bestMonthStats.bestMonth !== 'No shifts found'">
       <p class="mb-2">
