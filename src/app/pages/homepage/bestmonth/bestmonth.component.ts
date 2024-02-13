@@ -1,4 +1,6 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
+import { ActivatedRoute, Router } from '@angular/router';
 // import { HomepageComponent } from '../homepage.component';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Shift } from 'src/app/utilitis/types';
@@ -12,13 +14,23 @@ export class BestmonthComponent implements OnInit, OnChanges {
   bestMonthStats = { bestMonth: '', income: 0, totalShifts: 0 };
   upcomingShifts: Shift[] = [];
   isLoading: boolean = false;
+  userId?: string;
 
   constructor(
     // private homepage: HomepageComponent,
-    private authService: FirebaseAuthService
+    private auth: Auth,
+    private authService: FirebaseAuthService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    const idFromUrl = this.route.snapshot.paramMap.get('id');
+    if (idFromUrl) {
+      this.userId = idFromUrl;
+    } else {
+      this.userId = this.auth.currentUser?.uid;
+    }
     this.handleCalculateTheBestMonth();
   }
   ngOnChanges(): void {
@@ -28,9 +40,8 @@ export class BestmonthComponent implements OnInit, OnChanges {
 
   async handleCalculateTheBestMonth() {
     this.isLoading = true;
-    const userId: string | null = localStorage.getItem('userId');
-    if (userId) {
-      this.authService.getSortedShifts(userId).then((sortedShifts) => {
+    if (this.userId) {
+      this.authService.getSortedShifts(this.userId).then((sortedShifts) => {
         const result = this.authService.calculateBestMonth(sortedShifts);
         this.bestMonthStats = result;
         this.isLoading = false;

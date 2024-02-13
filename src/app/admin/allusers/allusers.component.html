@@ -3,7 +3,7 @@
     <div
       class="w-full text-center mt-1 sticky top-0 bg-white flex flex-col items-center"
     >
-      <h1 class="mt-4 text-[24px] font-mono">All users</h1>
+      <h1 class="mt-4 text-[24px] font-mono">Dashboard</h1>
       <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
     </div>
 
@@ -11,7 +11,7 @@
       <div class="flex flex-wrap gap-2 justify-center">
         <ng-container *ngFor="let user of allUsers">
           <div
-            class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink flex-grow w-full sm:w-[330px] flex items-center flex-col"
+            class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink flex-grow w-full sm:w-[330px] sm:flex-grow-0 flex items-center flex-col"
           >
             <ul class="w-full flex flex-col justify-start">
               <li class="flex flex-col" #userUid>
@@ -36,21 +36,28 @@
                 class="flex items-center text-sky-700"
               >
                 <mat-icon>apps</mat-icon>
-                See Shifts
+                Shifts
               </button>
               <button
                 (click)="navigate(user.uid, 'addShift')"
                 class="flex items-center text-sky-700"
               >
                 <mat-icon>note_add</mat-icon>
-                Add shift
+                Add
+              </button>
+              <button
+                (click)="navigate(user.uid, 'stats')"
+                class="flex items-center text-sky-700"
+              >
+                <mat-icon>poll</mat-icon>
+                Stats
               </button>
               <button
                 (click)="navigate(user.uid, 'user')"
                 class="flex items-center text-sky-700"
               >
                 <mat-icon>edit</mat-icon>
-                Edit user
+                Edit
               </button>
             </div>
           </div>

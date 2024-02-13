@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import {
   Firestore,
   collection,
@@ -9,7 +10,7 @@ import {
   query,
   where,
 } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Shift } from 'src/app/utilitis/types';
 
@@ -20,24 +21,32 @@ import { Shift } from 'src/app/utilitis/types';
 })
 export class UpcomingshiftsComponent implements OnInit {
   isLoadingUpcoming: boolean = false;
-  userId?: string | null = localStorage.getItem('userId');
+  userId?: string;
   userShifts: Shift[] = [];
   upcomingShifts: Shift[] = [];
 
   constructor(
+    private auth: Auth,
     private authService: FirebaseAuthService,
     private firestore: Firestore,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    const idFromUrl = this.route.snapshot.paramMap.get('id');
+    if (idFromUrl) {
+      this.userId = idFromUrl;
+    } else {
+      this.userId = this.auth.currentUser?.uid;
+    }
     this.handleUpcomingShifts();
   }
 
   async handleUpcomingShifts() {
     this.isLoadingUpcoming = true;
     const newDate = new Date(Date.now());
-    const userId = localStorage.getItem('userId');
+    const userId = this.userId;
     if (!userId) return;
 
     const shiftsCollection = collection(
