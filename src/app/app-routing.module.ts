@@ -74,6 +74,11 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'admin/stats/:id',
+    component: HomepageComponent,
+    canActivate: [authGuard],
+  },
+  {
     path: '**',
     component: PageNotFoundComponent,
   },

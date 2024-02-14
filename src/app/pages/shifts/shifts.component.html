@@ -9,7 +9,7 @@
   </div>
 
   <div class="w-full flex flex-col items-center mb-2 p-2">
-    <h2>Filters:</h2>
+    <h2 class="w-full text-left">Filters:</h2>
     <div
       class="w-full sm:w-11/12 flex flex-col sm:flex-row sm:flex-wrap mb-2 justify-center items-center px-2 gap-4"
     >
@@ -53,15 +53,15 @@
           class="border-b-2 border-b-[#673ab7] w-full outline-none"
         />
       </div>
-      <div class="flex flex-row w-28 gap-1">
+      <div class="flex flex-row w-full sm:w-28 gap-1">
         <button
-          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white"
+          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white flex-grow sm:flex-grow-0"
           (click)="applyFilters()"
         >
           Apply
         </button>
         <button
-          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white"
+          class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer p-2 rounded-md text-white flex-grow flex-shrink sm:flex-grow-0"
           (click)="resetFilters()"
         >
           Reset
@@ -75,7 +75,7 @@
     <div class="w-11/12 flex justify-center sm:justify-start">
       <button
         (click)="adminAddShift()"
-        class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 text-sm rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300 my-2"
+        class="bg-[#673ab7] hover:bg-sky-800 active:bg-green-800 cursor-pointer px-4 py-2 text-sm rounded-md text-white disabled:cursor-not-allowed disabled:bg-slate-300 my-2 flex-grow sm:flex-grow-0"
       >
         Add shift
       </button>
@@ -106,15 +106,22 @@
     <span>Loading...</span>
   </div>
   <div
-    class="flex flex-wrap flex-row gap-2 items-center sm:items-start justify-center sm:justify-start w-11/12 sm:ml-4 p-3"
+    class="flex flex-wrap flex-row gap-2 items-center sm:items-start justify-center w-full sm:ml-4 p-3"
     *ngIf="userShifts.length > 0"
   >
     <ng-container class="ml-0 w-full" *ngFor="let shift of userShifts">
       <div
-        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink flex-grow sm:w-[230px]"
+        class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink flex-grow sm:flex-grow-0 sm:w-[250px]"
       >
         <ul class="flex flex-col gap-1 flex-grow w-auto">
-          <li><span class="font-bold"> Name:</span> {{ shift.name }}</li>
+          <li>
+            <span class="font-bold"> Name:</span>
+            {{
+              shift.name.length < 15
+                ? (shift.name | slice : 0 : 15) + "..."
+                : shift.name
+            }}
+          </li>
           <li>
             <span class="font-bold">Start Date:</span>
             {{ shift.dateStart.toDate() | date : "dd/MMM/yyyy HH:MM" }}
@@ -130,7 +137,14 @@
           <li>
             <span class="font-bold">Work place:</span> {{ shift.position }}
           </li>
-          <li><span class="font-bold">Comments:</span> {{ shift.comments }}</li>
+          <li>
+            <span class="font-bold">Comments:</span>
+            {{
+              shift.comments.length > 16
+                ? (shift.comments | slice : 0 : 15) + "..."
+                : shift.comments
+            }}
+          </li>
           <li class="w-full text-sky-800 text-lg">
             <span class="font-bold">Total income:</span>
             {{

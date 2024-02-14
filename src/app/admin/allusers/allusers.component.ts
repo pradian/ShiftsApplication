@@ -43,6 +43,8 @@ export class AllusersComponent implements OnInit {
       this.router.navigate(['admin/editUser', id]);
     } else if (path === 'addShift') {
       this.router.navigate(['/admin/addUserShift/', '', id]);
+    } else if (path === 'stats') {
+      this.router.navigate(['/admin/stats/', id]);
     }
   }
 }

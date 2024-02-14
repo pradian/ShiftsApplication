@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
 import { Member } from 'src/app/utilitis/types';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-user-profile',
@@ -26,7 +27,7 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-
+    private auth: Auth,
     private authService: FirebaseAuthService,
     protected firestore: Firestore,
     private router: Router,
@@ -56,7 +57,7 @@ export class UserProfileComponent implements OnInit {
     if (this.idFromUrl) {
       this.userId = this.idFromUrl as string;
     } else {
-      this.userId = localStorage.getItem('userId') as string;
+      this.userId = this.auth.currentUser?.uid;
     }
     console.log(this.userId);
 
