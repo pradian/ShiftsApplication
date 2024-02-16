@@ -107,11 +107,11 @@ export class FirebaseAuthService {
     lastName: string,
     role: string,
     email: string,
-    birthDate: Date
+    bday: Date
   ): Promise<void> {
     const userRef = doc(this.firestore, 'users', id);
     const userDoc = await getDoc(userRef);
-
+    const birthDate = bday.toISOString().split('T')[0];
     const userData = {
       uid: id,
       firstName,
@@ -120,6 +120,7 @@ export class FirebaseAuthService {
       email,
       birthDate,
     };
+    console.log(bday);
 
     if (userDoc.exists()) {
       await setDoc(userRef, userData, { merge: true });
