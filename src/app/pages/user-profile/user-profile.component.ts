@@ -25,6 +25,9 @@ export class UserProfileComponent implements OnInit {
   isLoadingPwd = false;
   idFromUrl?: string | null;
 
+  maxDate: Date;
+  minDate: Date;
+
   constructor(
     private fb: FormBuilder,
     private auth: Auth,
@@ -35,9 +38,12 @@ export class UserProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location
   ) {
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 65, 0, 1);
+    this.maxDate = new Date(currentYear - 18, 11, 31);
     this.userProfileForm = this.fb.group({
-      firstName: ['', Validators.min(3)],
-      lastName: ['', Validators.min(3)],
+      firstName: ['', [Validators.required, Validators.minLength(3)]],
+      lastName: ['', [Validators.required, Validators.minLength(3)]],
       role: [''],
       birthDate: ['', Validators.required],
       email: [{ value: '', disabled: true }],
@@ -59,9 +65,9 @@ export class UserProfileComponent implements OnInit {
     } else {
       this.userId = this.auth.currentUser?.uid;
     }
-    console.log(this.userId);
 
     this.autofillForm();
+    console.log(this.userData);
   }
 
   async autofillForm() {
@@ -74,8 +80,11 @@ export class UserProfileComponent implements OnInit {
         const currentUser = fetchedUsers.find(
           (user) => user.uid === this.userId
         );
+        console.log(currentUser);
+
         if (currentUser) {
           this.userData = currentUser;
+          console.log(this.userData);
 
           this.userProfileForm.patchValue({
             firstName: this.userData.firstName || '',

@@ -2,7 +2,7 @@ import { Timestamp } from '@angular/fire/firestore';
 
 export type Member = {
   // [x: string]: any;
-  birthDate: Timestamp;
+  birthDate: string;
   firstName: string;
   lastName: string;
   email: string;
