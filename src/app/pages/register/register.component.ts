@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, doc, setDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, Timestamp } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
       },
       {
         validators: this.validators.passwordMatchValidator,
-        age: this.ageValidation,
+        asyncValidators: [this.ageValidation.bind(this)],
       }
     );
   }
@@ -94,10 +94,10 @@ export class RegisterComponent implements OnInit {
     const birthDate = g.get('birthDate')?.value as Date;
     const age = this.calculateAge(birthDate);
 
-    if (age < 18 && age < 65) {
-      g.get('birthDate')?.setErrors({ invalidAge: true });
+    if (age < 18 || age > 65) {
+      return Promise.resolve({ invalidAge: true });
     } else {
-      g.get('birthDate')?.setErrors(null);
+      return Promise.resolve(null);
     }
   }
 
