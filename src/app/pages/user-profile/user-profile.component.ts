@@ -80,11 +80,8 @@ export class UserProfileComponent implements OnInit {
         const currentUser = fetchedUsers.find(
           (user) => user.uid === this.userId
         );
-        console.log(currentUser);
-
         if (currentUser) {
           this.userData = currentUser;
-          console.log(this.userData);
 
           this.userProfileForm.patchValue({
             firstName: this.userData.firstName || '',
