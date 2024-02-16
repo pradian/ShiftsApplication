@@ -90,7 +90,7 @@ export class UserProfileComponent implements OnInit {
             firstName: this.userData.firstName || '',
             lastName: this.userData.lastName || '',
             role: this.userData.role || '',
-            birthDate: this.userData.birthDate || '',
+            birthDate: this.userData.birthDate.toDate() || '',
             email: this.userData.email || '',
           });
         }

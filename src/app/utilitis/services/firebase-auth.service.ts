@@ -111,7 +111,8 @@ export class FirebaseAuthService {
   ): Promise<void> {
     const userRef = doc(this.firestore, 'users', id);
     const userDoc = await getDoc(userRef);
-    const birthDate = bday.toISOString().split('T')[0];
+    const birthDate = new Date(bday);
+
     const userData = {
       uid: id,
       firstName,
