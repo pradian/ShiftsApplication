@@ -26,8 +26,8 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {
     const currentYear = new Date().getFullYear();
-    this.minDate = new Date(currentYear - 65, 0, 1);
-    this.maxDate = new Date(currentYear - 18, 11, 31);
+    this.minDate = new Date(currentYear - 65, 0, 0);
+    this.maxDate = new Date(currentYear - 18, 0, 0);
     this.registerForm = this.fb.group(
       {
         email: [
