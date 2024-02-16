@@ -391,7 +391,7 @@ export class FirebaseAuthService {
     message: string,
     snackBarClass: string = 'snack-bar-success'
   ): void {
-    this._snackBar.open(message, 'Close!', {
+    this._snackBar.open(message, '', {
       duration: 3000,
       panelClass: [snackBarClass],
       verticalPosition: 'bottom',

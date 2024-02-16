@@ -83,8 +83,8 @@
     <div class="w-11/12 border-b-[#673ab7] border-b-[0.5px]"></div>
   </ng-container>
 
-  <div class="text-left w-full p-2">
-    <h2>Shifts:</h2>
+  <div class="text-left w-full">
+    <div class="ml-2"><h2>Shifts:</h2></div>
   </div>
   <div *ngIf="isLoading" role="status" class="mt-10">
     <svg
@@ -106,10 +106,10 @@
     <span>Loading...</span>
   </div>
   <div
-    class="flex flex-wrap flex-row gap-2 items-center sm:items-start justify-center w-full sm:ml-4 p-3"
+    class="flex flex-wrap flex-row gap-2 items-center sm:items-start justify-center w-full"
     *ngIf="userShifts.length > 0"
   >
-    <ng-container class="ml-0 w-full" *ngFor="let shift of userShifts">
+    <ng-container class="ml-0 w-11/12" *ngFor="let shift of userShifts">
       <div
         class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] p-2 flex-shrink flex-grow sm:flex-grow-0 sm:w-[250px]"
       >
@@ -117,18 +117,18 @@
           <li>
             <span class="font-bold"> Name:</span>
             {{
-              shift.name.length < 15
+              shift.name.length > 15
                 ? (shift.name | slice : 0 : 15) + "..."
                 : shift.name
             }}
           </li>
           <li>
             <span class="font-bold">Start Date:</span>
-            {{ shift.dateStart.toDate() | date : "medium" }}
+            {{ shift.dateStart.toDate() | date : "d MMM y - h:mm a" }}
           </li>
           <li>
             <span class="font-bold">End Date:</span>
-            {{ shift.dateEnd.toDate() | date : "medium" }}
+            {{ shift.dateEnd.toDate() | date : "d MMM y - h:mm a" }}
           </li>
           <li>
             <span class="font-bold">Wage:</span>
