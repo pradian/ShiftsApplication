@@ -47,14 +47,14 @@ export class ShiftComponent implements OnInit {
   }
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.shiftIdfromUrl = params.get('id1');
+      this.id_2 = params.get('id1') as string;
       this.id_1 = params.get('id2') as string;
     });
     if (this.id_1) {
       this.userId = this.id_1;
-    }
-    if (this.shiftIdfromUrl === '') {
-      this.shiftIdfromUrl = null;
+      this.shiftIdfromUrl = this.id_2;
+    } else {
+      this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');
     }
 
     // this.shiftIdfromUrl = this.route.snapshot.paramMap.get('id');

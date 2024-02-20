@@ -10,6 +10,7 @@ import { ShiftComponent } from './pages/shift/shift.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AllusersComponent } from './admin/allusers/allusers.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { routeGuardGuard } from './utilitis/guards/route-guard.guard';
 
 const routes: Routes = [
   {
@@ -48,39 +49,41 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   { path: 'shift/:id', component: ShiftComponent, canActivate: [authGuard] },
+
   {
     path: 'admin/allUsers',
     component: AllusersComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, routeGuardGuard],
   },
   {
     path: 'admin/editUser/:id',
     component: UserProfileComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, routeGuardGuard],
   },
   {
     path: 'admin/userShifts/:id',
     component: ShiftsComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, routeGuardGuard],
   },
   {
     path: 'admin/editUserShift/:id1/:id2',
     component: ShiftComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, routeGuardGuard],
   },
   {
     path: 'admin/addUserShift/:id1/:id2',
     component: ShiftComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, routeGuardGuard],
   },
   {
     path: 'admin/stats/:id',
     component: HomepageComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, routeGuardGuard],
   },
   {
     path: '**',
     component: PageNotFoundComponent,
+    // canActivate: [authGuard],
   },
 ];
 

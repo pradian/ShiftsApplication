@@ -8,6 +8,7 @@ import {
   signOut,
   updatePassword,
   EmailAuthProvider,
+  UserInfo,
 } from '@angular/fire/auth';
 import {
   Firestore,
@@ -28,9 +29,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root',
 })
 export class FirebaseAuthService {
-  getUserProfileData() {
-    throw new Error('Method not implemented.');
-  }
   createdUser?: User;
   currentUser?: User;
   authService: any;
@@ -230,6 +228,23 @@ export class FirebaseAuthService {
     });
 
     return fetchedUsers;
+  }
+
+  async getUser(): Promise<boolean> {
+    const membersDB = await this.readMembersData(this.firestore, 'users');
+    const userUID = this.auth.currentUser?.uid;
+    let userData: Member | undefined;
+    membersDB.find((user) => {
+      if (user.uid === userUID && user.role === 'admin') {
+        userData === user;
+      }
+    });
+    if (userData) {
+      return true;
+    } else {
+      return false;
+    }
+    console.log(userData);
   }
 
   // Read user shifts
