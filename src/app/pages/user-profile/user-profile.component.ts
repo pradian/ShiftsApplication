@@ -67,7 +67,6 @@ export class UserProfileComponent implements OnInit {
     }
 
     this.autofillForm();
-    console.log(this.userData);
   }
 
   async autofillForm() {

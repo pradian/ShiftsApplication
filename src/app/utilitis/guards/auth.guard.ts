@@ -3,8 +3,10 @@ import { CanActivateFn, Router } from '@angular/router';
 import { FirebaseAuthService } from '../services/firebase-auth.service';
 import { LoginComponent } from 'src/app/pages/login/login.component';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(FirebaseAuthService);
+  // const getUser = inject(FirebaseAuthService).getAdmin();
+  // const isAdmin = authService.isAdmin$.subscribe();
   const isLoggedIn = authService.isLoggedIn();
   const router = inject(Router);
   if (

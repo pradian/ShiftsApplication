@@ -33,8 +33,8 @@ export class BestmonthComponent implements OnInit, OnChanges {
     }
     this.handleCalculateTheBestMonth();
   }
+
   ngOnChanges(): void {
-    this.handleCalculateTheBestMonth();
     this.bestMonthStats;
   }
 

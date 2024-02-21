@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import {
   Firestore,
@@ -19,7 +19,7 @@ import { Shift } from 'src/app/utilitis/types';
   templateUrl: './upcomingshifts.component.html',
   styleUrls: ['./upcomingshifts.component.css'],
 })
-export class UpcomingshiftsComponent implements OnInit {
+export class UpcomingshiftsComponent implements OnInit, OnChanges {
   isLoadingUpcoming: boolean = false;
   userId?: string;
   userShifts: Shift[] = [];
@@ -41,6 +41,11 @@ export class UpcomingshiftsComponent implements OnInit {
       this.userId = this.auth.currentUser?.uid;
     }
     this.handleUpcomingShifts();
+  }
+
+  ngOnChanges(): void {
+    this.userShifts;
+    this.upcomingShifts;
   }
 
   async handleUpcomingShifts() {
