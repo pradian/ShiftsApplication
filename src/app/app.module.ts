@@ -23,6 +23,8 @@ import { UpcomingshiftsComponent } from './pages/homepage/upcomingshifts/upcomin
 import { HomeComponent } from './pages/home/home.component';
 import { AllusersComponent } from './admin/allusers/allusers.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TestsComponent } from './pages/tests/tests.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
     HomeComponent,
     AllusersComponent,
     PageNotFoundComponent,
+    TestsComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
     MaterialModule,
     BrowserAnimationsModule,
     FormsModule,
+    HttpClientModule,
     AngularFireModule,
     AngularFirestoreModule,
     provideFirebaseApp(() =>

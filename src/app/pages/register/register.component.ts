@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, doc, setDoc, Timestamp } from '@angular/fire/firestore';
+// import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
+import { BackendService } from 'src/app/utilitis/services/backend.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
+import { User } from 'src/app/utilitis/types';
 
 @Component({
   selector: 'app-register',
@@ -19,11 +20,11 @@ export class RegisterComponent implements OnInit {
   minDate: Date;
 
   constructor(
-    private firestore: Firestore,
-    private authService: FirebaseAuthService,
+    // private firestore: Firestore,
     private fb: FormBuilder,
     private validators: ValidatorsService,
-    private router: Router
+    private router: Router,
+    private beService: BackendService
   ) {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 65, 0, 0);
@@ -54,40 +55,26 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {}
 
   register() {
-    if (this.registerForm?.valid) {
-      const { email, password, firstName, lastName, birthDate } =
-        this.registerForm.value;
-      this.isLoading = true;
-      this.authService
-        .register(email, password)
-        .then((result) => {
+    const { email, password, firstName, lastName, birthDate } =
+      this.registerForm.value;
+    this.isLoading = true;
+    if (this.registerForm.valid) {
+      const user: User = { email, password, firstName, lastName, birthDate };
+      this.beService.registerUser(user).subscribe({
+        next: () => {
           this.isLoading = false;
-          const user = this.authService.createdUser;
-          if (user) {
-            this.authService
-              .updateUserProfile(
-                user.uid,
-                firstName,
-                lastName,
-                'user',
-                email,
-                birthDate
-              )
-              .then(() => {})
-              .catch((error) => console.error('Error adding the profile'));
-          }
+          this.beService.showSnackBar('Successfuly registered');
           this.router.navigate(['/login']);
-          this.authService.showSnackBar('Successfuly registered');
-        })
-        .catch((error) => {
+        },
+        error: (err) => {
           this.isLoading = false;
-          this.authService.showSnackBar(
-            'Error, please check the form',
-            'snack-bar-warning'
+          this.beService.showSnackBar(
+            'Please check the form',
+            '.snack-bar-error'
           );
-        });
-    } else {
-      this.registerForm?.markAllAsTouched();
+          console.log(err);
+        },
+      });
     }
   }
   ageValidation(g: FormGroup) {

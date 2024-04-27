@@ -41,6 +41,14 @@
         <mat-icon>account_circle</mat-icon>
         Settings
       </li>
+      <li
+        class="cursor-pointer hover:underline w-full rounded-md flex items-center gap-1 text-base"
+        routerLink="/tests"
+        (click)="buttonClicked()"
+      >
+        <mat-icon>circle</mat-icon>
+        Tests
+      </li>
     </ul>
     <div
       class="w-full border-b-[#673ab7] border-b-[0.5px] h-1"
@@ -57,7 +65,7 @@
         (click)="buttonClicked()"
       >
         <mat-icon>view_comfy</mat-icon>
-        Admin dashboard
+        Admin dashboards
       </li>
     </ul>
     <div></div>
