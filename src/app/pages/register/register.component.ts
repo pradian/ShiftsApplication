@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, doc, setDoc, Timestamp } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
@@ -19,7 +19,6 @@ export class RegisterComponent implements OnInit {
   minDate: Date;
 
   constructor(
-    private firestore: Firestore,
     private authService: FirebaseAuthService,
     private fb: FormBuilder,
     private validators: ValidatorsService,
