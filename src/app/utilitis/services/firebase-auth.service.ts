@@ -8,6 +8,7 @@ import {
   signOut,
   updatePassword,
   EmailAuthProvider,
+  UserInfo,
 } from '@angular/fire/auth';
 import {
   Firestore,
@@ -36,25 +37,16 @@ export class FirebaseAuthService {
   );
   isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
 
-  isAdminSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  isAdmin$: Observable<boolean> = this.isAdminSubject.asObservable();
-  isAdmin?: Member;
-
   constructor(
     private auth: Auth,
     private _snackBar: MatSnackBar,
-    private firestore: Firestore
+    protected firestore: Firestore
   ) {}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('userId');
   }
-  isAdministrator(): boolean {
-    this.getAdmin();
-    return !!this.isAdmin$;
-  }
+
   // User Login
 
   async login(email: string, password: string) {
@@ -66,7 +58,6 @@ export class FirebaseAuthService {
       );
       this.currentUser = credentials.user;
       localStorage.setItem('userId', this.currentUser.uid);
-      this.getAdmin();
       this.isLoggedInSubject.next(true);
       return credentials.user;
     } catch {
@@ -239,20 +230,21 @@ export class FirebaseAuthService {
     return fetchedUsers;
   }
 
-  async getAdmin() {
-    this.readMembersData(this.firestore, 'users').then((members) => {
-      members.find((member) => {
-        if (
-          member.uid === localStorage.getItem('userId') &&
-          member.role === 'admin'
-        ) {
-          console.log(member);
-
-          this.isAdmin = member;
-          this.isAdminSubject.next(true);
-        }
-      });
+  async getUser(): Promise<boolean> {
+    const membersDB = await this.readMembersData(this.firestore, 'users');
+    const userUID = this.auth.currentUser?.uid;
+    let userData: Member | undefined;
+    membersDB.find((user) => {
+      if (user.uid === userUID && user.role === 'admin') {
+        userData === user;
+      }
     });
+    if (userData) {
+      return true;
+    } else {
+      return false;
+    }
+    console.log(userData);
   }
 
   // Read user shifts
@@ -405,7 +397,6 @@ export class FirebaseAuthService {
     await signOut(this.auth);
     this.currentUser = undefined;
     this.isLoggedInSubject.next(false);
-    this.isAdminSubject.next(false);
     return;
   }
 

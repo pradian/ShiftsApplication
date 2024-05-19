@@ -22,7 +22,4 @@ export class AppComponent {
   isLoggedIn() {
     return this.authService.isLoggedIn();
   }
-  isAdmin() {
-    this.authService.getAdmin();
-  }
 }
