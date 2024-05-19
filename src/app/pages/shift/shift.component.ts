@@ -2,7 +2,7 @@ import { formatDate, Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
 import { Shift } from 'src/app/utilitis/types';
@@ -28,7 +28,6 @@ export class ShiftComponent implements OnInit {
     private fb: FormBuilder,
     private authService: FirebaseAuthService,
     private firestore: Firestore,
-    private router: Router,
     private route: ActivatedRoute,
     private validators: ValidatorsService,
     private location: Location

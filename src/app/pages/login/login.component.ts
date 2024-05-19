@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Router } from '@angular/router';
