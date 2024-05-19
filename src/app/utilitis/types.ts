@@ -20,3 +20,10 @@ export type Shift = {
   comments: string;
   uid: string;
 };
+export type User = {
+  birthDate: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+};

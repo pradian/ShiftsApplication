@@ -12,14 +12,17 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 .snack-bar-success {
+  margin-top: 20px;
   --mdc-snackbar-container-color: rgb(144, 238, 144);
   --mdc-snackbar-supporting-text-color: rgb(0, 0, 0);
 }
 .snack-bar-warning {
+  margin-top: 20px;
   --mdc-snackbar-container-color: rgba(255, 191, 0);
   --mdc-snackbar-supporting-text-color: rgb(0, 0, 0);
 }
 .snack-bar-error {
+  margin-top: 20px;
   --mdc-snackbar-container-color: rgb(237, 41, 57);
   --mdc-snackbar-supporting-text-color: rgb(0, 0, 0);
 }

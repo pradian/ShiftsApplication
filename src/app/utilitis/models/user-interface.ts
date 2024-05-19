@@ -6,3 +6,11 @@ export interface UserInterface {
   lastName: string;
   role: string;
 }
+export interface UserInterfaceBE {
+  _id: string;
+  birthDate: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}

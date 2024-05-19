@@ -11,6 +11,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { AllusersComponent } from './admin/allusers/allusers.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { routeGuardGuard } from './utilitis/guards/route-guard.guard';
+import { TestsComponent } from './pages/tests/tests.component';
 
 const routes: Routes = [
   {
@@ -80,9 +81,11 @@ const routes: Routes = [
     component: HomepageComponent,
     canActivate: [authGuard, routeGuardGuard],
   },
+  { path: 'tests', component: TestsComponent },
   {
     path: '**',
     component: PageNotFoundComponent,
+    // canActivate: [authGuard],
   },
 ];
 

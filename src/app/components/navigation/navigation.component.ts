@@ -5,11 +5,15 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, Router } from '@angular/router';
-import { Observable, Subject, filter, map, takeUntil } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Member } from 'src/app/utilitis/types';
+import { MatIconModule } from '@angular/material/icon';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-navigation',
@@ -29,7 +33,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
   constructor(
     private authService: FirebaseAuthService,
     private firestore: Firestore,
-    private router: Router
+    private router: Router,
+    private auth: Auth,
+    private _snackBar: MatSnackBar,
+    private appC: AppComponent
   ) {}
   ngOnInit(): void {
     this.checkUserStatus();
@@ -38,9 +45,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         filter((event) => event instanceof NavigationEnd),
         takeUntil(this.unsubscribe)
       )
-      .subscribe(() => {
-        this.checkUserStatus();
-      });
+      .subscribe(() => this.checkUserStatus());
   }
   ngOnDestroy(): void {
     this.unsubscribe.next();

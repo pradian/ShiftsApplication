@@ -1,21 +1,24 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router, UrlTree } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { FirebaseAuthService } from '../services/firebase-auth.service';
-import { Observable, map } from 'rxjs';
+// import { Firestore, firestoreInstance$ } from '@angular/fire/firestore';
+import { HomepageComponent } from 'src/app/pages/homepage/homepage.component';
 
-export const routeGuardGuard: CanActivateFn = (): Observable<
-  boolean | UrlTree
-> => {
+export const routeGuardGuard: CanActivateFn = async (route, state) => {
+  const isLoggedIn = inject(FirebaseAuthService).isLoggedIn();
+  const isAdmin = inject(FirebaseAuthService).getUser();
   const router = inject(Router);
-  const authService = inject(FirebaseAuthService);
-  return authService.isAdmin$.pipe(
-    map((isAdmin) => {
-      console.log(isAdmin);
 
-      if (!isAdmin) {
-        return router.createUrlTree(['/dashboard']);
-      }
-      return true;
-    })
-  );
+  if (state.url.startsWith('/admin') && isLoggedIn) {
+    if (!isAdmin && isLoggedIn) {
+      router.navigate(['/admin/allUsers']);
+      return false;
+    }
+    return true;
+  }
+  if (!isAdmin) {
+    router.navigate(['/dashboard']);
+    return false;
+  }
+  return true;
 };
