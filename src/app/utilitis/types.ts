@@ -21,9 +21,26 @@ export type Shift = {
   uid: string;
 };
 export type User = {
-  birthDate: string;
+  birthDate: Date;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  role: string;
+};
+export type UserFullData = {
+  _id: string;
+  birthDate: Date;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: string;
+};
+
+export type UpdateUserData = {
+  birthDate: Date;
+  firstName: string;
+  lastName: string;
+  email: string;
 };

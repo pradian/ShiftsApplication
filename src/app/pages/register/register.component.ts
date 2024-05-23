@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
+import { BackendService } from 'src/app/utilitis/services/backend.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
+import { User } from 'src/app/utilitis/types';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +19,7 @@ export class RegisterComponent implements OnInit {
   minDate: Date;
 
   constructor(
-    private authService: FirebaseAuthService,
+    private authService: BackendService,
     private fb: FormBuilder,
     private validators: ValidatorsService,
     private router: Router
@@ -52,40 +53,22 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {}
 
   register() {
-    if (this.registerForm?.valid) {
-      const { email, password, firstName, lastName, birthDate } =
-        this.registerForm.value;
-      this.isLoading = true;
-      this.authService
-        .register(email, password)
-        .then((result) => {
+    this.isLoading = true;
+    if (this.registerForm.valid) {
+      const user: User = { ...this.registerForm.value, role: 'user' };
+      this.authService.registerUser(user).subscribe({
+        next: () => {
           this.isLoading = false;
-          const user = this.authService.createdUser;
-          if (user) {
-            this.authService
-              .updateUserProfile(
-                user.uid,
-                firstName,
-                lastName,
-                'user',
-                email,
-                birthDate
-              )
-              .then(() => {})
-              .catch((error) => console.error('Error adding the profile'));
-          }
+          this.authService.showSnackBar('User registered successfully');
           this.router.navigate(['/login']);
-          this.authService.showSnackBar('Successfuly registered');
-        })
-        .catch((error) => {
+        },
+        error: (error) => {
+          console.log(error);
+
           this.isLoading = false;
-          this.authService.showSnackBar(
-            'Error, please check the form',
-            'snack-bar-warning'
-          );
-        });
-    } else {
-      this.registerForm?.markAllAsTouched();
+          this.authService.showSnackBar(error, 'snack-bar-error');
+        },
+      });
     }
   }
   ageValidation(g: FormGroup) {
@@ -104,7 +87,6 @@ export class RegisterComponent implements OnInit {
     const birthYear = birthDate.getFullYear();
     const currentYear = today.getFullYear();
     let age = currentYear - birthYear;
-
     const birthMonth = birthDate.getMonth();
     const currentMonth = today.getMonth();
 

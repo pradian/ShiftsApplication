@@ -3,6 +3,7 @@ import { Member, Shift } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Firestore, Timestamp, deleteDoc, doc } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BackendService } from 'src/app/utilitis/services/backend.service';
 
 @Component({
   selector: 'app-shifts',
@@ -32,7 +33,8 @@ export class ShiftsComponent implements OnChanges, OnInit {
     private authService: FirebaseAuthService,
     private firestore: Firestore,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private backend: BackendService
   ) {}
   ngOnInit(): void {
     this.fetchUserShifts();

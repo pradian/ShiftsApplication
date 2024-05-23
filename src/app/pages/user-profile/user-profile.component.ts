@@ -1,3 +1,5 @@
+import { catchError } from 'rxjs';
+import { BackendService } from 'src/app/utilitis/services/backend.service';
 import { Component, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -5,8 +7,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { ValidatorsService } from 'src/app/utilitis/services/validators.service';
-import { Member } from 'src/app/utilitis/types';
+import {
+  Member,
+  UpdateUserData,
+  User,
+  UserFullData,
+} from 'src/app/utilitis/types';
 import { Auth } from '@angular/fire/auth';
+import { UserService } from 'src/app/utilitis/services/user.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -17,7 +25,7 @@ export class UserProfileComponent implements OnInit {
   userProfileForm: FormGroup;
   changePwdForm: FormGroup;
   authState = 'Loading....';
-  userData?: Member;
+  userData?: UserFullData | null = this.userService.getUser();
   usersData: Member[] = [];
   userId?: string;
   // id = this.userId + '';
@@ -36,7 +44,9 @@ export class UserProfileComponent implements OnInit {
     private router: Router,
     private validators: ValidatorsService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private userService: UserService,
+    private backendService: BackendService
   ) {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 65, 0, 1);
@@ -72,27 +82,16 @@ export class UserProfileComponent implements OnInit {
 
   async autofillForm() {
     try {
-      const fetchedUsers = await this.authService.readMembersData(
-        this.firestore,
-        'users'
-      );
-      if (fetchedUsers.length > 0) {
-        const currentUser = fetchedUsers.find(
-          (user) => user.uid === this.userId
-        );
-        if (currentUser) {
-          this.userData = currentUser;
-
-          this.userProfileForm.patchValue({
-            firstName: this.userData.firstName || '',
-            lastName: this.userData.lastName || '',
-            role: this.userData.role || '',
-            birthDate: this.userData.birthDate.toDate() || '',
-            email: this.userData.email || '',
-          });
-        }
+      if (this.userData) {
+        this.userProfileForm.patchValue({
+          firstName: this.userData.firstName || '',
+          lastName: this.userData.lastName || '',
+          role: this.userData.role || '',
+          birthDate: this.userData.birthDate || '',
+          email: this.userData.email || '',
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching user data:', error);
     }
   }
@@ -108,26 +107,53 @@ export class UserProfileComponent implements OnInit {
         birthDate,
       } = this.userProfileForm.value;
 
-      await this.authService
-        .updateUserProfile(
-          this.userId as string,
-          firstName,
-          lastName,
-          role,
-          email,
-          birthDate
-        )
-        .then(
-          () => {
-            this.location.back();
+      const updatedUser: UpdateUserData = {
+        firstName,
+        lastName,
+        email,
+        birthDate,
+      };
+      try {
+        this.backendService
+          .editUser(firstName, lastName, email, birthDate)
+          .subscribe({
+            next: (res) => {
+              console.log(res);
+            },
+            error: (err) => {
+              console.log(err);
+            },
+          });
 
-            this.authService.showSnackBar('Profile updated successfuly.');
-          },
-          (error) => {
-            console.error('Error updating profile:', error);
-          }
-        );
+        this.authService.showSnackBar('Profile updated successfuly.');
+
+        console.log(updatedUser);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
+      }
+      // await this.authService
+      //   .updateUserProfile(
+      //     this.userId as string,
+      //     firstName,
+      //     lastName,
+      //     role,
+      //     email,
+      //     birthDate
+      //   )
+      //   .then(
+      //     () => {
+      //       this.location.back();
+
+      //       this.authService.showSnackBar('Profile updated successfuly.');
+      //     },
+      //     (error) => {
+      //       console.error('Error updating profile:', error);
+      //     }
+      //   );
     } else {
+      this.isLoading = false;
       console.error('Profile update failed. Please check form fields.');
     }
   }

@@ -1,12 +1,14 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { FirebaseAuthService } from '../services/firebase-auth.service';
-// import { Firestore, firestoreInstance$ } from '@angular/fire/firestore';
-import { HomepageComponent } from 'src/app/pages/homepage/homepage.component';
+import { BackendService } from '../services/backend.service';
+import { UserService } from '../services/user.service';
 
 export const routeGuardGuard: CanActivateFn = async (route, state) => {
-  const isLoggedIn = inject(FirebaseAuthService).isLoggedIn();
-  const isAdmin = inject(FirebaseAuthService).getUser();
+  const userBackend = inject(UserService);
+  const user = userBackend.getUser();
+  const isLoggedIn = userBackend.isLoggedIn();
+  const isAdmin = !(user?.role === 'admin');
   const router = inject(Router);
 
   if (state.url.startsWith('/admin') && isLoggedIn) {

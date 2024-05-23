@@ -11,9 +11,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
-import { Member } from 'src/app/utilitis/types';
+import { Member, User, UserFullData } from 'src/app/utilitis/types';
 import { MatIconModule } from '@angular/material/icon';
 import { AppComponent } from 'src/app/app.component';
+import { BackendService } from 'src/app/utilitis/services/backend.service';
+import { UserService } from 'src/app/utilitis/services/user.service';
 
 @Component({
   selector: 'app-navigation',
@@ -21,8 +23,8 @@ import { AppComponent } from 'src/app/app.component';
   styleUrls: ['./navigation.component.css'],
 })
 export class NavigationComponent implements OnInit, OnDestroy {
-  userId = localStorage.getItem('userId');
-  userData?: Member | null;
+  userId: string | undefined;
+  userData?: UserFullData | null = this.auth.getUser();
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
 
@@ -31,10 +33,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
-    private authService: FirebaseAuthService,
+    private authService: BackendService,
     private firestore: Firestore,
     private router: Router,
-    private auth: Auth,
+    private auth: UserService,
     private _snackBar: MatSnackBar,
     private appC: AppComponent
   ) {}
@@ -52,59 +54,33 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
   async checkUserIsAdmin() {
-    this.userId = localStorage.getItem('userId');
-    const users = await this.authService
-      .readMembersData(this.firestore, 'users')
-      .then((members) => {
-        members.find((member) => {
-          if (member.uid === this.userId && member.role === 'admin') {
-            this.isAdmin = true;
-          }
-        });
-      });
+    if (this.userData?.role === 'admin') {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
   }
   buttonClicked() {
     this.reqCloseNav.emit();
   }
   checkUserStatus() {
-    this.isLoggedIn = this.authService.isLoggedIn();
+    this.isLoggedIn = this.auth.isLoggedIn();
     if (this.isLoggedIn) {
       this.getUser();
       this.checkUserIsAdmin();
     }
   }
   getisLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
+    return this.auth.isLoggedIn();
   }
 
   async getUser() {
-    this.userId = localStorage.getItem('userId');
-    const users = await this.authService
-      .readMembersData(this.firestore, 'users')
-
-      .then((members) => {
-        members.forEach((member) => {
-          if (member.uid === this.userId) {
-            this.userData = member;
-          }
-        });
-      });
+    return (this.userId = this.auth.getUser()?._id);
   }
   updateLoginStatus() {
-    this.isLoggedIn = this.authService.isLoggedIn();
+    this.isLoggedIn = this.auth.isLoggedIn();
   }
   handleLogout() {
-    this.authService
-      .logout()
-      .then(() => {
-        localStorage.removeItem('userId');
-        this.updateLoginStatus();
-        this.router.navigate(['/login']);
-
-        this.authService.showSnackBar('Successfuly logged out.');
-      })
-      .catch((error) => {
-        this.authService.showSnackBar('There was an error when logged out.');
-      });
+    this.auth.clearUser();
   }
 }

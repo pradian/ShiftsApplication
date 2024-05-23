@@ -1,16 +1,22 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserInterfaceBE } from '../models/user-interface';
-import { User } from '../types';
-import { Observable, catchError, of } from 'rxjs';
+import { UpdateUserData, User } from '../types';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackendService {
   private apiUrl = 'http://localhost:3100/api';
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar) {}
+
+  constructor(
+    private http: HttpClient,
+    private _snackBar: MatSnackBar,
+    private userService: UserService
+  ) {}
 
   getData() {
     return this.http.get<UserInterfaceBE[]>(`${this.apiUrl}/user/getAllUsers`);
@@ -19,11 +25,71 @@ export class BackendService {
   registerUser(user: User): Observable<any> {
     return this.http.post(`${this.apiUrl}/user/createUser`, user).pipe(
       catchError((error) => {
-        // Handle the error here, potentially re-throwing a new error
-        console.error('Error registering user:', error);
-        return of(error);
+        console.error('Error registering user:', error.error);
+
+        return throwError(() => error.error);
       })
     );
+  }
+
+  loginUser(email: string, password: string): Observable<any> {
+    return this.http
+      .post(`${this.apiUrl}/user/login`, { email, password })
+      .pipe(
+        catchError((error) => {
+          console.error('Error logging in user:', error.error);
+          return throwError(() => error.error);
+        }),
+        map((response: any) => {
+          console.log(response.bearer);
+          console.log(response.user);
+
+          if (response.bearer) {
+            localStorage.setItem('authorization', response.bearer);
+          }
+
+          return response;
+        })
+      );
+  }
+
+  editUser(
+    firstName: string,
+    lastName: string,
+    email: string,
+    birthDate: Date
+  ): Observable<any> {
+    const userId = this.userService.getUser()?._id;
+    const token = localStorage.getItem('authorization');
+    const headers = new HttpHeaders().set('authorization', `${token}`);
+    console.log(userId);
+
+    return this.http
+      .put(
+        `${this.apiUrl}/user/editUser/${userId}`,
+        {
+          firstName,
+          lastName,
+          email,
+          birthDate,
+        },
+        { headers }
+      )
+      .pipe(
+        catchError((error) => {
+          console.error('Error editing user:', error.error);
+          return throwError(() => error.error);
+        })
+      );
+  }
+
+  getUserShifts(): Observable<any> {
+    const token = localStorage.getItem('authorization');
+    const httpHeaders = new HttpHeaders();
+    httpHeaders.append('authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/shifts/getAllUserShifts/`, {
+      headers: httpHeaders,
+    });
   }
 
   showSnackBar(

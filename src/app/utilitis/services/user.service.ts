@@ -1,15 +1,29 @@
-import { Firestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UserInterface } from '../models/user-interface';
+import { BehaviorSubject } from 'rxjs';
+
+import { User, UserFullData } from '../types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private firestore: Firestore) {}
+  private userSubject = new BehaviorSubject<UserFullData | null>(null);
 
-  // getUser(userId: string): Observable<UserInterface> {
-  //   return this.firestore.collection('users').doc(userId).valueChanges();
-  // }
+  user$ = this.userSubject.asObservable();
+
+  setUser(user: UserFullData): void {
+    this.userSubject.next(user);
+  }
+
+  getUser(): UserFullData | null {
+    return this.userSubject.value;
+  }
+
+  clearUser(): void {
+    this.userSubject.next(null);
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.userSubject.value;
+  }
 }
