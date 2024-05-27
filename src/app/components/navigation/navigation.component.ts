@@ -48,6 +48,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe)
       )
       .subscribe(() => this.checkUserStatus());
+
+    this.auth.getUserObservable().subscribe((user) => {
+      this.userData = user;
+    });
   }
   ngOnDestroy(): void {
     this.unsubscribe.next();
@@ -74,7 +78,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     return this.auth.isLoggedIn();
   }
 
-  async getUser() {
+  getUser() {
     return (this.userId = this.auth.getUser()?._id);
   }
   updateLoginStatus() {

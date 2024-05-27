@@ -1,9 +1,10 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Member, Shift } from '../../utilitis/types';
+import { Member, Shift, ShiftBE, UserFullData } from '../../utilitis/types';
 import { FirebaseAuthService } from 'src/app/utilitis/services/firebase-auth.service';
 import { Firestore, Timestamp, deleteDoc, doc } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BackendService } from 'src/app/utilitis/services/backend.service';
+import { UserService } from 'src/app/utilitis/services/user.service';
 
 @Component({
   selector: 'app-shifts',
@@ -11,15 +12,15 @@ import { BackendService } from 'src/app/utilitis/services/backend.service';
   styleUrls: ['./shifts.component.css'],
 })
 export class ShiftsComponent implements OnChanges, OnInit {
-  userShifts: Shift[] = [];
+  userShifts: ShiftBE[] = [];
   userId?: string | null =
     this.route.snapshot.paramMap.get('id') || localStorage.getItem('userId');
   isLoading = false;
-  itemsPerPage = 20;
+  itemsPerPage = 5;
   currentPage = 1;
   totalItems = 0;
   idFromUrl: string | null = this.route.snapshot.paramMap.get('id');
-  userData?: Member;
+  userData?: UserFullData | null = this.userService.getUser();
 
   // Filters
 
@@ -34,11 +35,13 @@ export class ShiftsComponent implements OnChanges, OnInit {
     private firestore: Firestore,
     private router: Router,
     private route: ActivatedRoute,
-    private backend: BackendService
+    private backend: BackendService,
+    private userService: UserService
   ) {}
   ngOnInit(): void {
+    this.userService.isLoggedIn();
     this.fetchUserShifts();
-    this.getUser();
+    // this.getUser();
   }
   ngOnChanges(): void {
     this.userShifts;
@@ -49,47 +52,66 @@ export class ShiftsComponent implements OnChanges, OnInit {
     this.router.navigate(['/admin/addUserShift/', '', this.userId]);
   }
 
-  async fetchUserShifts() {
+  fetchUserShifts() {
     this.isLoading = true;
-    const data = await this.authService.readUserShifts(
-      this.firestore,
-      `shifts/${this.userId}/shifts`
-    );
-    if (data) {
-      this.totalItems = data.filter(
-        (shift) => shift.userId === this.userId
-      ).length;
-
-      this.userShifts = data
-        .filter(
-          (shift) =>
-            shift.userId === this.userId &&
-            shift.dateStart.toMillis() < Date.now() &&
-            (this.nameFilter === '' ||
-              shift.name
-                .toLowerCase()
-                .includes(this.nameFilter.toLowerCase())) &&
-            (this.positionFilter === '' ||
-              shift.position.toLocaleLowerCase() === this.positionFilter) &&
-            this.isDateInRange(shift.dateStart, shift.dateEnd)
-        )
-        .sort((a, b) => {
-          const dateA = a.dateStart.toMillis();
-          const dateB = b.dateStart.toMillis();
-          return dateB - dateA; // Sort in descending order
-        })
-        .slice(
-          (this.currentPage - 1) * this.itemsPerPage,
-          this.currentPage * this.itemsPerPage
-        );
-    }
-
-    this.isLoading = false;
+    this.backend.getUserShifts().subscribe((shifts: ShiftBE[]) => {
+      this.userShifts = shifts;
+      this.totalItems = this.userShifts.length;
+      this.applyPagination();
+      this.isLoading = false;
+    });
   }
-  shiftTotal(startDate: Timestamp, endDate: Timestamp, wage: number) {
-    return Math.round(
-      ((endDate.toMillis() - startDate.toMillis()) / 1000 / 60 / 60) * wage
+
+  // async fetchUserShifts() {
+  //   this.isLoading = true;
+  //   const data = await this.authService.readUserShifts(
+  //     this.firestore,
+  //     `shifts/${this.userId}/shifts`
+  //   );
+  //   if (data) {
+  //     this.totalItems = data.filter(
+  //       (shift) => shift.userId === this.userId
+  //     ).length;
+
+  //     this.userShifts = data
+  //       .filter(
+  //         (shift) =>
+  //           shift.userId === this.userId &&
+  //           shift.dateStart.toMillis() < Date.now() &&
+  //           (this.nameFilter === '' ||
+  //             shift.name
+  //               .toLowerCase()
+  //               .includes(this.nameFilter.toLowerCase())) &&
+  //           (this.positionFilter === '' ||
+  //             shift.position.toLocaleLowerCase() === this.positionFilter) &&
+  //           this.isDateInRange(shift.dateStart, shift.dateEnd)
+  //       )
+  //       .sort((a, b) => {
+  //         const dateA = a.dateStart.toMillis();
+  //         const dateB = b.dateStart.toMillis();
+  //         return dateB - dateA; // Sort in descending order
+  //       })
+  //       .slice(
+  //         (this.currentPage - 1) * this.itemsPerPage,
+  //         this.currentPage * this.itemsPerPage
+  //       );
+  //   }
+
+  //   this.isLoading = false;
+  // }
+
+  applyPagination() {
+    this.userShifts = this.userShifts.slice(
+      (this.currentPage - 1) * this.itemsPerPage,
+      this.currentPage * this.itemsPerPage
     );
+  }
+
+  shiftTotal(startDate: Date, endDate: Date, wage: number) {
+    const diff = new Date(endDate).getTime() - new Date(startDate).getTime();
+    const hours = diff / (1000 * 60 * 60);
+    const total = hours * wage;
+    return Math.round(total);
   }
 
   // Edit shift
@@ -150,18 +172,18 @@ export class ShiftsComponent implements OnChanges, OnInit {
   }
 
   // Get user data
-  async getUser() {
-    const users = await this.authService
-      .readMembersData(this.firestore, 'users')
+  // async getUser() {
+  //   const users = await this.authService
+  //     .readMembersData(this.firestore, 'users')
 
-      .then((members) => {
-        members.forEach((member) => {
-          if (member.uid === this.userId) {
-            this.userData = member;
-          }
-        });
-      });
-  }
+  //     .then((members) => {
+  //       members.forEach((member) => {
+  //         if (member._id === this.userId) {
+  //           this.userData = member;
+  //         }
+  //       });
+  //     });
+  // }
 
   // Reset filters inputs
 

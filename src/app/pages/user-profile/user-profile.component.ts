@@ -77,7 +77,11 @@ export class UserProfileComponent implements OnInit {
     }
 
     this.autofillForm();
-    console.log(this.userData);
+
+    this.userService.getUserObservable().subscribe((user) => {
+      this.userData = user;
+      this.autofillForm();
+    });
   }
 
   async autofillForm() {
@@ -117,15 +121,14 @@ export class UserProfileComponent implements OnInit {
         this.backendService
           .editUser(firstName, lastName, email, birthDate)
           .subscribe({
-            next: (res) => {
-              console.log(res);
-            },
+            next: (res) => {},
             error: (err) => {
               console.log(err);
             },
           });
 
         this.authService.showSnackBar('Profile updated successfuly.');
+        this.router.navigate(['/shifts']);
 
         console.log(updatedUser);
       } catch (error) {
@@ -133,25 +136,6 @@ export class UserProfileComponent implements OnInit {
       } finally {
         this.isLoading = false;
       }
-      // await this.authService
-      //   .updateUserProfile(
-      //     this.userId as string,
-      //     firstName,
-      //     lastName,
-      //     role,
-      //     email,
-      //     birthDate
-      //   )
-      //   .then(
-      //     () => {
-      //       this.location.back();
-
-      //       this.authService.showSnackBar('Profile updated successfuly.');
-      //     },
-      //     (error) => {
-      //       console.error('Error updating profile:', error);
-      //     }
-      //   );
     } else {
       this.isLoading = false;
       console.error('Profile update failed. Please check form fields.');

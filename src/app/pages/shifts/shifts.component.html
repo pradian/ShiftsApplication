@@ -124,11 +124,11 @@
           </li>
           <li>
             <span class="font-bold">Start Date:</span>
-            {{ shift.dateStart.toDate() | date : "d MMM y - h:mm a" }}
+            {{ shift.dateStart | date : "d MMM y - h:mm a" }}
           </li>
           <li>
             <span class="font-bold">End Date:</span>
-            {{ shift.dateEnd.toDate() | date : "d MMM y - h:mm a" }}
+            {{ shift.dateEnd | date : "d MMM y - h:mm a" }}
           </li>
           <li>
             <span class="font-bold">Wage:</span>
@@ -159,14 +159,14 @@
             class="flex items-center text-sky-700"
             (click)="navigateEditShift(shift.uid)"
           >
-            <mat-icon>edit</mat-icon>
+            <!-- <mat-icon>edit</mat-icon> -->
             Edit
           </button>
           <button
             (click)="deleteShift(shift.uid)"
             class="flex items-center text-red-600"
           >
-            <mat-icon>delete</mat-icon>
+            <!-- <mat-icon>delete</mat-icon> -->
             Delete
           </button>
         </div>

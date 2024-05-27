@@ -44,3 +44,13 @@ export type UpdateUserData = {
   lastName: string;
   email: string;
 };
+export type ShiftBE = {
+  dateStart: Date;
+  dateEnd: Date;
+  wage: number;
+  position: string;
+  name: string;
+  userId: string;
+  comments: string;
+  uid: string;
+};

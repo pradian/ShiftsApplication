@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserInterfaceBE } from '../models/user-interface';
-import { UpdateUserData, User } from '../types';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { UpdateUserData, User, UserFullData } from '../types';
+import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from './user.service';
 
@@ -11,6 +11,8 @@ import { UserService } from './user.service';
 })
 export class BackendService {
   private apiUrl = 'http://localhost:3100/api';
+  private currenUserSubject: BehaviorSubject<UserFullData | null> =
+    new BehaviorSubject<UserFullData | null>(null);
 
   constructor(
     private http: HttpClient,
@@ -46,6 +48,9 @@ export class BackendService {
 
           if (response.bearer) {
             localStorage.setItem('authorization', response.bearer);
+          }
+          if (response.user) {
+            this.userService.setUser(response.user);
           }
 
           return response;
@@ -85,11 +90,17 @@ export class BackendService {
 
   getUserShifts(): Observable<any> {
     const token = localStorage.getItem('authorization');
-    const httpHeaders = new HttpHeaders();
-    httpHeaders.append('authorization', `Bearer ${token}`);
-    return this.http.get(`${this.apiUrl}/shifts/getAllUserShifts/`, {
-      headers: httpHeaders,
-    });
+    const headers = new HttpHeaders().set('authorization', `${token}`);
+    return this.http
+      .get(`${this.apiUrl}/shifts/getAllUserShifts/`, {
+        headers: headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error getting user shifts:', error.error);
+          return throwError(() => error.error);
+        })
+      );
   }
 
   showSnackBar(
